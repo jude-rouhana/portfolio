@@ -1,9 +1,0 @@
-# Exclude large media files from Vercel build
-public/coding projects/**/*.mp4
-public/coding projects/**/*.mov
-public/animations/**/*.mp4
-public/music/**/*.wav
-public/music/**/*.mp3
-
-# Keep the files in the repository but exclude from build processing
-# They will still be served as static assets

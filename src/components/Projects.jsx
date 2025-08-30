@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useState } from 'react'
-import { getSafeAssetUrl } from '../utils/assetUtils'
 
 const Projects = () => {
   const [ref, inView] = useInView({
@@ -149,7 +148,7 @@ const Projects = () => {
                     }
                   }}
                 >
-                  <source src={getSafeAssetUrl("/coding projects/Thesis/Product images and video/Demo.mp4")} type="video/mp4" />
+                  <source src="/assets/coding projects/Thesis/Product images and video/Demo.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -173,7 +172,7 @@ const Projects = () => {
                     }
                   }}
                 >
-                  <source src={getSafeAssetUrl("/coding projects/Thesis/Product images and video/VBT Demo.mp4")} type="video/mp4" />
+                  <source src="/assets/coding projects/Thesis/Product images and video/VBT Demo.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -187,7 +186,7 @@ const Projects = () => {
                 autoPlay
                 muted
               >
-                <source src={getSafeAssetUrl("/coding projects/Othello/othello_demo.mp4")} type="video/mp4" />
+                <source src="/assets/coding projects/Othello/othello_demo.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -203,13 +202,13 @@ const Projects = () => {
                   console.error('Video failed to load:', e.target.error)
                 }}
               >
-                <source src={getSafeAssetUrl("/coding projects/Astro Invader/astroinvader.mov")} type="video/quicktime" />
-                <source src={getSafeAssetUrl("/coding projects/Astro Invader/astroinvader.mov")} type="video/mp4" />
+                <source src="/assets/coding projects/Astro Invader/astroinvader.mov" type="video/quicktime" />
+                <source src="/assets/coding projects/Astro Invader/astroinvader.mov" type="video/mp4" />
                 <p className="text-center text-gray-600 p-4">
                   Your browser does not support the video format. 
                   <br />
                   <a 
-                    href={getSafeAssetUrl("/coding projects/Astro Invader/astroinvader.mov")} 
+                    href="/assets/coding projects/Astro Invader/astroinvader.mov" 
                     download
                     className="text-blue-600 hover:text-blue-800 underline"
                   >
@@ -285,13 +284,13 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
 
     // Array of FocusAid images
     const focusAidImages = [
-      getSafeAssetUrl("/coding projects/FocusAid/FocusAid1.png"),
-      getSafeAssetUrl("/coding projects/FocusAid/FocusAid2.png"),
-      getSafeAssetUrl("/coding projects/FocusAid/FocusAid3.png"),
-      getSafeAssetUrl("/coding projects/FocusAid/FocusAid4.png"),
-      getSafeAssetUrl("/coding projects/FocusAid/FocusAid5.png"),
-      getSafeAssetUrl("/coding projects/FocusAid/FocusAid6.png"),
-      getSafeAssetUrl("/coding projects/FocusAid/FocusAid7.png")
+      "/assets/coding projects/FocusAid/focusaid1.png",
+      "/assets/coding projects/FocusAid/focusaid2.png",
+      "/assets/coding projects/FocusAid/focusaid3.png",
+      "/assets/coding projects/FocusAid/focusaid4.png",
+      "/assets/coding projects/FocusAid/focusaid5.png",
+      "/assets/coding projects/FocusAid/focusaid6.png",
+      "/assets/coding projects/FocusAid/focusaid7.png"
     ]
 
     const nextImage = () => {
@@ -375,7 +374,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "Velocity-Based Training System for Hamilton College's Athletics Department",
       fullTitle: "Velocity-Based Training System",
       description: "The Velocity-Based Training (VBT) System is a device and full-stack web application created for Hamilton College's Athletics Department. The VBT is a small, portable device that measures the velocity of a repition of an exercise on a barbell and sends the data to the web application where the data is stored and displayed in a user-friendly interface in order to track peak and average velocity of an athlete's lifts. The 5 devices are built with an Arduino Nano IoT board, a battery, charger, and switch, all of which are housed in a custom-designed, 3D-printed case. Logo and UI design created by myself. Product design, development, production, and documentation by myself, Pandelis Margaronis, Teddy Rosenbaum, and Kien Tran as our Senior Thesis project.",
-      image: getSafeAssetUrl("/coding projects/Thesis/Product images and video/VBT_logo_gray.png"),
+      image: "assets/coding projects/Thesis/Product images and video/VBT_logo_gray.png",
       technologies: ["Python", "React", "Next.js", "Node.js", "FastAPI", "Arduino", "Blender", "3D Printing", "Wire Soldering"],
       hasDemo: true
     },
@@ -384,7 +383,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "Othello Smart AI Opponent",
       fullTitle: "Othello AI",
       description: "An intelligent Othello game implementation with AI opponent using minimax algorithm and alpha-beta pruning. Features a fun interface with original artwork. Built by myself and Jacob Helzner.",
-      image: getSafeAssetUrl("/coding projects/Othello/othello.png"),
+      image: "assets/coding projects/Othello/othello.png",
       technologies: ["Python", "Minimax Algorithm", "Alpha-Beta Pruning", "Pixel Art", "Graphical User Interface"],
       hasDemo: true
     },
@@ -402,7 +401,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "Chord Progression Neural Network",
       fullTitle: "Chord Progression Neural Network",
       description: "A neural network to generate musically coherent chord progressions by learning harmonic relationships between chords. Trained on the Chordonomicon dataset with one-hot encoded inputs, the model predicts the next chord based on the previous four. With 132 chord types and a two-layer architecture, it outputs progressions that often mirror real musical structures — including the classic I–V–vi–IV progression found in many pop songs. Built by myself and Jacob Helzner.",
-      image: getSafeAssetUrl("/coding projects/Chord Classifier:Generator/Image.png"),
+      image: "assets/coding projects/Chord Classifier:Generator/Image.png",
       technologies: ["Python", "Neural Networks", "Machine Learning"],
       hasDescription: true
     },
@@ -411,7 +410,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "Astro Invader: A Space-Themed Arcade Game",
       fullTitle: "Astro Invader",
       description: "A space-themed arcade game built from scratch in Assembly Language (ASM). Features multiple enemy types, obstacles, and music. Built by myself and Pandelis Margaronis.",
-      image: getSafeAssetUrl("/coding projects/Astro Invader/astroinvader.png"),
+      image: "assets/coding projects/Astro Invader/astroinvader.png",
       technologies: ["Assembly", "DOSBox"],
       hasDemo: true
     },
@@ -496,7 +495,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                         {/* Project Image */}
                         <div className="flex justify-center">
                           <div className="h-48 w-full max-w-md bg-accent-light/10 rounded-lg flex items-center justify-center">
-                            {project.image && (project.image.startsWith('/')) ? (
+                            {project.image && (project.image.startsWith('assets/') || project.image.startsWith('/')) ? (
                               <img 
                                 src={project.image} 
                                 alt={project.fullTitle}

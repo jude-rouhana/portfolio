@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useState } from 'react'
+import { getSafeAssetUrl } from '../utils/assetUtils'
 
 const AdditionalProjects = () => {
   const [ref, inView] = useInView({
@@ -137,7 +138,7 @@ const AdditionalProjects = () => {
                 }, 100)
               }}
             >
-              <source src="/animations/JRouhana_Final_Project.mp4" type="video/mp4" />
+              <source src={getSafeAssetUrl("/animations/JRouhana_Final_Project.mp4")} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -203,7 +204,7 @@ const AdditionalProjects = () => {
                 }, 100)
               }}
             >
-              <source src="/coding projects/Particle Visualization.mov" type="video/quicktime" />
+              <source src={getSafeAssetUrl("/coding projects/Particle Visualization.mov")} type="video/quicktime" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -273,13 +274,13 @@ const AdditionalProjects = () => {
                 console.error('Video failed to load:', e.target.error)
               }}
             >
-              <source src="/coding projects/Pixel Art Smoother/pixelartsmoother.mov" type="video/quicktime" />
-              <source src="/coding projects/Pixel Art Smoother/pixelartsmoother.mov" type="video/mp4" />
+              <source src={getSafeAssetUrl("/coding projects/Pixel Art Smoother/pixelartsmoother.mov")} type="video/quicktime" />
+              <source src={getSafeAssetUrl("/coding projects/Pixel Art Smoother/pixelartsmoother.mov")} type="video/mp4" />
               <p className="text-center text-gray-600 p-4">
                 Your browser does not support the video format. 
                 <br />
                 <a 
-                  href="/coding projects/Pixel Art Smoother/pixelartsmoother.mov" 
+                  href={getSafeAssetUrl("/coding projects/Pixel Art Smoother/pixelartsmoother.mov")} 
                   download
                   className="text-blue-600 hover:text-blue-800 underline"
                 >

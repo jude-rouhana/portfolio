@@ -1,5 +1,5 @@
 {
-  "buildCommand": "git lfs pull && npm run build",
+  "buildCommand": "./build.sh",
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [

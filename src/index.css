@@ -1,0 +1,653 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables for Theme Switching */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #0D1830;
+  --text-secondary: #15254A;
+  --accent-blue: #1A2E5C;
+  --accent-sky-blue: #15254A;
+  --accent-gold: #CBAC67;
+  --accent-light: #DBE3F5;
+  --accent-dark: #0D1830;
+  --border-color: #e5e7eb;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0D1830;
+  --bg-secondary: #15254A;
+  --text-primary: #ffffff;
+  --text-secondary: #DBE3F5;
+  --accent-blue: #CBAC67;
+  --accent-sky-blue: #CBAC67;
+  --accent-gold: #CBAC67;
+  --accent-light: #DBE3F5;
+  --accent-dark: #0D1830;
+  --border-color: #15254A;
+  --shadow-color: rgba(13, 24, 48, 0.3);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+/* Background overlay for better text readability */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background: rgba(13, 24, 48, 0.7); Dark overlay for better contrast */
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* [data-theme="light"] body::before {
+  background: rgba(255, 255, 255, 0.8); Light overlay for light theme
+} */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Figtree', 'Gidole', 'Inter', system-ui, sans-serif;
+  /* background-image: url('/leftheadshot.png'); */
+  /* background-size: cover; */
+  /* background-position: left center; */
+  /* background-attachment: fixed; */
+  /* background-repeat: no-repeat; */
+  background-color: transparent !important;
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  position: relative;
+}
+
+/* Pixelated background overlay for transition effect */
+/* body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/pixelated.png');
+  background-size: cover;
+  background-position: left center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  opacity: var(--pixelated-opacity, 0);
+  transition: opacity 0.1s ease;
+  z-index: -2;
+  pointer-events: none;
+} */
+
+/* Mobile background positioning */
+/* @media (max-width: 768px) {
+  body {
+    background-position: 10% center;
+  }
+  
+  body::after {
+    background-position: 10% center;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    background-position: 15% center;
+  }
+  
+  body::after {
+    background-position: 15% center;
+  }
+} */
+
+/* Dark mode overrides for Tailwind classes */
+[data-theme="dark"] .bg-primary {
+  background-color: var(--bg-primary);
+}
+
+[data-theme="dark"] .text-contrast {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .text-contrast-gray {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .bg-primary-dark {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .border-border-color {
+  border-color: var(--border-color);
+}
+
+/* Dark mode navbar scrolled state */
+[data-theme="dark"] .bg-primary\/95 {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="dark"] .bg-primary\/95 .text-contrast {
+  color: #0D1830;
+}
+
+[data-theme="dark"] .bg-primary\/95 .text-accent-blue {
+  color: var(--accent-gold);
+}
+
+[data-theme="dark"] .bg-primary\/95 .hover\:text-accent-blue:hover {
+  color: var(--accent-gold);
+}
+
+[data-theme="dark"] .bg-primary\/95 .bg-accent-blue\/10 {
+  background-color: rgba(203, 172, 103, 0.1);
+}
+
+[data-theme="dark"] .bg-primary\/95 .hover\:bg-accent-blue\/5:hover {
+  background-color: rgba(203, 172, 103, 0.05);
+}
+
+/* Dark mode accent color overrides */
+[data-theme="dark"] .text-accent-blue,
+[data-theme="dark"] .text-accent-sky-blue {
+  color: var(--accent-gold);
+}
+
+[data-theme="dark"] .bg-accent-blue,
+[data-theme="dark"] .bg-accent-sky-blue {
+  background-color: var(--accent-gold);
+}
+
+[data-theme="dark"] .border-accent-blue,
+[data-theme="dark"] .border-accent-sky-blue {
+  border-color: var(--accent-gold);
+}
+
+[data-theme="dark"] .hover\:text-accent-blue:hover,
+[data-theme="dark"] .hover\:text-accent-sky-blue:hover {
+  color: var(--accent-gold);
+}
+
+[data-theme="dark"] .hover\:bg-accent-blue:hover,
+[data-theme="dark"] .hover\:bg-accent-sky-blue:hover {
+  background-color: var(--accent-gold);
+}
+
+[data-theme="dark"] .hover\:border-accent-blue:hover,
+[data-theme="dark"] .hover\:border-accent-sky-blue:hover {
+  border-color: var(--accent-gold);
+}
+
+[data-theme="dark"] .bg-accent-blue\/10 {
+  background-color: rgba(203, 172, 103, 0.1);
+}
+
+[data-theme="dark"] .border-accent-blue\/20 {
+  border-color: rgba(203, 172, 103, 0.2);
+}
+
+[data-theme="dark"] .text-accent-blue\/20 {
+  color: rgba(203, 172, 103, 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+body {
+  -ms-overflow-style: none;
+}
+
+/* Loading Animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.loading-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Floating Button Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Orbital Rotation Animation */
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(280px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(280px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-reverse {
+  0% {
+    transform: rotate(0deg) translateX(250px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg) translateX(250px) rotate(360deg);
+  }
+}
+
+@keyframes orbit-2 {
+  0% {
+    transform: rotate(0deg) translateX(210px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(210px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-3 {
+  0% {
+    transform: rotate(0deg) translateX(200px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg) translateX(200px) rotate(360deg);
+  }
+}
+
+@keyframes orbit-4 {
+  0% {
+    transform: rotate(0deg) translateX(300px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(300px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-5 {
+  0% {
+    transform: rotate(0deg) translateX(180px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg) translateX(180px) rotate(360deg);
+  }
+}
+
+.orbit-animation {
+  animation: orbit 7s linear infinite;
+}
+
+.orbit-animation-reverse {
+  animation: orbit-reverse 16s linear infinite;
+}
+
+.orbit-animation-2 {
+  animation: orbit-2 8s linear infinite;
+}
+
+.orbit-animation-3 {
+  animation: orbit-3 9s linear infinite;
+}
+
+.orbit-animation-4 {
+  animation: orbit-4 12s linear infinite;
+}
+
+.orbit-animation-5 {
+  animation: orbit-5 10s linear infinite;
+}
+
+/* Gidole Font */
+.gidole-regular {
+  font-family: "Gidole", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Figtree Font */
+.figtree {
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Update font-display to use Figtree */
+.font-display {
+  font-family: "Figtree", sans-serif !important;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Wavy Fade Animation */
+@keyframes wave {
+  0% {
+    background-position: 0% 50%;
+    opacity: 1;
+  }
+  25% {
+    background-position: 50% 50%;
+    opacity: 0.8;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.5;
+  }
+  75% {
+    background-position: 150% 50%;
+    opacity: 0.2;
+  }
+  100% {
+    background-position: 200% 50%;
+    opacity: 0;
+  }
+}
+
+@keyframes wave-fade {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-10px) scale(1.02);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(5px) scale(0.98);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translateY(-5px) scale(1.01);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Scroll prevention during intro animation */
+.no-scroll {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+}
+
+/* Hide navbar during intro animation */
+.hide-navbar nav {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(-100%) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Text readability over ocean background */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Semi-transparent backgrounds for content sections */
+.content-bg {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.content-bg-dark {
+  background: rgba(13, 24, 48, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(203, 172, 103, 0.3);
+}
+
+/* Make all primary backgrounds semi-transparent for ocean visibility */
+.bg-primary {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px);
+}
+
+.bg-primary-dark {
+  background-color: rgba(248, 249, 250, 0.3) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Ensure bg-transparent is truly transparent */
+.bg-transparent {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Dark theme overrides for semi-transparent backgrounds */
+[data-theme="dark"] .bg-primary {
+  background-color: rgba(13, 24, 48, 0.9) !important;
+  backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .bg-primary-dark {
+  background-color: rgba(13, 24, 48, 0.95) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Mobile text size optimizations */
+@media (max-width: 768px) {
+  /* Reduce heading sizes for mobile */
+  .text-4xl {
+    font-size: 1.75rem !important; /* 28px */
+    line-height: 2rem !important;
+  }
+  
+  .text-5xl {
+    font-size: 2rem !important; /* 32px */
+    line-height: 2.25rem !important;
+  }
+  
+  .text-6xl {
+    font-size: 2.25rem !important; /* 36px */
+    line-height: 2.5rem !important;
+  }
+  
+  .text-7xl {
+    font-size: 2.5rem !important; /* 40px */
+    line-height: 2.75rem !important;
+  }
+  
+  /* Reduce body text sizes */
+  .text-lg {
+    font-size: 0.875rem !important; /* 14px */
+    line-height: 1.25rem !important;
+  }
+  
+  .text-xl {
+    font-size: 1rem !important; /* 16px */
+    line-height: 1.5rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.125rem !important; /* 18px */
+    line-height: 1.75rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.25rem !important; /* 20px */
+    line-height: 1.875rem !important;
+  }
+  
+  /* Reduce padding and margins for mobile */
+  .py-32 {
+    padding-top: 2rem !important; /* 32px */
+    padding-bottom: 2rem !important;
+  }
+  
+  .py-20 {
+    padding-top: 1.5rem !important; /* 24px */
+    padding-bottom: 1.5rem !important;
+  }
+  
+  .mb-16 {
+    margin-bottom: 2rem !important; /* 32px */
+  }
+  
+  .mb-8 {
+    margin-bottom: 1rem !important; /* 16px */
+  }
+  
+  .mb-6 {
+    margin-bottom: 0.75rem !important; /* 12px */
+  }
+  
+  .mb-4 {
+    margin-bottom: 0.5rem !important; /* 8px */
+  }
+  
+  /* Reduce container sizes */
+  .max-w-7xl {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .max-w-4xl {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Reduce gap sizes */
+  .gap-12 {
+    gap: 1.5rem !important; /* 24px */
+  }
+  
+  .gap-8 {
+    gap: 1rem !important; /* 16px */
+  }
+  
+  .space-y-8 > * + * {
+    margin-top: 1rem !important; /* 16px */
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 0.75rem !important; /* 12px */
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 0.5rem !important; /* 8px */
+  }
+}
+
+/* Smooth section transitions */
+section {
+  transition: all 0.6s ease-in-out;
+  scroll-margin-top: 100px; /* Account for fixed navbar with extra space */
+}
+
+/* Consistent section spacing */
+section[id] {
+  padding-top: 1rem !important; /* 16px top padding for all sections */
+  padding-bottom: 1rem !important; /* 16px bottom padding for all sections */
+}
+
+/* Gradual fade for better section flow */
+.fade-section-transition {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease-out;
+}
+
+.fade-section-transition.visible {
+  opacity: 1;
+  transform: translateY(0);
+} 
+
+/* Mobile adjustments for section spacing */
+@media (max-width: 768px) {
+  section[id] {
+    padding-top: 1rem !important; /* 16px top padding for mobile */
+    padding-bottom: 1rem !important; /* 16px bottom padding for mobile */
+  }
+} 
+
+/* Prevent scrolling beyond page content */
+html, body {
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Ensure the main container takes full height */
+#root {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Prevent scroll bounce on mobile */
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure ocean background stays fixed and doesn't move with scroll bounce */
+.ocean-background {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Mobile menu improvements */
+@media (max-width: 768px) {
+  /* Improve touch targets for mobile menu items */
+  nav button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+} 

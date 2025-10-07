@@ -169,9 +169,9 @@ const About = () => {
               </div>
 
               {/* Resume Button */}
-              {/* <motion.div variants={itemVariants} className="text-center">
+              <motion.div variants={itemVariants} className="text-center">
                 <motion.a
-                  href="/resume.pdf"
+                  href="/Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-accent-blue text-white font-semibold rounded-lg hover:bg-accent-blue/80 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
@@ -183,7 +183,7 @@ const About = () => {
                   </svg>
                   View Resume
                 </motion.a>
-              </motion.div> */}
+              </motion.div>
 
               {/* Skills */}
               <div>

@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "git lfs install && git lfs fetch --all && git lfs checkout",
+    "vercel-build": "git lfs install && git lfs fetch --all && git lfs checkout && vite build"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

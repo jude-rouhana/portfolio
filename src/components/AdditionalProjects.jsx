@@ -273,13 +273,13 @@ const AdditionalProjects = () => {
                 console.error('Video failed to load:', e.target.error)
               }}
             >
-              <source src="/assets/coding projects/Pixel Art Smoother/pixelartsmoother.mov" type="video/quicktime" />
-              <source src="/assets/coding projects/Pixel Art Smoother/pixelartsmoother.mov" type="video/mp4" />
+              <source src="/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov" type="video/quicktime" />
+              <source src="/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov" type="video/mp4" />
               <p className="text-center text-gray-600 p-4">
                 Your browser does not support the video format. 
                 <br />
                 <a 
-                  href="/assets/coding projects/Pixel Art Smoother/pixelartsmoother.mov" 
+                  href="/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov" 
                   download
                   className="text-blue-600 hover:text-blue-800 underline"
                 >

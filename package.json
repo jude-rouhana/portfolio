@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "postinstall": "git lfs install --local || true",
+    "postinstall": "git lfs install --local && git lfs fetch origin --all && git lfs checkout",
     "vercel-build": "git lfs install --local && (git config lfs.url https://github.com/jude-rouhana/portfolio.git/info/lfs || true) && (git lfs fetch origin --all && git lfs checkout || echo 'LFS fetch failed, continuing...') && (mkdir -p public/assets && cp -r 'public/coding projects' 'public/assets/' 2>/dev/null || true) && (cp -r 'public/animations' 'public/assets/' 2>/dev/null || true) && (cp -r 'public/music' 'public/assets/' 2>/dev/null || true) && vite build"
   },
   "dependencies": {

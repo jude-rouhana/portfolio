@@ -57,13 +57,13 @@ const AdditionalProjects = () => {
       technologies: [],
       category: "Stay tuned!",
     },
-    // {
-    //   id: 4,
-    //   title: "Video Game",
-    //   description: "A video game... will fill this in later.",
-    //   technologies: [],
-    //   category: "Video Game",
-    // },
+    {
+      id: 4,
+      title: "Video Game",
+      description: "A video game... will fill this in later.",
+      technologies: [],
+      category: "Video Game",
+    },
     // {
     //   id: 5,
     //   title: "Side Project 1",

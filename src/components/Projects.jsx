@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useState } from 'react'
+import { getVideoUrl } from '../config/assets'
 
 const Projects = () => {
   const [ref, inView] = useInView({
@@ -148,7 +149,7 @@ const Projects = () => {
                     }
                   }}
                 >
-                  <source src="/assets/coding%20projects/Thesis/Product%20images%20and%20video/Demo.mp4" type="video/mp4" />
+                  <source src={getVideoUrl('vbtDemo') || "/assets/coding%20projects/Thesis/Product%20images%20and%20video/Demo.mp4"} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -172,7 +173,7 @@ const Projects = () => {
                     }
                   }}
                 >
-                  <source src="/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT%20Demo.mp4" type="video/mp4" />
+                  <source src={getVideoUrl('vbtLiveDemo') || "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT%20Demo.mp4"} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -186,7 +187,7 @@ const Projects = () => {
                 autoPlay
                 muted
               >
-                <source src="/assets/coding%20projects/Othello/othello_demo.mp4" type="video/mp4" />
+                <source src={getVideoUrl('othelloDemo') || "/assets/coding%20projects/Othello/othello_demo.mp4"} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -202,13 +203,13 @@ const Projects = () => {
                   console.error('Video failed to load:', e.target.error)
                 }}
               >
-                <source src="/assets/coding%20projects/Astro%20Invader/astroinvader.mov" type="video/quicktime" />
-                <source src="/assets/coding%20projects/Astro%20Invader/astroinvader.mov" type="video/mp4" />
+                <source src={getVideoUrl('astroInvader') || "/assets/coding%20projects/Astro%20Invader/astroinvader.mov"} type="video/quicktime" />
+                <source src={getVideoUrl('astroInvader') || "/assets/coding%20projects/Astro%20Invader/astroinvader.mov"} type="video/mp4" />
                 <p className="text-center text-gray-600 p-4">
                   Your browser does not support the video format. 
                   <br />
                   <a 
-                    href="/assets/coding%20projects/Astro%20Invader/astroinvader.mov" 
+                    href={getVideoUrl('astroInvader') || "/assets/coding%20projects/Astro%20Invader/astroinvader.mov"} 
                     download
                     className="text-blue-600 hover:text-blue-800 underline"
                   >

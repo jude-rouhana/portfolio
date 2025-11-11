@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useState } from 'react'
+import { getVideoUrl } from '../config/assets'
 
 const AdditionalProjects = () => {
   const [ref, inView] = useInView({
@@ -137,7 +138,7 @@ const AdditionalProjects = () => {
                 }, 100)
               }}
             >
-              <source src="/assets/animations/JRouhana_Final_Project.mp4" type="video/mp4" />
+              <source src={getVideoUrl('jazzCats') || "/assets/animations/JRouhana_Final_Project.mp4"} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -203,7 +204,7 @@ const AdditionalProjects = () => {
                 }, 100)
               }}
             >
-              <source src="/assets/coding%20projects/Particle%20Visualization.mov" type="video/quicktime" />
+              <source src={getVideoUrl('particleVisualization') || "/assets/coding%20projects/Particle%20Visualization.mov"} type="video/quicktime" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -273,13 +274,13 @@ const AdditionalProjects = () => {
                 console.error('Video failed to load:', e.target.error)
               }}
             >
-              <source src="/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov" type="video/quicktime" />
-              <source src="/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov" type="video/mp4" />
+              <source src={getVideoUrl('pixelArtSmoother') || "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov"} type="video/quicktime" />
+              <source src={getVideoUrl('pixelArtSmoother') || "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov"} type="video/mp4" />
               <p className="text-center text-gray-600 p-4">
                 Your browser does not support the video format. 
                 <br />
                 <a 
-                  href="/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov" 
+                  href={getVideoUrl('pixelArtSmoother') || "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov"} 
                   download
                   className="text-blue-600 hover:text-blue-800 underline"
                 >

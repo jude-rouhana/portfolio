@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useState, useRef } from 'react'
+import { getAudioUrl } from '../config/assets'
 
 const Music = () => {
   const [ref, inView] = useInView({
@@ -90,7 +91,7 @@ const Music = () => {
       artist: "Jude Rouhana",
       duration: "2:14",
       genre: "Bossa Nova",
-      audioFile: "/assets/music/Bossa%20Nova.wav",
+      audioFile: getAudioUrl('bossaNova') || "/assets/music/Bossa%20Nova.mp3",
       description: "A smooth bossa nova piece featuring warm saxophone, marimba, and piano melodies and gentle rhythms. Written, recorded, mixed, and produced by Jude Rouhana.",
       featured: false
     },
@@ -100,7 +101,7 @@ const Music = () => {
       artist: "Original by Erroll Garner",
       duration: "2:22",
       genre: "Jazz Ballad",
-      audioFile: "/assets/music/Ballad.wav",
+      audioFile: getAudioUrl('ballad') || "/assets/music/Ballad.mp3",
       description: "A classic jazz ballad interpretation with soulful saxophone and piano phrasing and rich harmonic textures. Written by Erroll Garner. Recorded, mixed, and produced by Jude Rouhana.",
       featured: false
     },
@@ -110,7 +111,7 @@ const Music = () => {
       artist: "Original by Franz Liszt",
       duration: "4:09",
       genre: "Classical",
-      audioFile: "/assets/music/Classical.wav",
+      audioFile: getAudioUrl('classical') || "/assets/music/Classical.mp3",
       description: "A classical piece that combines traditional classical harmony with elements inspired from jazz. Written by Franz Liszt. Recorded, mixed, and produced by Jude Rouhana.",
       featured: false
     },
@@ -120,7 +121,7 @@ const Music = () => {
       artist: "Jude Rouhana",
       duration: "2:08",
       genre: "House Jazz",
-      audioFile: "/assets/music/House.wav",
+      audioFile: getAudioUrl('house') || "/assets/music/House.mp3",
       description: "A house jazz piece that combines traditional house beats with a jazz-inspired melody. Written by Jude Rouhana. Recorded, mixed, and produced by Jude Rouhana.",
       featured: true
     },
@@ -130,7 +131,7 @@ const Music = () => {
       artist: "Jude Rouhana",
       duration: "3:16",
       genre: "R&B/Ballad",
-      audioFile: "/assets/music/R%26B.wav",
+      audioFile: getAudioUrl('rnb') || "/assets/music/R%26B.mp3",
       description: "A R&B/Ballad that explores the use of ambient sounds and textures to create a more immersive and emotional experience. Written by Jude Rouhana. Recorded, mixed, and produced by Jude Rouhana.",
       featured: true
     },

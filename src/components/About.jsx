@@ -168,7 +168,7 @@ const About = () => {
                 </p>
               </div>
 
-              {/* Resume Button */}
+              {/* Resume Button
               <motion.div variants={itemVariants} className="text-center">
                 <motion.a
                   href="/Resume.pdf"
@@ -183,7 +183,7 @@ const About = () => {
                   </svg>
                   View Resume
                 </motion.a>
-              </motion.div>
+              </motion.div> */}
 
               {/* Skills */}
               <div>

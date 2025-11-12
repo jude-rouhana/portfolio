@@ -277,11 +277,14 @@ const OceanBackground = () => {
 
     // Handle ship interaction
     function handleShipClick(event) {
-      if (!ship || !isShipLoaded) return
+      if (!ship || !isShipLoaded) {
+        return
+      }
       
+      const rect = renderer.domElement.getBoundingClientRect()
       const mouse = new THREE.Vector2()
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
       
       const raycaster = new THREE.Raycaster()
       raycaster.setFromCamera(mouse, camera)
@@ -289,27 +292,49 @@ const OceanBackground = () => {
       const intersects = raycaster.intersectObject(ship, true)
       
       if (intersects.length > 0) {
-        setIsInteractive(!isInteractive)
-        controls.enabled = !controls.enabled
-        
-        if (isInteractive) {
-          // Reset camera to default view
-          camera.position.set(0, 9, 9)
-          camera.lookAt(0, 0, 0)
-          controls.reset()
-        } else {
-          // Focus on ship
-          const shipCenter = new THREE.Vector3()
-          ship.getWorldPosition(shipCenter)
-          camera.position.set(shipCenter.x + 10, shipCenter.y + 5, shipCenter.z + 10)
-          controls.target.copy(shipCenter)
-        }
+        console.log("Ship has been clicked")
+        // Just log - don't change camera or ship position
       }
     }
 
     // Add click event listener
     renderer.domElement.addEventListener('click', handleShipClick)
     renderer.domElement.style.pointerEvents = 'auto'
+    renderer.domElement.style.zIndex = '1'
+    
+    // Add window-level click handler to catch clicks that might be blocked by other elements
+    // This will check if we're clicking on the ship even if other elements are on top
+    const handleWindowClick = (event) => {
+      // Skip if clicking on interactive elements (buttons, links, inputs, etc.)
+      const target = event.target
+      const isInteractive = target.closest('a, button, input, textarea, select, [role="button"], [tabindex]')
+      
+      if (isInteractive) {
+        return // Let interactive elements handle their own clicks
+      }
+      
+      // Check if click would hit the ship using raycaster
+      if (!ship || !isShipLoaded) return
+      
+      const rect = renderer.domElement.getBoundingClientRect()
+      const mouse = new THREE.Vector2()
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+      
+      const raycaster = new THREE.Raycaster()
+      raycaster.setFromCamera(mouse, camera)
+      
+      const intersects = raycaster.intersectObject(ship, true)
+      
+      if (intersects.length > 0) {
+        console.log("Ship has been clicked")
+        event.stopPropagation() // Prevent other handlers
+        // Just log - don't change camera or ship position
+      }
+    }
+    
+    // Use capture phase to catch events before they're blocked
+    window.addEventListener('click', handleWindowClick, true)
 
     const handleResize = () => {
       const w = container.clientWidth
@@ -343,6 +368,8 @@ const OceanBackground = () => {
     return () => {
       destroyed = true
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('click', handleWindowClick, true)
+      renderer.domElement.removeEventListener('click', handleShipClick)
       if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current)
       renderer.dispose()
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)

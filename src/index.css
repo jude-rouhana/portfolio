@@ -650,6 +650,30 @@ body {
   pointer-events: none !important;
 }
 
+/* Allow pointer events on the canvas element for ship interaction */
+.ocean-background canvas {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Make content sections allow pointer events to pass through to canvas when clicking empty areas */
+main > section,
+main > div {
+  pointer-events: auto;
+}
+
+/* But allow pointer events on interactive elements */
+main a,
+main button,
+main input,
+main textarea,
+main select,
+main [role="button"],
+main [tabindex] {
+  pointer-events: auto !important;
+}
+
 /* Mobile menu improvements */
 @media (max-width: 768px) {
   /* Improve touch targets for mobile menu items */

@@ -57,14 +57,14 @@ const AdditionalProjects = () => {
       description: "Upcoming projects: video games, chord progression creator, and more!",
       technologies: [],
       category: "Stay tuned!",
-    },
-    {
-      id: 4,
-      title: "Video Game",
-      description: "A video game... will fill this in later.",
-      technologies: [],
-      category: "Video Game",
-    },
+    }
+    // {
+    //   id: 4,
+    //   title: "Video Game",
+    //   description: "A video game... will fill this in later.",
+    //   technologies: [],
+    //   category: "Video Game",
+    // },
     // {
     //   id: 5,
     //   title: "Side Project 1",

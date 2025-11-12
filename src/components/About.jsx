@@ -127,7 +127,7 @@ const About = () => {
                   <div className="w-48 h-48 sm:w-80 sm:h-80 mx-auto rounded-full bg-accent-light/20 p-1">
                     <div className="w-full h-full rounded-full bg-transparent overflow-hidden">
                       <img 
-                        src="/public/headshot.jpg" 
+                        src="/headshot.jpg" 
                         alt="Jude Rouhana" 
                         className="w-full h-full object-cover"
                       />

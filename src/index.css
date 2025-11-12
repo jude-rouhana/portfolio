@@ -58,7 +58,7 @@ html {
 }
 
 body {
-  font-family: 'Figtree', 'Gidole', 'Inter', system-ui, sans-serif;
+  font-family: 'Figtree', 'Gidole', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', system-ui, sans-serif;
   /* background-image: url('/leftheadshot.png'); */
   /* background-size: cover; */
   /* background-position: left center; */
@@ -341,14 +341,14 @@ body {
 
 /* Gidole Font */
 .gidole-regular {
-  font-family: "Gidole", sans-serif;
+  font-family: "Gidole", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', system-ui, sans-serif;
   font-weight: 400;
   font-style: normal;
 }
 
 /* Figtree Font */
 .figtree {
-  font-family: "Figtree", sans-serif;
+  font-family: "Figtree", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', system-ui, sans-serif;
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
@@ -356,7 +356,7 @@ body {
 
 /* Update font-display to use Figtree */
 .font-display {
-  font-family: "Figtree", sans-serif !important;
+  font-family: "Figtree", "Gidole", "Poppins", "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', system-ui, sans-serif !important;
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;

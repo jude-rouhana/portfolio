@@ -25,10 +25,10 @@ export default {
         }
       },
       fontFamily: {
-        'sans': ['Figtree', 'Gidole', 'Inter', 'Poppins', 'Montserrat', 'system-ui', 'sans-serif'],
-        'display': ['Figtree', 'Gidole', 'Poppins', 'Inter', 'system-ui', 'sans-serif'],
-        'gidole': ['Gidole', 'sans-serif'],
-        'figtree': ['Figtree', 'sans-serif'],
+        'sans': ['Figtree', 'Gidole', 'Inter', 'Poppins', 'Montserrat', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'system-ui', 'sans-serif'],
+        'display': ['Figtree', 'Gidole', 'Poppins', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'system-ui', 'sans-serif'],
+        'gidole': ['Gidole', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'system-ui', 'sans-serif'],
+        'figtree': ['Figtree', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-in-out',

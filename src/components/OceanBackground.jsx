@@ -4,12 +4,15 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-const OceanBackground = () => {
+const OceanBackground = ({ onGameModeChange }) => {
   const mountRef = useRef(null)
   const rendererRef = useRef(null)
   const animationIdRef = useRef(null)
   const [isShipLoaded, setIsShipLoaded] = useState(false)
   const [isInteractive, setIsInteractive] = useState(false)
+  const [isGameMode, setIsGameMode] = useState(false)
+  const [collectedFragments, setCollectedFragments] = useState(0)
+  const isGameModeRef = useRef(false)
 
   useEffect(() => {
     if (!mountRef.current) return
@@ -40,7 +43,7 @@ const OceanBackground = () => {
 
     // Add OrbitControls for interactive ship viewing
     const controls = new OrbitControls(camera, renderer.domElement)
-    controls.enabled = false // Start disabled, enable on ship click
+    controls.enabled = false // Always disabled - camera is controlled programmatically
     controls.enableDamping = true
     controls.dampingFactor = 0.05
     controls.screenSpacePanning = false
@@ -99,6 +102,25 @@ const OceanBackground = () => {
     let shipTargetPosition = { x: 10, y: 2, z: 0 }
     let shipSailingTime = 0
     let shipSailingSpeed = 0.004
+    
+    // Game mode variables
+    const keysPressed = { up: false, down: false, left: false, right: false }
+    const shipVelocity = new THREE.Vector3(0, 0, 0)
+    let shipRotationVelocity = 0
+    const fragments = []
+    const originalCameraPosition = new THREE.Vector3(20, 18, 85)
+    const originalCameraLookAt = new THREE.Vector3(0, 0, 0)
+    let isAutomaticSailing = true
+    
+    // Physics constants
+    const maxSpeed = 1.2  // Increased from 0.4
+    const acceleration = 0.08  // Increased from 0.005
+    const rotationSpeed = 0.2
+    const friction = 0.95
+    const angularFriction = 0.92
+    
+    // Ocean boundaries - 5x larger: 175*5 = 875, 75*5 = 375
+    const oceanBounds = { xMin: -875, xMax: 875, zMin: -375, zMax: 375 }
 
     // Load the ship model with original materials
     const mtlLoader = new MTLLoader()
@@ -133,7 +155,8 @@ const OceanBackground = () => {
     })
 
     const GRID = 200
-    const geometry = new THREE.PlaneGeometry(350, 150, GRID, GRID)
+    // Ocean made 5x larger: 350*5 = 1750, 150*5 = 750
+    const geometry = new THREE.PlaneGeometry(1750, 750, GRID, GRID)
     const material = new THREE.MeshPhongMaterial({
       vertexColors: true,
       side: THREE.DoubleSide,
@@ -230,9 +253,9 @@ const OceanBackground = () => {
       sunLight.intensity = intensity * 1.2
     }
 
-    // Animate the ship sailing
+    // Animate the ship sailing (automatic mode)
     function animateShip(time) {
-      if (!ship) return
+      if (!ship || !isAutomaticSailing) return
       
       shipSailingTime += shipSailingSpeed
       
@@ -274,6 +297,190 @@ const OceanBackground = () => {
         ship.rotation.y += Math.PI // Turn the ship around
       }
     }
+    
+    // Update ship physics (game mode)
+    function updateShipPhysics(time, deltaTime) {
+      if (!ship || !isGameModeRef.current) return
+      
+      // Handle rotation
+      if (keysPressed.left) {
+        shipRotationVelocity += rotationSpeed * deltaTime
+      }
+      if (keysPressed.right) {
+        shipRotationVelocity -= rotationSpeed * deltaTime
+      }
+      
+      // Apply angular friction
+      shipRotationVelocity *= angularFriction
+      
+      // Update ship rotation
+      ship.rotation.y += shipRotationVelocity
+      
+      // Calculate forward direction based on ship rotation
+      const forward = new THREE.Vector3(
+        Math.sin(ship.rotation.y),
+        0,
+        Math.cos(ship.rotation.y)
+      )
+      
+      // Handle acceleration
+      if (keysPressed.up) {
+        shipVelocity.add(forward.multiplyScalar(acceleration * deltaTime * 60))
+      }
+      if (keysPressed.down) {
+        shipVelocity.add(forward.multiplyScalar(-acceleration * deltaTime * 60 * 0.5))
+      }
+      
+      // Apply friction
+      shipVelocity.multiplyScalar(friction)
+      
+      // Limit max speed
+      if (shipVelocity.length() > maxSpeed) {
+        shipVelocity.normalize().multiplyScalar(maxSpeed)
+      }
+      
+      // Update ship position
+      ship.position.x += shipVelocity.x
+      ship.position.z += shipVelocity.z
+      
+      // Boundary constraints
+      if (ship.position.x < oceanBounds.xMin) {
+        ship.position.x = oceanBounds.xMin
+        shipVelocity.x *= -0.5 // Bounce back
+      }
+      if (ship.position.x > oceanBounds.xMax) {
+        ship.position.x = oceanBounds.xMax
+        shipVelocity.x *= -0.5
+      }
+      if (ship.position.z < oceanBounds.zMin) {
+        ship.position.z = oceanBounds.zMin
+        shipVelocity.z *= -0.5
+      }
+      if (ship.position.z > oceanBounds.zMax) {
+        ship.position.z = oceanBounds.zMax
+        shipVelocity.z *= -0.5
+      }
+      
+      // Enhanced bobbing motion - more pronounced and realistic
+      const bobFrequency = 0.8
+      const bobAmplitude = 0.3
+      const rollFrequency = 0.6
+      const rollAmplitude = 0.08
+      const pitchFrequency = 0.4
+      const pitchAmplitude = 0.04
+      
+      // Vertical bobbing motion
+      const bobOffset = Math.sin(time * bobFrequency) * bobAmplitude
+      
+      // Rolling motion (side to side) - enhanced when turning
+      const baseRoll = Math.sin(time * rollFrequency) * rollAmplitude
+      const turnRoll = shipRotationVelocity * 0.3
+      ship.rotation.z = baseRoll + turnRoll
+      
+      // Pitching motion (forward/backward) - enhanced when moving
+      const basePitch = Math.sin(time * pitchFrequency) * pitchAmplitude
+      const speedPitch = shipVelocity.length() * 0.1
+      ship.rotation.x = basePitch - speedPitch
+      
+      // Add wave height to ship position plus bobbing
+      const waveHeight = getWaveHeight(ship.position.x, ship.position.z, time)
+      ship.position.y = 2 + waveHeight * 0.1 + bobOffset
+    }
+    
+    // Update camera to follow ship - maintains fixed relative position with rotation
+    function updateCameraFollow() {
+      if (!ship || !isGameModeRef.current) return
+      
+      const targetPosition = new THREE.Vector3()
+      ship.getWorldPosition(targetPosition)
+      
+      // Calculate camera position behind and above ship
+      // Fixed distance, height, and orientation relative to ship
+      const distance = 24  // Zoomed in slightly from 35
+      const height = 12  // Reduced height proportionally
+      const angle = ship.rotation.y
+      
+      const cameraTarget = new THREE.Vector3(
+        targetPosition.x - Math.sin(angle) * distance,
+        targetPosition.y + height,
+        targetPosition.z - Math.cos(angle) * distance
+      )
+      
+      // Immediate positioning to maintain fixed relative position
+      camera.position.copy(cameraTarget)
+      
+      // Rotate camera slightly left/right as ship turns
+      // Use ship's rotation to add a subtle camera rotation
+      const cameraRotationOffset = ship.rotation.y * 0.3  // Subtle rotation following ship
+      camera.lookAt(
+        targetPosition.x + Math.sin(cameraRotationOffset) * 2,
+        targetPosition.y,
+        targetPosition.z + Math.cos(cameraRotationOffset) * 2
+      )
+    }
+    
+    // Create tablet fragments
+    function createFragments(time) {
+      const fragmentCount = 15
+      const fragmentGeometry = new THREE.BoxGeometry(3.0, 3.0, 0.6)  // Made much larger: was 1.5, 1.5, 0.3
+      const fragmentMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffd700,
+        emissive: 0xffaa00,
+        emissiveIntensity: 2.0,  // Increased from 0.8 for much brighter glow
+        metalness: 0.7,
+        roughness: 0.3
+      })
+      
+      for (let i = 0; i < fragmentCount; i++) {
+        const fragment = new THREE.Mesh(fragmentGeometry, fragmentMaterial.clone())
+        
+        // Random position within ocean bounds
+        const x = Math.random() * (oceanBounds.xMax - oceanBounds.xMin) + oceanBounds.xMin
+        const z = Math.random() * (oceanBounds.zMax - oceanBounds.zMin) + oceanBounds.zMin
+        const y = getWaveHeight(x, z, time) * 0.1 + 4.0  // Adjusted for much bigger fragments
+        
+        fragment.position.set(x, y, z)
+        fragment.rotation.z = Math.random() * Math.PI * 2
+        fragment.userData.isFragment = true
+        fragment.userData.rotationSpeed = (Math.random() - 0.5) * 0.02
+        
+        scene.add(fragment)
+        fragments.push(fragment)
+      }
+    }
+    
+    // Update fragments animation and check collisions
+    function updateFragments(time) {
+      if (!isGameModeRef.current && fragments.length === 0) return
+      
+      // Iterate backwards to safely remove items
+      for (let i = fragments.length - 1; i >= 0; i--) {
+        const fragment = fragments[i]
+        if (!fragment.parent) {
+          fragments.splice(i, 1)
+          continue
+        }
+        
+        // Rotate fragment
+        fragment.rotation.y += fragment.userData.rotationSpeed
+        fragment.rotation.z += 0.01
+        
+        // Update Y position based on waves
+        const waveHeight = getWaveHeight(fragment.position.x, fragment.position.z, time)
+        fragment.position.y = waveHeight * 0.1 + 4.0  // Adjusted for much bigger fragments
+        
+        // Check collision with ship
+        if (ship && isGameModeRef.current) {
+          const distance = ship.position.distanceTo(fragment.position)
+          if (distance < 5) {  // Increased collision distance for much bigger fragments
+            // Collect fragment
+            scene.remove(fragment)
+            fragments.splice(i, 1)
+            setCollectedFragments(prev => prev + 1)
+          }
+        }
+      }
+    }
 
     // Handle ship interaction
     function handleShipClick(event) {
@@ -292,8 +499,19 @@ const OceanBackground = () => {
       const intersects = raycaster.intersectObject(ship, true)
       
       if (intersects.length > 0) {
-        console.log("Ship has been clicked")
-        // Just log - don't change camera or ship position
+        // Start game mode
+        setIsGameMode(true)
+        isGameModeRef.current = true
+        isAutomaticSailing = false
+        // Reset ship velocity
+        shipVelocity.set(0, 0, 0)
+        shipRotationVelocity = 0
+        // Make ship smaller for game mode
+        if (ship) {
+          ship.scale.set(0.5, 0.5, 0.5)  // Scale down from 0.8 to 0.5
+        }
+        // Notify parent component
+        if (onGameModeChange) onGameModeChange(true)
       }
     }
 
@@ -327,9 +545,20 @@ const OceanBackground = () => {
       const intersects = raycaster.intersectObject(ship, true)
       
       if (intersects.length > 0) {
-        console.log("Ship has been clicked")
+        // Start game mode
+        setIsGameMode(true)
+        isGameModeRef.current = true
+        isAutomaticSailing = false
+        // Reset ship velocity
+        shipVelocity.set(0, 0, 0)
+        shipRotationVelocity = 0
+        // Make ship smaller for game mode
+        if (ship) {
+          ship.scale.set(0.5, 0.5, 0.5)  // Scale down from 0.8 to 0.5
+        }
+        // Notify parent component
+        if (onGameModeChange) onGameModeChange(true)
         event.stopPropagation() // Prevent other handlers
-        // Just log - don't change camera or ship position
       }
     }
     
@@ -347,15 +576,115 @@ const OceanBackground = () => {
 
     const clock = new THREE.Clock()
     let destroyed = false
+    let lastTime = 0
+
+    // Update ref when state changes
+    isGameModeRef.current = isGameMode
+    
+    // Keyboard event handlers
+    const handleKeyDown = (event) => {
+      if (!isGameModeRef.current) return
+      
+      switch(event.key) {
+        case 'ArrowUp':
+          keysPressed.up = true
+          event.preventDefault()
+          break
+        case 'ArrowDown':
+          keysPressed.down = true
+          event.preventDefault()
+          break
+        case 'ArrowLeft':
+          keysPressed.left = true
+          event.preventDefault()
+          break
+        case 'ArrowRight':
+          keysPressed.right = true
+          event.preventDefault()
+          break
+        case 'Escape':
+          // Exit game mode
+          setIsGameMode(false)
+          isGameModeRef.current = false
+          isAutomaticSailing = true
+          shipVelocity.set(0, 0, 0)
+          shipRotationVelocity = 0
+          // Restore ship to original size
+          if (ship) {
+            ship.scale.set(0.8, 0.8, 0.8)  // Restore original scale
+          }
+          // Reset camera
+          camera.position.copy(originalCameraPosition)
+          camera.lookAt(originalCameraLookAt)
+          // Notify parent component
+          if (onGameModeChange) onGameModeChange(false)
+          event.preventDefault()
+          break
+      }
+    }
+    
+    const handleKeyUp = (event) => {
+      if (!isGameModeRef.current) return
+      
+      switch(event.key) {
+        case 'ArrowUp':
+          keysPressed.up = false
+          event.preventDefault()
+          break
+        case 'ArrowDown':
+          keysPressed.down = false
+          event.preventDefault()
+          break
+        case 'ArrowLeft':
+          keysPressed.left = false
+          event.preventDefault()
+          break
+        case 'ArrowRight':
+          keysPressed.right = false
+          event.preventDefault()
+          break
+      }
+    }
+    
+    // Add keyboard listeners
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+    
+    // Create fragments when game mode is first activated
+    let fragmentsCreated = false
 
     function animate() {
       if (destroyed) return
       animationIdRef.current = requestAnimationFrame(animate)
       const t = clock.getElapsedTime()
+      const deltaTime = t - lastTime
+      lastTime = t
+      
       animateWaves(t)
       animateSun(t)
-      animateShip(t)
-      controls.update()
+      
+      if (isGameModeRef.current) {
+        // Create fragments once when entering game mode
+        if (!fragmentsCreated) {
+          createFragments(t)
+          fragmentsCreated = true
+        }
+        updateShipPhysics(t, deltaTime)
+        updateCameraFollow()  // Camera follows ship from behind and above
+        updateFragments(t)
+        // Don't update controls in game mode - camera is controlled programmatically
+      } else {
+        animateShip(t)
+        // Reset fragments when exiting game mode
+        if (fragmentsCreated) {
+          fragments.forEach(fragment => scene.remove(fragment))
+          fragments.length = 0
+          fragmentsCreated = false
+          setCollectedFragments(0)
+        }
+        controls.update()
+      }
+      
       renderer.render(scene, camera)
     }
     animate()
@@ -369,12 +698,14 @@ const OceanBackground = () => {
       destroyed = true
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('click', handleWindowClick, true)
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
       renderer.domElement.removeEventListener('click', handleShipClick)
       if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current)
       renderer.dispose()
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)
     }
-  }, [isShipLoaded, isInteractive])
+  }, [isShipLoaded, isInteractive, isGameMode])
 
   return (
     <div
@@ -385,17 +716,30 @@ const OceanBackground = () => {
         inset: 0, 
         width: '100vw', 
         height: '100vh', 
-        zIndex: 0,
+        zIndex: isGameMode ? 50 : 0,
         cursor: isShipLoaded ? 'pointer' : 'default'
       }}
     >
-      {/* Ship interaction instructions */}
-      {/* {isShipLoaded && (
-        <div className="absolute bottom-4 left-4 bg-black/50 text-white px-4 py-2 rounded-lg text-sm backdrop-blur-sm">
-          <p>🚢 Click the ship to explore it in 3D</p>
-          <p className="text-xs opacity-75">Use mouse to rotate, scroll to zoom</p>
+      {/* Game UI Overlay */}
+      {isGameMode && (
+        <div className="absolute inset-0 pointer-events-none z-50">
+          {/* Fragment Counter */}
+          <div className="absolute top-4 left-4 bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
+            <div className="text-lg font-bold">Tablet Fragments: {collectedFragments}</div>
+          </div>
+          
+          {/* Instructions - top right, always visible */}
+          <div 
+            className="absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm"
+          >
+            <h3 className="text-lg font-bold mb-2">Ship Control</h3>
+            <p className="text-sm mb-1">↑ ↓ Arrow Keys: Move Forward/Backward</p>
+            <p className="text-sm mb-1">← → Arrow Keys: Turn Left/Right</p>
+            <p className="text-sm text-yellow-400 mt-2">Collect the glowing tablet fragments!</p>
+            <p className="text-xs mt-2 opacity-75">Press ESC to exit</p>
+          </div>
         </div>
-      )} */}
+      )}
     </div>
   )
 }

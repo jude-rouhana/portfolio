@@ -16,6 +16,7 @@ function App() {
   const [theme, setTheme] = useState('light')
   const [activeSection, setActiveSection] = useState('home')
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isGameMode, setIsGameMode] = useState(false)
 
   // Theme management
   useEffect(() => {
@@ -98,18 +99,20 @@ function App() {
   return (
     <div className="min-h-screen bg-transparent text-contrast transition-colors duration-300 relative">
       {/* Background Transition Effect */}
-      <BackgroundTransition />
+      {!isGameMode && <BackgroundTransition />}
       
       {/* Ocean Background - Fixed position */}
-      <OceanBackground />
+      <OceanBackground onGameModeChange={setIsGameMode} />
       
       <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10"
-        >
+        {!isGameMode && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative z-10"
+          >
           {/* Navigation */}
           <Navbar activeSection={activeSection} theme={theme} />
           
@@ -139,6 +142,7 @@ function App() {
           {/* Scroll to Top Button */}
           <ScrollToTop />
         </motion.div>
+        )}
       </AnimatePresence>
     </div>
   )

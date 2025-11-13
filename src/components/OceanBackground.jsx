@@ -12,10 +12,23 @@ const OceanBackground = ({ onGameModeChange }) => {
   const [isInteractive, setIsInteractive] = useState(false)
   const [isGameMode, setIsGameMode] = useState(false)
   const [collectedFragments, setCollectedFragments] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
   const isGameModeRef = useRef(false)
+  const keysPressedRef = useRef({ up: false, down: false, left: false, right: false })
+  const gameStateRef = useRef(null) // Will store ship, camera, etc.
 
   useEffect(() => {
     if (!mountRef.current) return
+
+    // Detect mobile device
+    const checkMobile = () => {
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) ||
+        ('ontouchstart' in window)
+      setIsMobile(isMobileDevice)
+      return isMobileDevice
+    }
+    const mobileDevice = checkMobile()
 
     const container = mountRef.current
     const scene = new THREE.Scene()
@@ -32,11 +45,16 @@ const OceanBackground = ({ onGameModeChange }) => {
     // Make camera look more horizontally to see more sky
     camera.lookAt(0, 0, 0)
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+    // Optimize renderer for mobile
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: !mobileDevice, // Disable antialiasing on mobile for performance
+      alpha: true, 
+      powerPreference: mobileDevice ? 'low-power' : 'high-performance' // Use low-power on mobile
+    })
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileDevice ? 1.5 : 2)) // Lower pixel ratio on mobile
     renderer.setSize(container.clientWidth, container.clientHeight)
     renderer.setClearColor(0x4a90e2, 0.3)
-    renderer.shadowMap.enabled = true
+    renderer.shadowMap.enabled = !mobileDevice // Disable shadows on mobile for performance
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     rendererRef.current = renderer
     container.appendChild(renderer.domElement)
@@ -104,13 +122,27 @@ const OceanBackground = ({ onGameModeChange }) => {
     let shipSailingSpeed = 0.004
     
     // Game mode variables
-    const keysPressed = { up: false, down: false, left: false, right: false }
+    const keysPressed = keysPressedRef.current
     const shipVelocity = new THREE.Vector3(0, 0, 0)
-    let shipRotationVelocity = 0
+    const shipRotationVelocityRef = { value: 0 }
     const fragments = []
     const originalCameraPosition = new THREE.Vector3(20, 18, 85)
     const originalCameraLookAt = new THREE.Vector3(0, 0, 0)
-    let isAutomaticSailing = true
+    const isAutomaticSailingRef = { value: true }
+    
+    // Store game state in ref for access from mobile controls
+    gameStateRef.current = {
+      ship: null,
+      camera: camera,
+      originalCameraPosition: originalCameraPosition,
+      originalCameraLookAt: originalCameraLookAt,
+      setIsGameMode: setIsGameMode,
+      isGameModeRef: isGameModeRef,
+      shipVelocity: shipVelocity,
+      shipRotationVelocity: shipRotationVelocityRef,
+      isAutomaticSailing: isAutomaticSailingRef,
+      onGameModeChange: onGameModeChange
+    }
     
     // Physics constants
     const maxSpeed = 1.2  // Increased from 0.4
@@ -131,6 +163,9 @@ const OceanBackground = ({ onGameModeChange }) => {
       objLoader.setMaterials(materials)
       objLoader.load('/ship-small.obj', (object) => {
         ship = object
+        if (gameStateRef.current) {
+          gameStateRef.current.ship = ship
+        }
         
         // Scale and position the ship
         ship.scale.set(0.8, 0.8, 0.8)
@@ -154,7 +189,8 @@ const OceanBackground = ({ onGameModeChange }) => {
       console.error('Error loading materials:', error)
     })
 
-    const GRID = 200
+    // Reduce grid resolution on mobile for better performance
+    const GRID = mobileDevice ? 100 : 200
     // Ocean made 5x larger: 350*5 = 1750, 150*5 = 750
     const geometry = new THREE.PlaneGeometry(1750, 750, GRID, GRID)
     const material = new THREE.MeshPhongMaterial({
@@ -255,7 +291,7 @@ const OceanBackground = ({ onGameModeChange }) => {
 
     // Animate the ship sailing (automatic mode)
     function animateShip(time) {
-      if (!ship || !isAutomaticSailing) return
+      if (!ship || !isAutomaticSailingRef.value) return
       
       shipSailingTime += shipSailingSpeed
       
@@ -304,17 +340,17 @@ const OceanBackground = ({ onGameModeChange }) => {
       
       // Handle rotation
       if (keysPressed.left) {
-        shipRotationVelocity += rotationSpeed * deltaTime
+        shipRotationVelocityRef.value += rotationSpeed * deltaTime
       }
       if (keysPressed.right) {
-        shipRotationVelocity -= rotationSpeed * deltaTime
+        shipRotationVelocityRef.value -= rotationSpeed * deltaTime
       }
       
       // Apply angular friction
-      shipRotationVelocity *= angularFriction
+      shipRotationVelocityRef.value *= angularFriction
       
       // Update ship rotation
-      ship.rotation.y += shipRotationVelocity
+      ship.rotation.y += shipRotationVelocityRef.value
       
       // Calculate forward direction based on ship rotation
       const forward = new THREE.Vector3(
@@ -374,7 +410,7 @@ const OceanBackground = ({ onGameModeChange }) => {
       
       // Rolling motion (side to side) - enhanced when turning
       const baseRoll = Math.sin(time * rollFrequency) * rollAmplitude
-      const turnRoll = shipRotationVelocity * 0.3
+      const turnRoll = shipRotationVelocityRef.value * 0.3
       ship.rotation.z = baseRoll + turnRoll
       
       // Pitching motion (forward/backward) - enhanced when moving
@@ -482,19 +518,28 @@ const OceanBackground = ({ onGameModeChange }) => {
       }
     }
 
-    // Handle ship interaction
-    function handleShipClick(event) {
+    // Handle ship interaction (works for both mouse and touch)
+    function handleShipInteraction(event) {
       if (!ship || !isShipLoaded) {
         return
       }
       
+      // Prevent default to avoid scrolling on mobile
+      event.preventDefault()
+      
       const rect = renderer.domElement.getBoundingClientRect()
-      const mouse = new THREE.Vector2()
-      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+      const pointer = new THREE.Vector2()
+      
+      // Handle both mouse and touch events (touchend uses changedTouches)
+      const touch = event.touches?.[0] || event.changedTouches?.[0]
+      const clientX = touch ? touch.clientX : event.clientX
+      const clientY = touch ? touch.clientY : event.clientY
+      
+      pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1
+      pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1
       
       const raycaster = new THREE.Raycaster()
-      raycaster.setFromCamera(mouse, camera)
+      raycaster.setFromCamera(pointer, camera)
       
       const intersects = raycaster.intersectObject(ship, true)
       
@@ -502,10 +547,10 @@ const OceanBackground = ({ onGameModeChange }) => {
         // Start game mode
         setIsGameMode(true)
         isGameModeRef.current = true
-        isAutomaticSailing = false
+        isAutomaticSailingRef.value = false
         // Reset ship velocity
         shipVelocity.set(0, 0, 0)
-        shipRotationVelocity = 0
+        shipRotationVelocityRef.value = 0
         // Make ship smaller for game mode
         if (ship) {
           ship.scale.set(0.5, 0.5, 0.5)  // Scale down from 0.8 to 0.5
@@ -515,17 +560,19 @@ const OceanBackground = ({ onGameModeChange }) => {
       }
     }
 
-    // Add click event listener
-    renderer.domElement.addEventListener('click', handleShipClick)
+    // Add click and touch event listeners
+    renderer.domElement.addEventListener('click', handleShipInteraction)
+    renderer.domElement.addEventListener('touchend', handleShipInteraction, { passive: false })
     renderer.domElement.style.pointerEvents = 'auto'
+    renderer.domElement.style.touchAction = 'none' // Prevent default touch behaviors
     renderer.domElement.style.zIndex = '1'
     
     // Add window-level click handler to catch clicks that might be blocked by other elements
     // This will check if we're clicking on the ship even if other elements are on top
-    const handleWindowClick = (event) => {
+    const handleWindowInteraction = (event) => {
       // Skip if clicking on interactive elements (buttons, links, inputs, etc.)
       const target = event.target
-      const isInteractive = target.closest('a, button, input, textarea, select, [role="button"], [tabindex]')
+      const isInteractive = target.closest('a, button, input, textarea, select, [role="button"], [tabindex], .mobile-control')
       
       if (isInteractive) {
         return // Let interactive elements handle their own clicks
@@ -535,12 +582,18 @@ const OceanBackground = ({ onGameModeChange }) => {
       if (!ship || !isShipLoaded) return
       
       const rect = renderer.domElement.getBoundingClientRect()
-      const mouse = new THREE.Vector2()
-      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+      const pointer = new THREE.Vector2()
+      
+      // Handle both mouse and touch events (touchend uses changedTouches)
+      const touch = event.touches?.[0] || event.changedTouches?.[0]
+      const clientX = touch ? touch.clientX : event.clientX
+      const clientY = touch ? touch.clientY : event.clientY
+      
+      pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1
+      pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1
       
       const raycaster = new THREE.Raycaster()
-      raycaster.setFromCamera(mouse, camera)
+      raycaster.setFromCamera(pointer, camera)
       
       const intersects = raycaster.intersectObject(ship, true)
       
@@ -548,10 +601,10 @@ const OceanBackground = ({ onGameModeChange }) => {
         // Start game mode
         setIsGameMode(true)
         isGameModeRef.current = true
-        isAutomaticSailing = false
+        isAutomaticSailingRef.value = false
         // Reset ship velocity
         shipVelocity.set(0, 0, 0)
-        shipRotationVelocity = 0
+        shipRotationVelocityRef.value = 0
         // Make ship smaller for game mode
         if (ship) {
           ship.scale.set(0.5, 0.5, 0.5)  // Scale down from 0.8 to 0.5
@@ -559,11 +612,13 @@ const OceanBackground = ({ onGameModeChange }) => {
         // Notify parent component
         if (onGameModeChange) onGameModeChange(true)
         event.stopPropagation() // Prevent other handlers
+        event.preventDefault() // Prevent default on mobile
       }
     }
     
     // Use capture phase to catch events before they're blocked
-    window.addEventListener('click', handleWindowClick, true)
+    window.addEventListener('click', handleWindowInteraction, true)
+    window.addEventListener('touchend', handleWindowInteraction, { passive: false, capture: true })
 
     const handleResize = () => {
       const w = container.clientWidth
@@ -606,9 +661,9 @@ const OceanBackground = ({ onGameModeChange }) => {
           // Exit game mode
           setIsGameMode(false)
           isGameModeRef.current = false
-          isAutomaticSailing = true
+          isAutomaticSailingRef.value = true
           shipVelocity.set(0, 0, 0)
-          shipRotationVelocity = 0
+          shipRotationVelocityRef.value = 0
           // Restore ship to original size
           if (ship) {
             ship.scale.set(0.8, 0.8, 0.8)  // Restore original scale
@@ -697,10 +752,12 @@ const OceanBackground = ({ onGameModeChange }) => {
     return () => {
       destroyed = true
       window.removeEventListener('resize', handleResize)
-      window.removeEventListener('click', handleWindowClick, true)
+      window.removeEventListener('click', handleWindowInteraction, true)
+      window.removeEventListener('touchend', handleWindowInteraction, true)
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
-      renderer.domElement.removeEventListener('click', handleShipClick)
+      renderer.domElement.removeEventListener('click', handleShipInteraction)
+      renderer.domElement.removeEventListener('touchend', handleShipInteraction)
       if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current)
       renderer.dispose()
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)
@@ -730,7 +787,7 @@ const OceanBackground = ({ onGameModeChange }) => {
           
           {/* Instructions - top right, always visible */}
           <div 
-            className="absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm"
+            className={`absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm ${isMobile ? 'hidden' : ''}`}
           >
             <h3 className="text-lg font-bold mb-2">Ship Control</h3>
             <p className="text-sm mb-1">↑ ↓ Arrow Keys: Move Forward/Backward</p>
@@ -738,6 +795,125 @@ const OceanBackground = ({ onGameModeChange }) => {
             <p className="text-sm text-yellow-400 mt-2">Collect the glowing tablet fragments!</p>
             <p className="text-xs mt-2 opacity-75">Press ESC to exit</p>
           </div>
+          
+          {/* Mobile Instructions */}
+          {isMobile && (
+            <div className="absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm max-w-[200px]">
+              <h3 className="text-base font-bold mb-2">Ship Control</h3>
+              <p className="text-xs mb-1">Use on-screen buttons to control the ship</p>
+              <p className="text-xs text-yellow-400 mt-2">Collect the glowing fragments!</p>
+            </div>
+          )}
+          
+          {/* Mobile Control Buttons */}
+          {isMobile && (
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-auto mobile-control">
+              {/* Movement Controls - Bottom Left */}
+              <div className="absolute bottom-6 left-6 flex flex-col items-center gap-2">
+                {/* Forward Button */}
+                <button
+                  onTouchStart={(e) => {
+                    e.preventDefault()
+                    keysPressedRef.current.up = true
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault()
+                    keysPressedRef.current.up = false
+                  }}
+                  onMouseDown={() => keysPressedRef.current.up = true}
+                  onMouseUp={() => keysPressedRef.current.up = false}
+                  onMouseLeave={() => keysPressedRef.current.up = false}
+                  className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                  style={{ touchAction: 'manipulation' }}
+                >
+                  ↑
+                </button>
+                
+                {/* Left/Right/Backward Row */}
+                <div className="flex gap-2 items-center">
+                  {/* Left Button */}
+                  <button
+                    onTouchStart={(e) => {
+                      e.preventDefault()
+                      keysPressedRef.current.left = true
+                    }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault()
+                      keysPressedRef.current.left = false
+                    }}
+                    onMouseDown={() => keysPressedRef.current.left = true}
+                    onMouseUp={() => keysPressedRef.current.left = false}
+                    onMouseLeave={() => keysPressedRef.current.left = false}
+                    className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                    style={{ touchAction: 'manipulation' }}
+                  >
+                    ←
+                  </button>
+                  
+                  {/* Backward Button */}
+                  <button
+                    onTouchStart={(e) => {
+                      e.preventDefault()
+                      keysPressedRef.current.down = true
+                    }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault()
+                      keysPressedRef.current.down = false
+                    }}
+                    onMouseDown={() => keysPressedRef.current.down = true}
+                    onMouseUp={() => keysPressedRef.current.down = false}
+                    onMouseLeave={() => keysPressedRef.current.down = false}
+                    className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                    style={{ touchAction: 'manipulation' }}
+                  >
+                    ↓
+                  </button>
+                  
+                  {/* Right Button */}
+                  <button
+                    onTouchStart={(e) => {
+                      e.preventDefault()
+                      keysPressedRef.current.right = true
+                    }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault()
+                      keysPressedRef.current.right = false
+                    }}
+                    onMouseDown={() => keysPressedRef.current.right = true}
+                    onMouseUp={() => keysPressedRef.current.right = false}
+                    onMouseLeave={() => keysPressedRef.current.right = false}
+                    className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                    style={{ touchAction: 'manipulation' }}
+                  >
+                    →
+                  </button>
+                </div>
+              </div>
+              
+              {/* Exit Button - Bottom Right */}
+              <button
+                onClick={() => {
+                  if (!gameStateRef.current) return
+                  const state = gameStateRef.current
+                  state.setIsGameMode(false)
+                  state.isGameModeRef.current = false
+                  state.isAutomaticSailing.value = true
+                  state.shipVelocity.set(0, 0, 0)
+                  state.shipRotationVelocity.value = 0
+                  if (state.ship) {
+                    state.ship.scale.set(0.8, 0.8, 0.8)
+                  }
+                  state.camera.position.copy(state.originalCameraPosition)
+                  state.camera.lookAt(state.originalCameraLookAt)
+                  if (state.onGameModeChange) state.onGameModeChange(false)
+                }}
+                className="absolute bottom-6 right-6 w-16 h-16 bg-red-500/80 hover:bg-red-600/90 active:bg-red-700/90 backdrop-blur-md rounded-full flex items-center justify-center text-xl font-bold text-white shadow-lg border-2 border-red-400/50 touch-manipulation"
+                style={{ touchAction: 'manipulation' }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

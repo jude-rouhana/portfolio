@@ -237,7 +237,7 @@ const Projects = () => {
         onClick={() => setShowDescriptionModal(false)}
       >
         <motion.div
-          className="relative bg-primary-dark rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[95vh] overflow-y-auto"
+          className="relative bg-white rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[95vh] overflow-y-auto shadow-2xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}

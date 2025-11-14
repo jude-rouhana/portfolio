@@ -75,23 +75,97 @@ function App() {
 
 
 
-  // Intersection Observer for active section
+  // Intersection Observer for active section - improved to better detect active section
   useEffect(() => {
+    const sections = document.querySelectorAll('section[id]')
+    
+    // Function to determine which section is currently most visible
+    const getActiveSection = () => {
+      const scrollPosition = window.scrollY + 100 // Account for navbar + offset
+      let activeSection = 'home'
+      let maxScore = -1
+
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect()
+        // getBoundingClientRect() gives position relative to viewport, so add scrollY
+        const sectionTop = rect.top + window.scrollY
+        const sectionBottom = sectionTop + rect.height
+        
+        // Calculate how much of the section is visible in the viewport
+        const viewportTop = window.scrollY
+        const viewportBottom = window.scrollY + window.innerHeight
+        
+        // Calculate intersection
+        const visibleTop = Math.max(sectionTop, viewportTop)
+        const visibleBottom = Math.min(sectionBottom, viewportBottom)
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop)
+        const visibilityRatio = visibleHeight / rect.height
+        
+        // Check if scroll position is within section bounds
+        const isInRange = scrollPosition >= sectionTop && scrollPosition <= sectionBottom
+        
+        // Calculate a score: prioritize sections in range, then by visibility
+        let score = visibilityRatio
+        if (isInRange) {
+          score += 1.0 // Boost score if scroll position is within section
+        }
+        
+        // Also boost if section top is near the top of viewport (accounting for navbar)
+        const distanceFromTop = Math.abs(rect.top - 80) // 80px = navbar height + spacing
+        if (distanceFromTop < 200) {
+          score += 0.5 * (1 - distanceFromTop / 200) // More boost the closer to top
+        }
+        
+        if (score > maxScore) {
+          maxScore = score
+          activeSection = section.id
+        }
+      })
+
+      return activeSection
+    }
+
+    // Use IntersectionObserver with better configuration
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
-        })
+        // Check all sections to find the most visible one
+        const active = getActiveSection()
+        setActiveSection(active)
       },
-      { threshold: 0.5 }
+      {
+        root: null,
+        rootMargin: '-80px 0px -50% 0px', // Account for navbar, trigger when section is near top
+        threshold: [0, 0.1, 0.3, 0.5, 0.7, 1.0] // Multiple thresholds for better detection
+      }
     )
 
-    const sections = document.querySelectorAll('section[id]')
     sections.forEach((section) => observer.observe(section))
 
-    return () => observer.disconnect()
+    // Also listen to scroll events for more accurate detection (with requestAnimationFrame)
+    let scrollFrameId = null
+    const handleScroll = () => {
+      // Clear previous frame request
+      if (scrollFrameId !== null) {
+        cancelAnimationFrame(scrollFrameId)
+      }
+      
+      // Use requestAnimationFrame for smooth updates
+      scrollFrameId = requestAnimationFrame(() => {
+        const active = getActiveSection()
+        setActiveSection(active)
+        scrollFrameId = null
+      })
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', handleScroll)
+      if (scrollFrameId !== null) {
+        cancelAnimationFrame(scrollFrameId)
+      }
+    }
   }, [])
 
 

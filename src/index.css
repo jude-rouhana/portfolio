@@ -590,7 +590,7 @@ body {
 /* Smooth section transitions */
 section {
   transition: all 0.6s ease-in-out;
-  scroll-margin-top: 100px; /* Account for fixed navbar with extra space */
+  scroll-margin-top: 80px; /* Account for fixed navbar (64px) + spacing (16px) */
 }
 
 /* Consistent section spacing */

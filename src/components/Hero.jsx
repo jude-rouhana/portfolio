@@ -87,7 +87,15 @@ const Hero = () => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      // Get navbar height (h-16 = 64px) plus some extra spacing
+      const navbarHeight = 80 // 64px navbar + 16px spacing
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+      const offsetPosition = elementPosition - navbarHeight
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
     }
   }
 

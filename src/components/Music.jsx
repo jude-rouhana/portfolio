@@ -93,7 +93,7 @@ const Music = () => {
       genre: "Bossa Nova",
       audioFile: getAudioUrl('bossaNova') || "/assets/music/Bossa%20Nova.mp3",
       description: "A smooth bossa nova piece featuring warm saxophone, marimba, and piano melodies and gentle rhythms. Written, recorded, mixed, and produced by Jude Rouhana.",
-      featured: false
+      featured: true
     },
     {
       id: 2,
@@ -103,7 +103,7 @@ const Music = () => {
       genre: "Jazz Ballad",
       audioFile: getAudioUrl('ballad') || "/assets/music/Ballad.mp3",
       description: "A classic jazz ballad interpretation with soulful saxophone and piano phrasing and rich harmonic textures. Written by Erroll Garner. Recorded, mixed, and produced by Jude Rouhana.",
-      featured: false
+      featured: true
     },
     {
       id: 3,
@@ -113,7 +113,7 @@ const Music = () => {
       genre: "Classical",
       audioFile: getAudioUrl('classical') || "/assets/music/Classical.mp3",
       description: "A classical piece that combines traditional classical harmony with elements inspired from jazz. Written by Franz Liszt. Recorded, mixed, and produced by Jude Rouhana.",
-      featured: false
+      featured: true
     },
     {
       id: 4,
@@ -129,7 +129,7 @@ const Music = () => {
       id: 5,
       title: "Begin Again",
       artist: "Jude Rouhana",
-      duration: "3:44",
+      duration: "3:16",
       genre: "R&B/Ballad",
       audioFile: getAudioUrl('rnb') || "/assets/music/R%26B.mp3",
       description: "A R&B/Ballad that explores the use of ambient sounds and textures to create a more immersive and emotional experience. Written by Jude Rouhana. Recorded, mixed, and produced by Jude Rouhana.",
@@ -139,11 +139,11 @@ const Music = () => {
       id: 6,
       title: "Blues, All Day Long",
       artist: "Jude Rouhana",
-      duration: "3:16",
+      duration: "3:44",
       genre: "Blues",
       audioFile: getAudioUrl('blues') || "/assets/music/Blues.mp3",
       description: "An expressive solo on saxophone, piano, and clarinet over a simple blues progression that combines traditional blues with elements inspired from jazz. Written by Jude Rouhana. Recorded, mixed, and produced by Jude Rouhana.",
-      featured: false
+      featured: true
     },
   ]
 

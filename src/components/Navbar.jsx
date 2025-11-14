@@ -50,9 +50,14 @@ const Navbar = ({ activeSection, theme }) => {
       
       // Small delay to ensure menu closes before scrolling
       setTimeout(() => {
-        element.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
+        // Get navbar height (h-16 = 64px) plus some extra spacing
+        const navbarHeight = 80 // 64px navbar + 16px spacing
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+        const offsetPosition = elementPosition - navbarHeight
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
         })
       }, 100)
     }

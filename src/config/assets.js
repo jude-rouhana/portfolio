@@ -105,13 +105,13 @@ export const imageAssets = {
   
   // FocusAid gallery
   focusAidGallery: [
-    "/assets/coding%20projects/FocusAid/focusaid1.png",
-    "/assets/coding%20projects/FocusAid/focusaid2.png",
-    "/assets/coding%20projects/FocusAid/focusaid3.png",
-    "/assets/coding%20projects/FocusAid/focusaid4.png",
-    "/assets/coding%20projects/FocusAid/focusaid5.png",
-    "/assets/coding%20projects/FocusAid/focusaid6.png",
-    "/assets/coding%20projects/FocusAid/focusaid7.png",
+    "/assets/coding%20projects/FocusAid/FocusAid1.png",
+    "/assets/coding%20projects/FocusAid/FocusAid2.png",
+    "/assets/coding%20projects/FocusAid/FocusAid3.png",
+    "/assets/coding%20projects/FocusAid/FocusAid4.png",
+    "/assets/coding%20projects/FocusAid/FocusAid5.png",
+    "/assets/coding%20projects/FocusAid/FocusAid6.png",
+    "/assets/coding%20projects/FocusAid/FocusAid7.png",
   ],
 };
 

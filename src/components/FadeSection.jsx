@@ -38,7 +38,7 @@ const FadeSection = ({ children, className = "", delay = 0, duration = 1.2 }) =>
       variants={fadeVariants}
       initial="hidden"
       animate={inView ? "visible" : "exit"}
-      className={`relative z-10 ${className}`}
+      className={`relative z-10 my-8 sm:my-12 ${className}`}
     >
       {children}
     </motion.div>

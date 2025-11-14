@@ -595,8 +595,8 @@ section {
 
 /* Consistent section spacing */
 section[id] {
-  padding-top: 1rem !important; /* 16px top padding for all sections */
-  padding-bottom: 1rem !important; /* 16px bottom padding for all sections */
+  padding-top: 4rem !important; /* 64px top padding for all sections */
+  padding-bottom: 4rem !important; /* 64px bottom padding for all sections */
 }
 
 /* Gradual fade for better section flow */
@@ -614,8 +614,8 @@ section[id] {
 /* Mobile adjustments for section spacing */
 @media (max-width: 768px) {
   section[id] {
-    padding-top: 1rem !important; /* 16px top padding for mobile */
-    padding-bottom: 1rem !important; /* 16px bottom padding for mobile */
+    padding-top: 3rem !important; /* 48px top padding for mobile */
+    padding-bottom: 3rem !important; /* 48px bottom padding for mobile */
   }
 } 
 

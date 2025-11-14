@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js'
@@ -13,9 +13,16 @@ const OceanBackground = ({ onGameModeChange }) => {
   const [isGameMode, setIsGameMode] = useState(false)
   const [collectedFragments, setCollectedFragments] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
+  const [joystickPosition, setJoystickPosition] = useState({ x: 0, y: 0 })
+  const [isJoystickActive, setIsJoystickActive] = useState(false)
+  const isJoystickActiveRef = useRef(false)
   const isGameModeRef = useRef(false)
   const keysPressedRef = useRef({ up: false, down: false, left: false, right: false })
   const gameStateRef = useRef(null) // Will store ship, camera, etc.
+  const joystickRef = useRef(null)
+  const joystickContainerRef = useRef(null)
+  const joystickElementRef = useRef(null) // Ref for the joystick container div
+  const isMobileRef = useRef(false) // Store mobile state for camera adjustments
 
   useEffect(() => {
     if (!mountRef.current) return
@@ -26,6 +33,7 @@ const OceanBackground = ({ onGameModeChange }) => {
         (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) ||
         ('ontouchstart' in window)
       setIsMobile(isMobileDevice)
+      isMobileRef.current = isMobileDevice
       return isMobileDevice
     }
     const mobileDevice = checkMobile()
@@ -431,9 +439,9 @@ const OceanBackground = ({ onGameModeChange }) => {
       ship.getWorldPosition(targetPosition)
       
       // Calculate camera position behind and above ship
-      // Fixed distance, height, and orientation relative to ship
-      const distance = 24  // Zoomed in slightly from 35
-      const height = 12  // Reduced height proportionally
+      // Zoom out more on mobile for better view
+      const distance = isMobileRef.current ? 35 : 24  // Further back on mobile
+      const height = isMobileRef.current ? 16 : 12  // Higher on mobile for better overview
       const angle = ship.rotation.y
       
       const cameraTarget = new THREE.Vector3(
@@ -764,6 +772,117 @@ const OceanBackground = ({ onGameModeChange }) => {
     }
   }, [isShipLoaded, isInteractive, isGameMode])
 
+  // Update ref when state changes
+  useEffect(() => {
+    isJoystickActiveRef.current = isJoystickActive
+  }, [isJoystickActive])
+
+  // Joystick handler functions
+  const handleJoystickStart = (event) => {
+    setIsJoystickActive(true)
+    isJoystickActiveRef.current = true
+    if (joystickContainerRef.current) {
+      const rect = joystickContainerRef.current.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+      const clientX = event.clientX || event.touches?.[0]?.clientX || 0
+      const clientY = event.clientY || event.touches?.[0]?.clientY || 0
+      handleJoystickMove({ clientX, clientY })
+    }
+  }
+
+  // Set up touch event listeners with useEffect - using refs to access latest state
+  useEffect(() => {
+    const joystickEl = joystickElementRef.current
+    if (!joystickEl || !isMobile) return
+
+    // Touch event handlers that use refs to access latest state
+    const handleTouchStart = (e) => {
+      e.preventDefault()
+      if (e.touches && e.touches[0]) {
+        handleJoystickStart(e.touches[0])
+      }
+    }
+
+    const handleTouchMove = (e) => {
+      e.preventDefault()
+      if (isJoystickActiveRef.current && e.touches && e.touches[0]) {
+        handleJoystickMove(e.touches[0])
+      }
+    }
+
+    const handleTouchEnd = (e) => {
+      e.preventDefault()
+      handleJoystickEnd()
+    }
+
+    joystickEl.addEventListener('touchstart', handleTouchStart, { passive: false })
+    joystickEl.addEventListener('touchmove', handleTouchMove, { passive: false })
+    joystickEl.addEventListener('touchend', handleTouchEnd, { passive: false })
+
+    return () => {
+      joystickEl.removeEventListener('touchstart', handleTouchStart)
+      joystickEl.removeEventListener('touchmove', handleTouchMove)
+      joystickEl.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [isMobile]) // Only re-run when isMobile changes
+
+  const handleJoystickMove = (event) => {
+    if (!joystickContainerRef.current || !joystickRef.current) return
+    
+    const rect = joystickContainerRef.current.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    const clientX = event.clientX || event.touches?.[0]?.clientX || 0
+    const clientY = event.clientY || event.touches?.[0]?.clientY || 0
+    
+    // Calculate distance from center
+    const deltaX = clientX - centerX
+    const deltaY = clientY - centerY
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    
+    // Get max radius (container radius - handle radius)
+    const containerRadius = rect.width / 2
+    const handleElement = joystickRef.current
+    const handleWidth = handleElement ? parseFloat(getComputedStyle(handleElement).width) : 0
+    const handleRadius = handleWidth / 2 || 30
+    const maxRadius = Math.max(containerRadius - handleRadius, 10) // Ensure minimum radius
+    
+    // Clamp position to circle bounds
+    const clampedDistance = Math.min(distance, maxRadius)
+    const angle = Math.atan2(deltaY, deltaX)
+    
+    const newX = clampedDistance * Math.cos(angle)
+    const newY = clampedDistance * Math.sin(angle)
+    
+    setJoystickPosition({ x: newX, y: newY })
+    
+    // Calculate direction based on joystick position
+    // Normalize to -1 to 1 range
+    const normalizedX = newX / maxRadius
+    const normalizedY = newY / maxRadius
+    
+    // Update keys based on joystick position
+    // Use a threshold to prevent accidental movement
+    const threshold = 0.3
+    
+    keysPressedRef.current.up = normalizedY < -threshold
+    keysPressedRef.current.down = normalizedY > threshold
+    keysPressedRef.current.left = normalizedX < -threshold
+    keysPressedRef.current.right = normalizedX > threshold
+  }
+
+  const handleJoystickEnd = () => {
+    setIsJoystickActive(false)
+    isJoystickActiveRef.current = false
+    setJoystickPosition({ x: 0, y: 0 })
+    // Reset all keys
+    keysPressedRef.current.up = false
+    keysPressedRef.current.down = false
+    keysPressedRef.current.left = false
+    keysPressedRef.current.right = false
+  }
+
   return (
     <div
       ref={mountRef}
@@ -781,8 +900,8 @@ const OceanBackground = ({ onGameModeChange }) => {
       {isGameMode && (
         <div className="absolute inset-0 pointer-events-none z-50">
           {/* Fragment Counter */}
-          <div className="absolute top-4 left-4 bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
-            <div className="text-lg font-bold">Tablet Fragments: {collectedFragments}</div>
+          <div className={`absolute top-4 left-4 bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm ${isMobile ? 'px-2 py-1' : ''}`}>
+            <div className={`${isMobile ? 'text-sm' : 'text-lg'} font-bold`}>Tablet Fragments: {collectedFragments}</div>
           </div>
           
           {/* Instructions - top right, always visible */}
@@ -798,122 +917,66 @@ const OceanBackground = ({ onGameModeChange }) => {
           
           {/* Mobile Instructions */}
           {isMobile && (
-            <div className="absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm max-w-[200px]">
-              <h3 className="text-base font-bold mb-2">Ship Control</h3>
-              <p className="text-xs mb-1">Use on-screen buttons to control the ship</p>
-              <p className="text-xs text-yellow-400 mt-2">Collect the glowing fragments!</p>
+            <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-2 rounded-lg backdrop-blur-sm max-w-[180px]">
+              <h3 className="text-xs font-bold mb-1">Ship Control</h3>
+              <p className="text-[10px] mb-0.5 leading-tight">Use joystick to control the ship</p>
+              <p className="text-[10px] text-yellow-400 mt-1 leading-tight">Collect the glowing fragments!</p>
             </div>
           )}
           
           {/* Mobile Control Buttons */}
           {isMobile && (
             <div className="absolute bottom-0 left-0 right-0 pointer-events-auto mobile-control">
-              {/* Movement Controls - Bottom Left - Raised and responsive */}
+              {/* Joystick Control - Bottom Left - Raised and responsive */}
               <div 
-                className="absolute flex flex-col items-center gap-2"
+                ref={joystickContainerRef}
+                className="absolute"
                 style={{
                   bottom: 'min(20vh, 120px)', // Raise controls - use 20% of viewport height or max 120px
                   left: 'max(1rem, 4vw)', // Responsive left margin
                   zIndex: 100
                 }}
               >
-                {/* Forward Button */}
-                <button
-                  onTouchStart={(e) => {
-                    e.preventDefault()
-                    keysPressedRef.current.up = true
+                {/* Outer Circle - Joystick Container */}
+                <div
+                  ref={joystickElementRef}
+                  className="relative rounded-full border-2 border-gray-500/70 bg-gray-900/50 backdrop-blur-sm shadow-inner"
+                  style={{
+                    width: 'clamp(6rem, 24vw, 8rem)',
+                    height: 'clamp(6rem, 24vw, 8rem)',
+                    touchAction: 'none',
+                    boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)'
                   }}
-                  onTouchEnd={(e) => {
+                  onMouseDown={(e) => {
                     e.preventDefault()
-                    keysPressedRef.current.up = false
-                  }}
-                  onMouseDown={() => keysPressedRef.current.up = true}
-                  onMouseUp={() => keysPressedRef.current.up = false}
-                  onMouseLeave={() => keysPressedRef.current.up = false}
-                  className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                  style={{ 
-                    touchAction: 'manipulation',
-                    width: 'clamp(3.5rem, 14vw, 5rem)',
-                    height: 'clamp(3.5rem, 14vw, 5rem)',
-                    fontSize: 'clamp(1.5rem, 6vw, 2.25rem)'
+                    handleJoystickStart(e)
+                    const handleMouseMove = (moveEvent) => {
+                      handleJoystickMove(moveEvent)
+                    }
+                    const handleMouseUp = () => {
+                      handleJoystickEnd()
+                      document.removeEventListener('mousemove', handleMouseMove)
+                      document.removeEventListener('mouseup', handleMouseUp)
+                    }
+                    document.addEventListener('mousemove', handleMouseMove)
+                    document.addEventListener('mouseup', handleMouseUp)
                   }}
                 >
-                  ↑
-                </button>
-                
-                {/* Left/Right/Backward Row */}
-                <div className="flex gap-2 items-center" style={{ gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
-                  {/* Left Button */}
-                  <button
-                    onTouchStart={(e) => {
-                      e.preventDefault()
-                      keysPressedRef.current.left = true
+                  {/* Inner Circle - Joystick Handle */}
+                  <div
+                    ref={joystickRef}
+                    className="absolute rounded-full bg-gradient-to-br from-gray-500 to-gray-700 border-2 border-gray-400 shadow-lg transition-transform duration-100 ease-out"
+                    style={{
+                      width: 'clamp(2.5rem, 10vw, 3.5rem)',
+                      height: 'clamp(2.5rem, 10vw, 3.5rem)',
+                      left: '50%',
+                      top: '50%',
+                      transform: `translate(calc(-50% + ${joystickPosition.x}px), calc(-50% + ${joystickPosition.y}px))`,
+                      touchAction: 'none',
+                      userSelect: 'none',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.2)'
                     }}
-                    onTouchEnd={(e) => {
-                      e.preventDefault()
-                      keysPressedRef.current.left = false
-                    }}
-                    onMouseDown={() => keysPressedRef.current.left = true}
-                    onMouseUp={() => keysPressedRef.current.left = false}
-                    onMouseLeave={() => keysPressedRef.current.left = false}
-                    className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                    style={{ 
-                      touchAction: 'manipulation',
-                      width: 'clamp(3.5rem, 14vw, 5rem)',
-                      height: 'clamp(3.5rem, 14vw, 5rem)',
-                      fontSize: 'clamp(1.5rem, 6vw, 2.25rem)'
-                    }}
-                  >
-                    ←
-                  </button>
-                  
-                  {/* Backward Button */}
-                  <button
-                    onTouchStart={(e) => {
-                      e.preventDefault()
-                      keysPressedRef.current.down = true
-                    }}
-                    onTouchEnd={(e) => {
-                      e.preventDefault()
-                      keysPressedRef.current.down = false
-                    }}
-                    onMouseDown={() => keysPressedRef.current.down = true}
-                    onMouseUp={() => keysPressedRef.current.down = false}
-                    onMouseLeave={() => keysPressedRef.current.down = false}
-                    className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                    style={{ 
-                      touchAction: 'manipulation',
-                      width: 'clamp(3.5rem, 14vw, 5rem)',
-                      height: 'clamp(3.5rem, 14vw, 5rem)',
-                      fontSize: 'clamp(1.5rem, 6vw, 2.25rem)'
-                    }}
-                  >
-                    ↓
-                  </button>
-                  
-                  {/* Right Button */}
-                  <button
-                    onTouchStart={(e) => {
-                      e.preventDefault()
-                      keysPressedRef.current.right = true
-                    }}
-                    onTouchEnd={(e) => {
-                      e.preventDefault()
-                      keysPressedRef.current.right = false
-                    }}
-                    onMouseDown={() => keysPressedRef.current.right = true}
-                    onMouseUp={() => keysPressedRef.current.right = false}
-                    onMouseLeave={() => keysPressedRef.current.right = false}
-                    className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                    style={{ 
-                      touchAction: 'manipulation',
-                      width: 'clamp(3.5rem, 14vw, 5rem)',
-                      height: 'clamp(3.5rem, 14vw, 5rem)',
-                      fontSize: 'clamp(1.5rem, 6vw, 2.25rem)'
-                    }}
-                  >
-                    →
-                  </button>
+                  />
                 </div>
               </div>
               

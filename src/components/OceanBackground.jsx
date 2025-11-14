@@ -16,6 +16,7 @@ const OceanBackground = ({ onGameModeChange }) => {
   const isGameModeRef = useRef(false)
   const keysPressedRef = useRef({ up: false, down: false, left: false, right: false })
   const gameStateRef = useRef(null) // Will store ship, camera, etc.
+  const isMobileRef = useRef(false) // Store mobile state for access in functions
 
   useEffect(() => {
     if (!mountRef.current) return
@@ -26,6 +27,7 @@ const OceanBackground = ({ onGameModeChange }) => {
         (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) ||
         ('ontouchstart' in window)
       setIsMobile(isMobileDevice)
+      isMobileRef.current = isMobileDevice
       return isMobileDevice
     }
     const mobileDevice = checkMobile()
@@ -34,14 +36,17 @@ const OceanBackground = ({ onGameModeChange }) => {
     const scene = new THREE.Scene()
     scene.fog = new THREE.Fog(0x4a90e2, 1, 80)
 
+    // Wider FOV on mobile for better view (higher FOV = more zoomed out)
+    const cameraFOV = mobileDevice ? 75 : 55
     const camera = new THREE.PerspectiveCamera(
-      55,
+      cameraFOV,
       container.clientWidth / container.clientHeight,
       0.1,
       1000
     )
-    // Position the camera in 3D space:
-    camera.position.set(20, 18, 85)
+    // Position the camera in 3D space - further back on mobile for better view
+    const initialCameraZ = mobileDevice ? 120 : 85
+    camera.position.set(20, 18, initialCameraZ)
     // Make camera look more horizontally to see more sky
     camera.lookAt(0, 0, 0)
 
@@ -126,7 +131,7 @@ const OceanBackground = ({ onGameModeChange }) => {
     const shipVelocity = new THREE.Vector3(0, 0, 0)
     const shipRotationVelocityRef = { value: 0 }
     const fragments = []
-    const originalCameraPosition = new THREE.Vector3(20, 18, 85)
+    const originalCameraPosition = new THREE.Vector3(20, 18, initialCameraZ)
     const originalCameraLookAt = new THREE.Vector3(0, 0, 0)
     const isAutomaticSailingRef = { value: true }
     
@@ -431,9 +436,9 @@ const OceanBackground = ({ onGameModeChange }) => {
       ship.getWorldPosition(targetPosition)
       
       // Calculate camera position behind and above ship
-      // Fixed distance, height, and orientation relative to ship
-      const distance = 24  // Zoomed in slightly from 35
-      const height = 12  // Reduced height proportionally
+      // Further back on mobile for better view
+      const distance = isMobileRef.current ? 40 : 24  // Zoomed out more on mobile
+      const height = isMobileRef.current ? 18 : 12  // Higher on mobile for better overview
       const angle = ship.rotation.y
       
       const cameraTarget = new THREE.Vector3(
@@ -624,6 +629,15 @@ const OceanBackground = ({ onGameModeChange }) => {
       const w = container.clientWidth
       const h = container.clientHeight
       camera.aspect = w / h
+      // Update FOV if device type changed (e.g., orientation change)
+      const isNowMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) ||
+        ('ontouchstart' in window)
+      if (isNowMobile !== isMobileRef.current) {
+        camera.fov = isNowMobile ? 75 : 55
+        setIsMobile(isNowMobile)
+        isMobileRef.current = isNowMobile
+      }
       camera.updateProjectionMatrix()
       renderer.setSize(w, h)
     }
@@ -781,13 +795,26 @@ const OceanBackground = ({ onGameModeChange }) => {
       {isGameMode && (
         <div className="absolute inset-0 pointer-events-none z-50">
           {/* Fragment Counter */}
-          <div className="absolute top-4 left-4 bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
-            <div className="text-lg font-bold">Tablet Fragments: {collectedFragments}</div>
+          <div 
+            className="absolute bg-black/70 text-white rounded-lg backdrop-blur-sm"
+            style={{
+              top: 'max(1rem, env(safe-area-inset-top, 0px) + 1rem)',
+              left: 'max(1rem, env(safe-area-inset-left, 0px) + 1rem)',
+              padding: 'clamp(0.5rem, 2vw, 1rem)',
+              fontSize: 'clamp(0.875rem, 3vw, 1.125rem)'
+            }}
+          >
+            <div className="font-bold">Tablet Fragments: {collectedFragments}</div>
           </div>
           
           {/* Instructions - top right, always visible */}
           <div 
-            className={`absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm ${isMobile ? 'hidden' : ''}`}
+            className={`absolute bg-black/70 text-white rounded-lg backdrop-blur-sm ${isMobile ? 'hidden' : ''}`}
+            style={{
+              top: 'max(1rem, env(safe-area-inset-top, 0px) + 1rem)',
+              right: 'max(1rem, env(safe-area-inset-right, 0px) + 1rem)',
+              padding: 'clamp(0.75rem, 2vw, 1rem)'
+            }}
           >
             <h3 className="text-lg font-bold mb-2">Ship Control</h3>
             <p className="text-sm mb-1">↑ ↓ Arrow Keys: Move Forward/Backward</p>
@@ -798,18 +825,33 @@ const OceanBackground = ({ onGameModeChange }) => {
           
           {/* Mobile Instructions */}
           {isMobile && (
-            <div className="absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm max-w-[200px]">
-              <h3 className="text-base font-bold mb-2">Ship Control</h3>
-              <p className="text-xs mb-1">Use on-screen buttons to control the ship</p>
-              <p className="text-xs text-yellow-400 mt-2">Collect the glowing fragments!</p>
+            <div 
+              className="absolute bg-black/70 text-white rounded-lg backdrop-blur-sm"
+              style={{
+                top: 'max(1rem, env(safe-area-inset-top, 0px) + 1rem)',
+                right: 'max(1rem, env(safe-area-inset-right, 0px) + 1rem)',
+                maxWidth: 'min(200px, 45vw)',
+                padding: 'clamp(0.5rem, 2vw, 0.75rem)',
+                fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)'
+              }}
+            >
+              <h3 className="font-bold mb-1" style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>Ship Control</h3>
+              <p className="mb-1">Use on-screen buttons to control the ship</p>
+              <p className="text-yellow-400 mt-1">Collect the glowing fragments!</p>
             </div>
           )}
           
           {/* Mobile Control Buttons */}
           {isMobile && (
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-auto mobile-control">
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-auto mobile-control" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
               {/* Movement Controls - Bottom Left */}
-              <div className="absolute bottom-6 left-6 flex flex-col items-center gap-2">
+              <div 
+                className="absolute flex flex-col items-center gap-2"
+                style={{
+                  bottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px) + 1.5rem)',
+                  left: 'max(1.5rem, env(safe-area-inset-left, 0px) + 1.5rem)'
+                }}
+              >
                 {/* Forward Button */}
                 <button
                   onTouchStart={(e) => {
@@ -823,8 +865,13 @@ const OceanBackground = ({ onGameModeChange }) => {
                   onMouseDown={() => keysPressedRef.current.up = true}
                   onMouseUp={() => keysPressedRef.current.up = false}
                   onMouseLeave={() => keysPressedRef.current.up = false}
-                  className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                  style={{ touchAction: 'manipulation' }}
+                  className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                  style={{ 
+                    touchAction: 'manipulation',
+                    width: 'clamp(3.5rem, 12vw, 4.5rem)',
+                    height: 'clamp(3.5rem, 12vw, 4.5rem)',
+                    fontSize: 'clamp(1.5rem, 5vw, 2rem)'
+                  }}
                 >
                   ↑
                 </button>
@@ -844,8 +891,13 @@ const OceanBackground = ({ onGameModeChange }) => {
                     onMouseDown={() => keysPressedRef.current.left = true}
                     onMouseUp={() => keysPressedRef.current.left = false}
                     onMouseLeave={() => keysPressedRef.current.left = false}
-                    className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                    style={{ touchAction: 'manipulation' }}
+                    className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                    style={{ 
+                      touchAction: 'manipulation',
+                      width: 'clamp(3.5rem, 12vw, 4.5rem)',
+                      height: 'clamp(3.5rem, 12vw, 4.5rem)',
+                      fontSize: 'clamp(1.5rem, 5vw, 2rem)'
+                    }}
                   >
                     ←
                   </button>
@@ -863,8 +915,13 @@ const OceanBackground = ({ onGameModeChange }) => {
                     onMouseDown={() => keysPressedRef.current.down = true}
                     onMouseUp={() => keysPressedRef.current.down = false}
                     onMouseLeave={() => keysPressedRef.current.down = false}
-                    className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                    style={{ touchAction: 'manipulation' }}
+                    className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                    style={{ 
+                      touchAction: 'manipulation',
+                      width: 'clamp(3.5rem, 12vw, 4.5rem)',
+                      height: 'clamp(3.5rem, 12vw, 4.5rem)',
+                      fontSize: 'clamp(1.5rem, 5vw, 2rem)'
+                    }}
                   >
                     ↓
                   </button>
@@ -882,8 +939,13 @@ const OceanBackground = ({ onGameModeChange }) => {
                     onMouseDown={() => keysPressedRef.current.right = true}
                     onMouseUp={() => keysPressedRef.current.right = false}
                     onMouseLeave={() => keysPressedRef.current.right = false}
-                    className="w-16 h-16 bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
-                    style={{ touchAction: 'manipulation' }}
+                    className="bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/30 touch-manipulation"
+                    style={{ 
+                      touchAction: 'manipulation',
+                      width: 'clamp(3.5rem, 12vw, 4.5rem)',
+                      height: 'clamp(3.5rem, 12vw, 4.5rem)',
+                      fontSize: 'clamp(1.5rem, 5vw, 2rem)'
+                    }}
                   >
                     →
                   </button>
@@ -907,8 +969,15 @@ const OceanBackground = ({ onGameModeChange }) => {
                   state.camera.lookAt(state.originalCameraLookAt)
                   if (state.onGameModeChange) state.onGameModeChange(false)
                 }}
-                className="absolute bottom-6 right-6 w-16 h-16 bg-red-500/80 hover:bg-red-600/90 active:bg-red-700/90 backdrop-blur-md rounded-full flex items-center justify-center text-xl font-bold text-white shadow-lg border-2 border-red-400/50 touch-manipulation"
-                style={{ touchAction: 'manipulation' }}
+                className="absolute bg-red-500/80 hover:bg-red-600/90 active:bg-red-700/90 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-red-400/50 touch-manipulation"
+                style={{ 
+                  touchAction: 'manipulation',
+                  bottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px) + 1.5rem)',
+                  right: 'max(1.5rem, env(safe-area-inset-right, 0px) + 1.5rem)',
+                  width: 'clamp(3.5rem, 12vw, 4.5rem)',
+                  height: 'clamp(3.5rem, 12vw, 4.5rem)',
+                  fontSize: 'clamp(1.25rem, 4vw, 1.75rem)'
+                }}
               >
                 ✕
               </button>

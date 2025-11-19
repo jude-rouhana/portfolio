@@ -329,10 +329,13 @@ const Music = () => {
       style={{
         backgroundImage: `
           linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px)
+          linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+          url('/paper texture.jpg')
         `,
-        backgroundSize: '32px 32px',
-        backgroundAttachment: 'fixed'
+        backgroundSize: '32px 32px, 32px 32px, cover',
+        backgroundPosition: '0 0, 0 0, center',
+        backgroundRepeat: 'repeat, repeat, no-repeat',
+        backgroundAttachment: 'fixed, fixed, fixed'
       }}
     >
       {/* Trail Cells */}
@@ -367,7 +370,7 @@ const Music = () => {
               <Link to="/projects" className="text-[#000052] hover:opacity-80 transition-colors">Projects</Link>
               <Link to="/music" className="text-[#000052] hover:opacity-80 transition-colors">Music</Link>
               <Link to="/games" className="text-[#000052] hover:opacity-80 transition-colors">Games</Link>
-              <Link to="/" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
+              <Link to="/contact" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
             </div>
             <div className="md:hidden relative">
               <motion.button
@@ -445,6 +448,13 @@ const Music = () => {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         Music
+                      </Link>
+                      <Link
+                        to="/contact"
+                        className="block px-4 py-2 text-sm text-[#000052] hover:bg-[#000052] hover:text-white transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Contact
                       </Link>
                     </div>
                   </motion.div>
@@ -665,6 +675,40 @@ const Music = () => {
             )}
           </div>
         </motion.main>
+
+        {/* Footer */}
+        <motion.footer
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="px-6 sm:px-8 lg:px-12 py-12 border-t border-black relative z-20"
+        >
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row md:justify-between gap-8">
+              <div>
+                <h3 className="text-xl font-bold mb-4 text-[#000052]">Jude Rouhana</h3>
+                <p className="text-sm text-[#000052]">Full-Stack Developer</p>
+              </div>
+              <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+                <div>
+                  <h4 className="text-sm font-medium mb-2 text-[#000052]">Contact</h4>
+                  <a href="mailto:juderouhana@gmail.com" className="text-sm text-[#000052] hover:underline">
+                    juderouhana@gmail.com
+                  </a>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium mb-2 text-[#000052]">Links</h4>
+                  <div className="flex flex-col gap-1">
+                    <a href="https://www.linkedin.com/in/jude-rouhana-798542261/" className="text-sm text-[#000052] hover:underline">LinkedIn</a>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <a href="https://www.juderouhana.com" className="text-sm text-[#000052] hover:underline">juderouhana.com</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.footer>
       </div>
     </div>
   )

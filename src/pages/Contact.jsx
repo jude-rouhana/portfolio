@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import { useInView } from 'react-intersection-observer'
+import emailjs from '@emailjs/browser'
+import Toast from '../components/Toast'
 
-const About = () => {
+const Contact = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1
@@ -11,8 +13,15 @@ const About = () => {
   const [trailCells, setTrailCells] = useState([])
   const [isShiftHeld, setIsShiftHeld] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [expandedSection, setExpandedSection] = useState(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' })
   const lastCellRef = useRef(null)
   const timeoutsRef = useRef([])
   const heldCellsRef = useRef([])
@@ -110,11 +119,9 @@ const About = () => {
 
     const handleTouchStart = (event) => {
       touchStartTimeRef.current = Date.now()
-      // Clear any existing timeout
       if (touchHoldTimeoutRef.current) {
         clearTimeout(touchHoldTimeoutRef.current)
       }
-      // Set timeout for 2 seconds
       touchHoldTimeoutRef.current = setTimeout(() => {
         shiftHeldRef.current = true
         setIsShiftHeld(true)
@@ -122,13 +129,11 @@ const About = () => {
     }
 
     const handleTouchEnd = (event) => {
-      // Clear the timeout if touch ends before 2 seconds
       if (touchHoldTimeoutRef.current) {
         clearTimeout(touchHoldTimeoutRef.current)
         touchHoldTimeoutRef.current = null
       }
       
-      // If shift was held (touch was held for 2+ seconds), release it
       if (shiftHeldRef.current) {
         shiftHeldRef.current = false
         setIsShiftHeld(false)
@@ -209,64 +214,67 @@ const About = () => {
     }
   }, [])
 
-  const toggleSection = (section) => {
-    setExpandedSection(expandedSection === section ? null : section)
+  // Form handlers
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
   }
 
-  const skills = [
-    // Programming Languages
-    { name: 'Python', type: 'programming', color: 'bg-blue-500' },
-    { name: 'C++', type: 'programming', color: 'bg-blue-500' },
-    { name: 'HTML', type: 'programming', color: 'bg-blue-500' },
-    { name: 'CSS', type: 'programming', color: 'bg-blue-500' },
-    { name: 'React', type: 'programming', color: 'bg-blue-500' },
-    { name: 'JavaScript', type: 'programming', color: 'bg-blue-500' },
-    { name: 'TypeScript', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Node.js', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Next.js', type: 'programming', color: 'bg-blue-500' },
-    { name: 'FastAPI', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Arduino', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Go', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Bash', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Scheme', type: 'programming', color: 'bg-blue-500' },
-    { name: 'OCaml', type: 'programming', color: 'bg-blue-500' },
-    { name: 'SmallTalk', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Prolog', type: 'programming', color: 'bg-blue-500' },
-    { name: 'Assembly', type: 'programming', color: 'bg-blue-500' },
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
     
-    // Design Skills
-    { name: 'Framer', type: 'design', color: 'bg-red-500' },
-    { name: 'Figma', type: 'design', color: 'bg-red-500' },
-    { name: 'ProTools', type: 'design', color: 'bg-red-500' },
-    { name: 'Logic Pro', type: 'design', color: 'bg-red-500' },
-    { name: 'Max/MSP', type: 'design', color: 'bg-red-500' },
-    { name: 'Adobe Photoshop', type: 'design', color: 'bg-red-500' },
-    { name: 'Adobe Premiere Pro', type: 'design', color: 'bg-red-500' },
-    { name: 'Adobe After Effects', type: 'design', color: 'bg-red-500' },
-    { name: 'Adobe Lightroom', type: 'design', color: 'bg-red-500' },
-    { name: 'Procreate', type: 'design', color: 'bg-red-500' },
-    { name: 'Blender', type: 'design', color: 'bg-red-500' },
-    { name: 'Godot', type: 'design', color: 'bg-red-500' },
-    
-    // Other Skills
-    { name: 'PostgreSQL', type: 'other', color: 'bg-yellow-500' }, 
-    { name: 'Git', type: 'other', color: 'bg-yellow-500' },
-    { name: 'Microsoft 365', type: 'other', color: 'bg-yellow-500' },
-    { name: 'Microsoft Power Suite', type: 'other', color: 'bg-yellow-500' },
+    try {
+      // EmailJS configuration
+      const serviceId = 'service_b8x6dgi'
+      const templateId = 'template_ywy32zf'
+      const publicKey = 'DEVcfMoSMdqumXQr8'
+      
+      const templateParams = {
+        to_email: 'juderouhana@gmail.com',
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        reply_to: formData.email
+      }
+
+      const result = await emailjs.send(serviceId, templateId, templateParams, publicKey)
+      
+      if (result.status === 200) {
+        setToast({ show: true, message: "Message sent successfully! I'll get back to you soon.", type: 'success' })
+        setFormData({ name: '', email: '', subject: '', message: '' })
+      } else {
+        setToast({ show: true, message: "Failed to send message. Please try again.", type: 'error' })
+      }
+    } catch (error) {
+      console.error('Email sending failed:', error)
+      setToast({ show: true, message: "Failed to send message. Please try again later.", type: 'error' })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const socialLinks = [
+    {
+      name: 'LinkedIn',
+      url: 'https://www.linkedin.com/in/jude-rouhana-798542261/',
+      icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>,
+    },
+    {
+      name: 'Instagram',
+      url: 'https://www.instagram.com/juderouhana/',
+      icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>,
+    },
+    {
+      name: 'Pinterest',
+      url: 'https://www.pinterest.com/juderouhana10/_profile/',
+      icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12 0 4.99 3.045 9.27 7.38 11.08-.11-.937-.2-2.38.042-3.407.217-.937 1.407-5.965 1.407-5.965s-.36-.72-.36-1.78c0-1.67.968-2.915 2.172-2.915 1.024 0 1.518.77 1.518 1.69 0 1.03-.654 2.568-.993 3.995-.283 1.195.598 2.17 1.775 2.17 2.13 0 3.77-2.245 3.77-5.475 0-2.86-2.06-4.875-5.008-4.875-3.41 0-5.41 2.562-5.41 5.22 0 1.033.397 2.14.893 2.738.098.12.11.224.083.345-.09.375-.293 1.2-.334 1.365-.053.225-.175.27-.402.165-1.495-.69-2.433-2.878-2.433-4.645 0-3.77 2.738-7.255 7.92-7.255 4.162 0 7.397 2.967 7.397 6.93 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.36-.63-2.75-1.378l-.748 2.853c-.27 1.042-1.002 2.348-1.492 3.145 1.124.345 2.317.532 3.554.532 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/></svg>,
+    }
   ]
-
-  // Group skills by type
-  const groupedSkills = {
-    programming: skills.filter(skill => skill.type === 'programming'),
-    design: skills.filter(skill => skill.type === 'design'),
-    other: skills.filter(skill => skill.type === 'other')
-  }
-
-  const sectionConfig = {
-    programming: { title: 'Programming Languages, Frameworks, and Libraries', color: 'bg-blue-500' },
-    design: { title: 'Design and Creative', color: 'bg-red-500' },
-    other: { title: 'Other Tools', color: 'bg-yellow-500' }
-  }
 
   return (
     <div
@@ -288,7 +296,7 @@ const About = () => {
         {trailCells.map(cell => (
           <motion.div
             key={cell.id}
-            className="fixed w-8 h-8 bg-[#000052] pointer-events-none z-20"
+            className="fixed w-8 h-8 bg-[#000052] pointer-events-none z-0"
             style={{ top: cell.y, left: cell.x }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.75 }}
@@ -308,7 +316,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-4">
           <div className="flex justify-between items-center">              
             <Link to="/" className="text-xl font-bold tracking-tight text-[#000052]">
-              Jude Rouhana
+              JUDE ROUHANA
             </Link>
             <div className="hidden md:flex space-x-8 text-sm font-medium">
               <Link to="/about" className="text-[#000052] hover:opacity-80 transition-colors">About</Link>
@@ -412,233 +420,165 @@ const About = () => {
 
       {/* Main Content */}
       <div className="min-h-screen flex flex-col relative z-10">
-        {/* Grid Overlay - covers main content and footer */}
-        <div
-          className="absolute inset-0 pointer-events-none z-10"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px)
-            `,
-            backgroundSize: '32px 32px',
-            backgroundAttachment: 'fixed'
-          }}
-        />
         <motion.main 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
           className="flex-1 pt-20 relative"
-          style={{
-            backgroundImage: isMobile ? 'url(/mobileabt.png)' : 'url(/aboutbackground.png)',
-            backgroundSize: isMobile ? '40%' : '65%',
-            backgroundPosition: isMobile ? 'center top 10%' : 'left 32% top 25%',
-            backgroundRepeat: 'no-repeat',
-            minHeight: 'calc(100vh - 80px)'
-          }}
         >
-          <section className="px-6 sm:px-8 lg:px-24 pt-48 md:pt-32 pb-10 relative z-20">
-            <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
+            {/* Section Header */}
+            <motion.div
+              ref={ref}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#000052] mb-4">
+                CONTACT
+              </h2>
+              <p className="text-lg text-[#000052] mb-8">
+                Get in touch with me
+              </p>
+              <div className="w-24 h-1 bg-[#000052] mx-auto mb-8"></div>
+            </motion.div>
+
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Contact Form */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="flex flex-col md:flex-row gap-6 md:gap-6 items-start"
-              >
-                {/* Text Content */}
-                <div className="flex-1 space-y-4 md:ml-auto md:max-w-2xl">
-                  <span className="text-xl sm:text-2xl md:text-4xl font-bold mb-4 text-[#000052]">
-                    Who am I?
-                  </span>
-                  {/* <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#000052]">
-                    About
-                  </h1> */}
-                  <div className="space-y-4 text-[#000052]">
-                    <p className="text-sm sm:text-sm md:text-lg leading-relaxed">
-                      I'm a software developer and creative technologist with a unique blend of technical skills and artistic vision. I love to build: from software and hardware to music, digital art, and games. Explore some of my work below!
-                    </p>
-                    <p className="text-sm sm:text-sm md:text-lg leading-relaxed">
-                      I graduated from Hamilton College in 2025 as a Computer Science major and Digital Arts and Music minors. I currently work at Boston Children's Hospital in Pediatrics-Emergency Medicine creating custom software solutions to help with process enhancement, automation, and workflow improvement.
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Navigation Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 1.0 }}
-                className="flex flex-wrap gap-2 md:gap-64 justify-center mt-16 md:mt-32 mb-8 md:mb-20"
               >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    to="/projects"
-                    className="inline-block px-3 py-2 md:px-6 md:py-3 bg-[#000052] text-white text-xs md:text-base font-medium transition-all duration-300 hover:shadow-lg"
+                <h3 className="text-2xl font-bold text-[#000052] mb-6">Send a Message</h3>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-[#000052] mb-2">
+                        Name *
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-black bg-white text-[#000052] placeholder-gray-400 transition-all duration-300"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-[#000052] mb-2">
+                        Email *
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-black bg-white text-[#000052] placeholder-gray-400 transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-[#000052] mb-2">
+                      Subject *
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-black bg-white text-[#000052] placeholder-gray-400 transition-all duration-300"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-[#000052] mb-2">
+                      Message *
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={6}
+                      className="w-full px-4 py-3 border border-black bg-white text-[#000052] placeholder-gray-400 transition-all duration-300 resize-none"
+                    />
+                  </div>
+                  
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full px-8 py-4 bg-[#000052] text-white font-semibold hover:opacity-80 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                   >
-                    Projects
-                  </Link>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    to="/music"
-                    className="inline-block px-3 py-2 md:px-6 md:py-3 bg-[#000052] text-white text-xs md:text-base font-medium transition-all duration-300 hover:shadow-lg"
-                  >
-                    Music
-                  </Link>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    to="/games"
-                    className="inline-block px-3 py-2 md:px-6 md:py-3 bg-[#000052] text-white text-xs md:text-base font-medium transition-all duration-300 hover:shadow-lg"
-                  >
-                    Games
-                  </Link>
-                </motion.div>
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </motion.button>
+                </form>
               </motion.div>
-              
-              {/* Skills Section */}
-              {/*<div ref={ref} className="mt-12 md:mt-16 relative z-40">
-                <h4 className="text-base sm:text-lg font-semibold text-[#000052] mb-4 sm:mb-6">
-                  Technical Skills
-                </h4>
-                
-                <div className="hidden md:block relative z-40">
-                  <div className="max-w-2xl space-y-4 relative z-40">
-                    {Object.entries(groupedSkills).map(([type, skillsList], index) => {
-                      const config = sectionConfig[type]
-                      return (
-                        <motion.div
-                          key={type}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={inView ? { opacity: 1, y: 0 } : {}}
-                          transition={{ delay: 0.2 + index * 0.1 }}
-                          className={`bg-white rounded-none border border-black overflow-hidden transition-all duration-200 ${
-                            expandedSection === type ? 'border-[#000052] border-2 bg-gray-50' : ''
-                          }`}
-                        >
-                          <motion.button
-                            onClick={() => toggleSection(type)}
-                            className={`w-full p-6 text-left flex items-center justify-between transition-colors duration-200 ${
-                              expandedSection === type ? 'bg-gray-50' : 'hover:bg-gray-50'
-                            }`}
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                          >
-                            <div className="flex items-center space-x-3">
-                              <div className={`w-3 h-3 rounded-none ${config.color} flex-shrink-0`}></div>
-                              <span className="text-[#000052] font-semibold text-sm">{config.title}</span>
-                            </div>
-                            <motion.div
-                              animate={{ rotate: expandedSection === type ? 180 : 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="text-[#000052]/60"
-                            >
-                              ▼
-                            </motion.div>
-                          </motion.button>
 
-                          <motion.div
-                            initial={false}
-                            animate={{
-                              height: expandedSection === type ? 'auto' : 0,
-                              opacity: expandedSection === type ? 1 : 0
-                            }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="overflow-hidden"
-                          >
-                            <div className="p-4 bg-gray-50 border-t border-[#000052]/20">
-                              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                {skillsList.map((skill, index) => (
-                                  <motion.div
-                                    key={skill.name}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={inView && expandedSection === type ? { opacity: 1, x: 0 } : {}}
-                                    transition={{ delay: index * 0.05 }}
-                                    className="flex items-center space-x-3 p-2 rounded-none hover:bg-white transition-colors duration-200"
-                                  >
-                                    <div className={`w-3 h-3 rounded-none ${skill.color} flex-shrink-0`}></div>
-                                    <span className="text-[#000052] font-medium text-xs">{skill.name}</span>
-                                  </motion.div>
-                                ))}
-                              </div>
-                            </div>
-                          </motion.div>
-                        </motion.div>
-                      )
-                    })}
+              {/* Contact Information */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="space-y-8"
+              >
+                <div>
+                  <h3 className="text-2xl font-bold text-[#000052] mb-6">Let's Connect</h3>
+                </div>
+
+                {/* Contact Details */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-[#000052] flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                      </svg>
+                    </div>
+                    <div className="bg-white border border-black px-4 py-2">
+                      <div className="text-sm font-medium text-[#000052]">Email</div>
+                      <a href="mailto:juderouhana@gmail.com" className="text-[#000052] hover:opacity-80 transition-colors duration-300">
+                        juderouhana@gmail.com
+                      </a>
+                    </div>
                   </div>
                 </div>
 
-                <div className="md:hidden space-y-3 sm:space-y-4">
-                  {Object.entries(groupedSkills).map(([type, skillsList], index) => {
-                    const config = sectionConfig[type]
-                    return (
-                      <motion.div
-                        key={type}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={inView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ delay: 0.2 + index * 0.1 }}
-                        className="border border-[#000052] rounded-none overflow-hidden"
+                {/* Social Links */}
+                <div>
+                  <h4 className="text-lg font-semibold text-[#000052] mb-4">Follow Me</h4>
+                  <div className="flex flex-wrap gap-4">
+                    {socialLinks.map((social) => (
+                      <motion.a
+                        key={social.name}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-black hover:opacity-80 transition-all duration-300 group"
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <button
-                          onClick={() => toggleSection(type)}
-                          className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors duration-200"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-3 h-3 rounded-none ${config.color} flex-shrink-0`}></div>
-                            <span className="text-[#000052] font-semibold text-sm">{config.title}</span>
-                          </div>
-                          <motion.div
-                            animate={{ rotate: expandedSection === type ? 180 : 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="text-[#000052]/60"
-                          >
-                            ▼
-                          </motion.div>
-                        </button>
-                        <motion.div
-                          initial={false}
-                          animate={{
-                            height: expandedSection === type ? 'auto' : 0,
-                            opacity: expandedSection === type ? 1 : 0
-                          }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="overflow-hidden"
-                        >
-                          <div className="p-4 bg-gray-50">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                              {skillsList.map((skill, index) => (
-                                <motion.div
-                                  key={skill.name}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={inView && expandedSection === type ? { opacity: 1, x: 0 } : {}}
-                                  transition={{ delay: index * 0.05 }}
-                                  className="flex items-center space-x-3 p-2 rounded-none hover:bg-white transition-colors duration-200"
-                                >
-                                  <div className={`w-3 h-3 rounded-none ${skill.color} flex-shrink-0`}></div>
-                                  <span className="text-[#000052] font-medium text-xs">{skill.name}</span>
-                                </motion.div>
-                              ))}
-                            </div>
-                          </div>
-                        </motion.div>
-                      </motion.div>
-                    )
-                  })}
+                        <span className="text-xl text-[#000052]">{social.icon}</span>
+                        <span className="text-[#000052]">
+                          {social.name}
+                        </span>
+                      </motion.a>
+                    ))}
+                  </div>
                 </div>
-              </div> */}
+              </motion.div>
             </div>
-          </section>
+          </div>
         </motion.main>
 
         {/* Footer */}
@@ -675,9 +615,17 @@ const About = () => {
           </div>
         </motion.footer>
       </div>
+
+      {/* Toast Notification */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.show}
+        onClose={() => setToast({ show: false, message: '', type: 'success' })}
+      />
     </div>
   )
 }
 
-export default About
+export default Contact
 

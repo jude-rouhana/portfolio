@@ -576,10 +576,13 @@ function Home() {
       style={{
         backgroundImage: `
           linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px)
+          linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+          url('/paper texture.jpg')
         `,
-        backgroundSize: '32px 32px',
-        backgroundAttachment: 'fixed'
+        backgroundSize: '32px 32px, 32px 32px, cover',
+        backgroundPosition: '0 0, 0 0, center',
+        backgroundRepeat: 'repeat, repeat, no-repeat',
+        backgroundAttachment: 'fixed, fixed, fixed'
       }}
     >
       <AnimatePresence>
@@ -739,7 +742,7 @@ function Home() {
                 <Link to="/projects" className="text-[#000052] hover:opacity-80 transition-colors">Projects</Link>
                 <Link to="/music" className="text-[#000052] hover:opacity-80 transition-colors">Music</Link>
                 <Link to="/games" className="text-[#000052] hover:opacity-80 transition-colors">Games</Link>
-                <Link to="/" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
+                <Link to="/contact" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
               </div>
               <div className="md:hidden relative">
                 <motion.button
@@ -769,7 +772,7 @@ function Home() {
                         y: isMenuOpen ? -6 : 0
                       }}
                     />
-                  </div>
+              </div>
                 </motion.button>
 
                 {/* Mobile Dropdown Menu */}
@@ -817,6 +820,13 @@ function Home() {
                           onClick={() => setIsMenuOpen(false)}
                         >
                           Music
+                        </Link>
+                        <Link
+                          to="/contact"
+                          className="block px-4 py-2 text-sm text-[#000052] hover:bg-[#000052] hover:text-white transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Contact
                         </Link>
                       </div>
                     </motion.div>
@@ -940,7 +950,7 @@ function Home() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              CANVAS
+              CANVAS!
             </motion.button>
           </motion.div>
         )}

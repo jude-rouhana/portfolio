@@ -22,8 +22,9 @@ const Toast = ({ message, type = 'success', isVisible, onClose }) => {
     switch (type) {
       case 'success':
         return {
-          bg: 'bg-green-500',
-          border: 'border-green-400',
+          bg: 'bg-white',
+          border: 'border-black',
+          text: 'text-[#000052]',
           icon: (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -32,8 +33,9 @@ const Toast = ({ message, type = 'success', isVisible, onClose }) => {
         }
       case 'error':
         return {
-          bg: 'bg-red-500',
-          border: 'border-red-400',
+          bg: 'bg-white',
+          border: 'border-black',
+          text: 'text-[#000052]',
           icon: (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -42,8 +44,9 @@ const Toast = ({ message, type = 'success', isVisible, onClose }) => {
         }
       default:
         return {
-          bg: 'bg-blue-500',
-          border: 'border-blue-400',
+          bg: 'bg-white',
+          border: 'border-black',
+          text: 'text-[#000052]',
           icon: (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -63,9 +66,9 @@ const Toast = ({ message, type = 'success', isVisible, onClose }) => {
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: 100, scale: 0.8 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className={`fixed bottom-6 right-6 z-50 max-w-sm w-full ${styles.bg} ${styles.border} border-2 rounded-lg shadow-2xl backdrop-blur-sm`}
+          className={`fixed bottom-6 right-6 z-50 max-w-sm w-full ${styles.bg} ${styles.border} border-2 rounded-none shadow-2xl`}
         >
-          <div className="flex items-center gap-3 p-4 text-white">
+          <div className={`flex items-center gap-3 p-4 ${styles.text}`}>
             <div className="flex-shrink-0">
               {styles.icon}
             </div>

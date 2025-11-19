@@ -8,6 +8,7 @@ import About from './pages/About'
 import ScrollToTop from './components/ScrollToTop'
 import Music from './pages/Music'
 import Games from './pages/Games'
+import Contact from './pages/Contact'
 
 function App() {
   const location = useLocation()
@@ -128,6 +129,7 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/games" element={<Games />} />
           <Route path="/music" element={<Music />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </AnimatePresence>
     </>

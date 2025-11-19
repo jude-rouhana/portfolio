@@ -298,6 +298,22 @@ const Projects = () => {
     }
   }, [showVideoModal, showDescriptionModal, showFocusAidModal, showPixelArtModal])
 
+  // Helper function to render description with bold CANVAS
+  const renderDescription = (description) => {
+    if (!description) return null
+    const parts = description.split('**CANVAS!**')
+    return (
+      <>
+        {parts.map((part, index) => (
+          <span key={index}>
+            {part}
+            {index < parts.length - 1 && <strong>CANVAS!</strong>}
+          </span>
+        ))}
+      </>
+    )
+  }
+
   // Video Modal Component
   const VideoModal = () => {
     if (!showVideoModal) return null
@@ -666,7 +682,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       id: 3,
       title: "Portfolio Website: Jude Rouhana",
       fullTitle: "Portfolio Website",
-      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the CANVAS feature on the home page, a built in pixel art designer! Continue exploring my work below.",
+      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the **CANVAS!** feature on the home page, a built in pixel art designer. Continue exploring my work below.",
       image: "/portfoliov2.png",
       technologies: ["React", "Framer Motion", "Three.js", "WebGL", "Tailwind CSS", "Vite"],
       hasDemo: false
@@ -717,10 +733,13 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       style={{
         backgroundImage: `
           linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px)
+          linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+          url('/paper texture.jpg')
         `,
-        backgroundSize: '32px 32px',
-        backgroundAttachment: 'fixed'
+        backgroundSize: '32px 32px, 32px 32px, cover',
+        backgroundPosition: '0 0, 0 0, center',
+        backgroundRepeat: 'repeat, repeat, no-repeat',
+        backgroundAttachment: 'fixed, fixed, fixed'
       }}
     >
       {/* Trail Cells */}
@@ -756,7 +775,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
               <Link to="/projects" className="text-[#000052] hover:opacity-80 transition-colors">Projects</Link>
               <Link to="/music" className="text-[#000052] hover:opacity-80 transition-colors">Music</Link>
               <Link to="/games" className="text-[#000052] hover:opacity-80 transition-colors">Games</Link>
-              <Link to="/" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
+              <Link to="/contact" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
             </div>
             <div className="md:hidden relative">
               <motion.button
@@ -834,6 +853,13 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                         onClick={() => setIsMenuOpen(false)}
                       >
                         Music
+                      </Link>
+                      <Link
+                        to="/contact"
+                        className="block px-4 py-2 text-sm text-[#000052] hover:bg-[#000052] hover:text-white transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Contact
                       </Link>
                     </div>
                   </motion.div>
@@ -946,7 +972,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
 
                             {/* Description */}
                             <p className="text-[#000052] leading-relaxed">
-                              {selectedProject.description}
+                              {renderDescription(selectedProject.description)}
                             </p>
 
                             {/* Technologies */}
@@ -1085,7 +1111,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
 
                         {/* Description */}
                               <p className="text-[#000052] leading-relaxed">
-                          {project.description}
+                          {renderDescription(project.description)}
                         </p>
 
                         {/* Technologies */}

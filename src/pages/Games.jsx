@@ -433,8 +433,8 @@ const Games = () => {
     },
     {
       id: 6,
-      title: "Sailing Game",
-      fullTitle: "Sailing Game",
+      title: "3D Sailing Game",
+      fullTitle: "3D Sailing Game",
       description: "An experimental sailing game built from scratch in Three.js and React, featuring a procedurally animated ocean with multi-component wave physics (primary waves, secondary chop, swell, and small choppy waves) that create realistic water movement. Built by myself.",
       image: "/sailing.png",
       technologies: ["Three.js", "React", "WebGL", "Tailwind CSS", "Vite"],
@@ -448,10 +448,13 @@ const Games = () => {
       style={{
         backgroundImage: `
           linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px)
+          linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+          url('/paper texture.jpg')
         `,
-        backgroundSize: '32px 32px',
-        backgroundAttachment: 'fixed'
+        backgroundSize: '32px 32px, 32px 32px, cover',
+        backgroundPosition: '0 0, 0 0, center',
+        backgroundRepeat: 'repeat, repeat, no-repeat',
+        backgroundAttachment: 'fixed, fixed, fixed'
       }}
     >
       {/* Trail Cells */}
@@ -487,7 +490,7 @@ const Games = () => {
               <Link to="/projects" className="text-[#000052] hover:opacity-80 transition-colors">Projects</Link>
               <Link to="/music" className="text-[#000052] hover:opacity-80 transition-colors">Music</Link>
               <Link to="/games" className="text-[#000052] hover:opacity-80 transition-colors">Games</Link>
-              <Link to="/" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
+              <Link to="/contact" className="text-[#000052] hover:opacity-80 transition-colors">Contact</Link>
             </div>
             <div className="md:hidden relative">
               <motion.button
@@ -565,6 +568,13 @@ const Games = () => {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         Music
+                      </Link>
+                      <Link
+                        to="/contact"
+                        className="block px-4 py-2 text-sm text-[#000052] hover:bg-[#000052] hover:text-white transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Contact
                       </Link>
                     </div>
                   </motion.div>

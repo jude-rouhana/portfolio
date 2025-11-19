@@ -52,22 +52,23 @@ function App() {
   }, [isTransitioning])
 
   useEffect(() => {
-    // Skip transition on initial load (intro animation will play)
-    if (isInitialLoadRef.current) {
+    // Check if this is an initial site visit (external link or direct visit)
+    const referrer = document.referrer
+    const isInitialVisit = !referrer || !referrer.includes(window.location.hostname)
+    
+    // Skip transition on initial load if it's an initial visit (intro animation will play)
+    if (isInitialLoadRef.current && isInitialVisit) {
       isInitialLoadRef.current = false
       previousPathRef.current = location.pathname
       return
     }
     
-    // Skip transition if navigating to home page (intro animation will play)
-    // Intro animation duration is 3800ms
-    if (location.pathname === '/') {
-      previousPathRef.current = location.pathname
-      return
+    // Mark initial load as complete
+    if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false
     }
     
-    // Only show transition when navigating between non-home pages
-    // or when navigating away from home page
+    // Show transition for all navigation (including to home page if not initial visit)
     setIsTransitioning(true)
     // Start exit animation after fade-in completes
     const exitTimer = setTimeout(() => {

@@ -301,13 +301,13 @@ const Projects = () => {
   // Helper function to render description with bold CANVAS
   const renderDescription = (description) => {
     if (!description) return null
-    const parts = description.split('**CANVAS!**')
+    const parts = description.split('**Canvas**')
     return (
       <>
         {parts.map((part, index) => (
           <span key={index}>
             {part}
-            {index < parts.length - 1 && <strong>CANVAS!</strong>}
+            {index < parts.length - 1 && <strong>Canvas</strong>}
           </span>
         ))}
       </>
@@ -682,7 +682,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       id: 3,
       title: "Portfolio Website: Jude Rouhana",
       fullTitle: "Portfolio Website",
-      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the **CANVAS!** feature on the home page, a built in pixel art designer. Continue exploring my work below.",
+      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the **Canvas** feature on the home page, a built in pixel art designer. Continue exploring my work below.",
       image: "/portfoliov2.png",
       technologies: ["React", "Framer Motion", "Three.js", "WebGL", "Tailwind CSS", "Vite"],
       hasDemo: false
@@ -764,7 +764,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
         transition={{ duration: 0.6, delay: 0.8 }}
         className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-black"
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-4">
+        <div className="w-full px-6 sm:px-8 lg:px-12 py-4">
           <div className="flex justify-between items-center">              
             <Link to="/" className="text-xl font-bold tracking-tight text-[#000052]">
               {/* JUDE ROUHANA */}
@@ -1190,7 +1190,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
           transition={{ duration: 0.6, delay: 0.8 }}
           className="px-6 sm:px-8 lg:px-12 py-12 border-t border-black"
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <div className="flex flex-col md:flex-row md:justify-between gap-8">
               <div>
                 <h3 className="text-xl font-bold mb-4 text-[#000052]">Jude Rouhana</h3>

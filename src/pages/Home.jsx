@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 
 function Home() {
-  // Initialize showIntro - always show on page load/reload
-  const [showIntro, setShowIntro] = useState(true)
+  // Initialize showIntro - will be set based on whether it's an initial visit
+  const [showIntro, setShowIntro] = useState(false)
   const [startLetterWave, setStartLetterWave] = useState(false)
   const [logoReveal, setLogoReveal] = useState(false)
   const [isShiftHeld, setIsShiftHeld] = useState(false)
@@ -88,9 +88,14 @@ function Home() {
     }
   }, [showIntro])
 
-  // Intro animation effect - play on every page load/reload
+  // Intro animation effect - only play on initial site visit (external link)
   useEffect(() => {
-    // Reset intro state on component mount
+    // Check if this is an initial site visit (external link or direct visit)
+    const referrer = document.referrer
+    const isInitialVisit = !referrer || !referrer.includes(window.location.hostname)
+    
+    // Only show intro on initial visit
+    if (isInitialVisit) {
     setShowIntro(true)
     setStartLetterWave(false)
     setLogoReveal(false)
@@ -111,6 +116,12 @@ function Home() {
       clearTimeout(timer)
       clearTimeout(logoTimer)
       clearTimeout(hideTimer)
+      }
+    } else {
+      // Internal navigation - skip intro
+      setShowIntro(false)
+      setStartLetterWave(false)
+      setLogoReveal(false)
     }
   }, []) // Empty dependency array ensures this runs only on mount
 
@@ -754,7 +765,7 @@ function Home() {
           className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-black"
           style={{ visibility: showIntro ? 'hidden' : 'visible' }}
         >
-          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-4">
+          <div className="w-full px-6 sm:px-8 lg:px-12 py-4">
             <div className="flex justify-between items-center">              
               <Link to="/" className="text-xl font-bold tracking-tight text-[#000052]">
                 {/* JUDE ROUHANA */}
@@ -978,19 +989,11 @@ function Home() {
           >
             <motion.button
               onClick={() => setIsCanvasMode(true)}
-              className="px-4 py-2 bg-white border border-black text-[#000052] text-sm font-medium hover:bg-[#000052] hover:text-white transition-colors"
+              className="px-4 py-2 bg-[#000052] border border-black text-white text-sm font-medium hover:bg-white hover:text-[#000052] transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              animate={{
-                scale: [1, 1.07, 1],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
             >
-              CANVAS!
+              Canvas
             </motion.button>
           </motion.div>
         )}
@@ -1144,7 +1147,7 @@ function Home() {
             className="px-6 sm:px-8 lg:px-12 py-12 border-t border-black"
             style={{ visibility: showIntro ? 'hidden' : 'visible' }}
           >
-            <div className="max-w-7xl mx-auto">
+            <div className="w-full">
               <div className="flex flex-col md:flex-row md:justify-between gap-8">
                 <div>
                   <h3 className="text-xl font-bold mb-4 text-[#000052]">Jude Rouhana</h3>

@@ -305,7 +305,7 @@ const About = () => {
         transition={{ duration: 0.6, delay: 0.8 }}
         className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-black"
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-4">
+        <div className="w-full px-6 sm:px-8 lg:px-12 py-4">
           <div className="flex justify-between items-center">              
             <Link to="/" className="text-xl font-bold tracking-tight text-[#000052]">
               Jude Rouhana
@@ -429,13 +429,6 @@ const About = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
           className="flex-1 pt-20 relative"
-          style={{
-            backgroundImage: isMobile ? 'url(/mobilebackground.png)' : 'url(/aboutbackground.png)',
-            backgroundSize: isMobile ? '50%' : '65%',
-            backgroundPosition: isMobile ? 'center top 10%' : 'left 32% top 25%',
-            backgroundRepeat: 'no-repeat',
-            minHeight: 'calc(100vh - 80px)'
-          }}
         >
           <section className="px-6 sm:px-8 lg:px-24 pt-48 md:pt-32 pb-10 relative z-20">
             <div className="max-w-7xl mx-auto">
@@ -443,10 +436,19 @@ const About = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="flex flex-col md:flex-row gap-6 md:gap-6 items-start"
+                className="flex flex-col md:flex-row gap-8 items-start"
               >
+                {/* Image - above text on mobile, left side on desktop */}
+                <div className="w-full md:w-auto md:flex-shrink-0 order-1 md:order-1 md:ml-32 -mt-40 md:mt-0">
+                  <img 
+                    src="/mobilebackground.png" 
+                    alt="About" 
+                    className="w-3/4 mx-auto md:w-auto md:max-w-xs object-contain"
+                  />
+                </div>
+                
                 {/* Text Content */}
-                <div className="flex-1 space-y-4 md:ml-auto md:max-w-2xl">
+                <div className="flex-1 space-y-4 md:ml-auto md:max-w-2xl order-2 md:order-2">
                   <span className="text-xl sm:text-2xl md:text-4xl font-bold mb-4 text-[#000052]">
                     Who am I?
                   </span>
@@ -648,7 +650,7 @@ const About = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="px-6 sm:px-8 lg:px-12 py-12 border-t border-black relative z-20"
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <div className="flex flex-col md:flex-row md:justify-between gap-8">
               <div>
                 <h3 className="text-xl font-bold mb-4 text-[#000052]">Jude Rouhana</h3>

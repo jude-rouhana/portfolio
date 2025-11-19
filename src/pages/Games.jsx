@@ -479,7 +479,7 @@ const Games = () => {
         transition={{ duration: 0.6, delay: 0.8 }}
         className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-black"
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-4">
+        <div className="w-full px-6 sm:px-8 lg:px-12 py-4">
           <div className="flex justify-between items-center">              
             <Link to="/" className="text-xl font-bold tracking-tight text-[#000052]">
               {/* JUDE ROUHANA */}
@@ -871,7 +871,7 @@ const Games = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="px-6 sm:px-8 lg:px-12 py-12 border-t border-black"
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <div className="flex flex-col md:flex-row md:justify-between gap-8">
               <div>
                 <h3 className="text-xl font-bold mb-4 text-[#000052]">Jude Rouhana</h3>

@@ -116,7 +116,7 @@ const About = () => {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-contrast mb-2 sm:mb-4 font-display">
               About Me
             </h2>
-            <div className="w-16 sm:w-24 h-1 bg-accent-gold mx-auto rounded-full"></div>
+            <div className="w-16 sm:w-24 h-1 bg-accent-gold mx-auto rounded-none"></div>
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-6 sm:gap-12 items-center">
@@ -124,8 +124,8 @@ const About = () => {
             <motion.div variants={itemVariants} className="space-y-4 sm:space-y-8">
                               {/* Profile Photo */}
                 <div className="relative">
-                  <div className="w-48 h-48 sm:w-80 sm:h-80 mx-auto rounded-full bg-accent-light/20 p-1">
-                    <div className="w-full h-full rounded-full bg-transparent overflow-hidden">
+                  <div className="w-48 h-48 sm:w-80 sm:h-80 mx-auto rounded-none bg-accent-light/20 p-1">
+                    <div className="w-full h-full rounded-none bg-transparent overflow-hidden">
                       <img 
                         src="/headshot.jpg" 
                         alt="Jude Rouhana" 
@@ -134,20 +134,20 @@ const About = () => {
                     </div>
                   </div>
                   {/* Decorative elements */}
-                  <div className="absolute top-1/2 left-1/2 w-6 h-6 sm:w-8 sm:h-8 bg-[#8B0000] rounded-full opacity-60 orbit-animation"></div>
-                  <div className="absolute top-1/2 left-1/2 w-4 h-4 sm:w-6 sm:h-6 bg-[#006400] rounded-full opacity-60 orbit-animation-reverse"></div>
-                  <div className="absolute top-1/2 left-1/2 w-5 h-5 sm:w-7 sm:h-7 bg-[#B8860B] rounded-full opacity-60 orbit-animation-2"></div>
-                  <div className="absolute top-1/2 left-1/2 w-4 h-4 sm:w-5 sm:h-5 bg-[#000080] rounded-full opacity-60 orbit-animation-3"></div>
-                  <div className="absolute top-1/2 left-1/2 w-6 h-6 sm:w-9 sm:h-9 bg-[#10B0FF] rounded-full opacity-60 orbit-animation-4"></div>
+                  <div className="absolute top-1/2 left-1/2 w-6 h-6 sm:w-8 sm:h-8 bg-[#8B0000] rounded-none opacity-60 orbit-animation"></div>
+                  <div className="absolute top-1/2 left-1/2 w-4 h-4 sm:w-6 sm:h-6 bg-[#006400] rounded-none opacity-60 orbit-animation-reverse"></div>
+                  <div className="absolute top-1/2 left-1/2 w-5 h-5 sm:w-7 sm:h-7 bg-[#B8860B] rounded-none opacity-60 orbit-animation-2"></div>
+                  <div className="absolute top-1/2 left-1/2 w-4 h-4 sm:w-5 sm:h-5 bg-[#000080] rounded-none opacity-60 orbit-animation-3"></div>
+                  <div className="absolute top-1/2 left-1/2 w-6 h-6 sm:w-9 sm:h-9 bg-[#10B0FF] rounded-none opacity-60 orbit-animation-4"></div>
                 </div>
 
               {/* Quick Facts
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-primary-dark rounded-lg border border-border-color">
+                <div className="text-center p-4 bg-primary-dark rounded-none border border-border-color">
                   <div className="text-2xl font-bold text-accent-blue">3+</div>
                   <div className="text-sm text-contrast-gray">Years Experience</div>
                 </div>
-                <div className="text-center p-4 bg-primary-dark rounded-lg border border-border-color">
+                <div className="text-center p-4 bg-primary-dark rounded-none border border-border-color">
                   <div className="text-2xl font-bold text-accent-sky-blue">50+</div>
                   <div className="text-sm text-contrast-gray">Projects Completed</div>
                 </div>
@@ -157,7 +157,7 @@ const About = () => {
             {/* Bio and Skills */}
             <motion.div variants={itemVariants} className="space-y-4 sm:space-y-8">
               {/* Bio */}
-              <div className="bg-primary/40 backdrop-blur-md rounded-2xl p-2 sm:p-4 shadow-xl border border-border-color/50">
+              <div className="bg-primary/40 backdrop-blur-md rounded-none p-2 sm:p-4 shadow-xl border border-border-color/50">
                 <h4 className="text-lg sm:text-xl font-semibold text-contrast mb-2 sm:mb-4 font-display">
                   Hello!
                 </h4>
@@ -174,7 +174,7 @@ const About = () => {
                   href="/Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-accent-blue text-white font-semibold rounded-lg hover:bg-accent-blue/80 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-accent-blue text-white font-semibold rounded-none hover:bg-accent-blue/80 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -199,7 +199,7 @@ const About = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={inView ? { opacity: 1, y: 0 } : {}}
                         transition={{ delay: 0.2 }}
-                        className="border border-border-color rounded-lg overflow-hidden"
+                        className="border border-border-color rounded-none overflow-hidden"
                       >
                         {/* Section Header */}
                         <button
@@ -207,7 +207,7 @@ const About = () => {
                           className="w-full flex items-center justify-between p-4 bg-primary-dark hover:bg-primary-dark/90 transition-colors duration-200"
                         >
                           <div className="flex items-center space-x-3">
-                            <div className={`w-3 h-3 rounded-full ${config.color} flex-shrink-0`}></div>
+                            <div className={`w-3 h-3 rounded-none ${config.color} flex-shrink-0`}></div>
                             <span className="text-contrast font-semibold">{config.title}</span>
                             <span className="text-contrast-gray text-sm">({skillsList.length})</span>
                           </div>
@@ -238,9 +238,9 @@ const About = () => {
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={inView && expandedSections[type] ? { opacity: 1, x: 0 } : {}}
                                   transition={{ delay: index * 0.05 }}
-                                  className="flex items-center space-x-3 p-2 rounded-lg hover:bg-primary-dark/70 transition-colors duration-200"
+                                  className="flex items-center space-x-3 p-2 rounded-none hover:bg-primary-dark/70 transition-colors duration-200"
                                 >
-                                  <div className={`w-3 h-3 rounded-full ${skill.color} flex-shrink-0`}></div>
+                                  <div className={`w-3 h-3 rounded-none ${skill.color} flex-shrink-0`}></div>
                                   <span className="text-contrast font-medium text-sm">{skill.name}</span>
                                 </motion.div>
                               ))}

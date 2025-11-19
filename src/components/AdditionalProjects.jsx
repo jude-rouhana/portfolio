@@ -94,7 +94,7 @@ const AdditionalProjects = () => {
         onClick={() => setShowVideoModal(false)}
       >
         <motion.div
-          className="relative bg-white rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
+          className="relative bg-white rounded-none p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -118,7 +118,7 @@ const AdditionalProjects = () => {
           {/* Video Container */}
           <div className="w-full max-w-xl mx-auto">
             <video
-              className="w-full rounded-lg"
+              className="w-full rounded-none"
               controls
               preload="metadata"
               autoPlay
@@ -160,7 +160,7 @@ const AdditionalProjects = () => {
         onClick={() => setShowParticleModal(false)}
       >
         <motion.div
-          className="relative bg-white rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
+          className="relative bg-white rounded-none p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -184,7 +184,7 @@ const AdditionalProjects = () => {
           {/* Video Container */}
           <div className="w-full">
             <video
-              className="w-full rounded-lg"
+              className="w-full rounded-none"
               controls
               preload="metadata"
               autoPlay
@@ -226,7 +226,7 @@ const AdditionalProjects = () => {
         onClick={() => setShowPixelArtModal(false)}
       >
         <motion.div
-          className="relative bg-white rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
+          className="relative bg-white rounded-none p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -250,7 +250,7 @@ const AdditionalProjects = () => {
           {/* Video Container */}
           <div className="w-full max-w-3xl mx-auto">
             <video
-              className="w-full rounded-lg"
+              className="w-full rounded-none"
               controls
               preload="metadata"
               autoPlay
@@ -315,7 +315,7 @@ const AdditionalProjects = () => {
             <p className="text-contrast-gray text-lg max-w-3xl mx-auto">
               A collection of smaller projects and experiments showcasing various skills and interests
             </p>
-            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-full mt-6"></div>
+            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-none mt-6"></div>
           </motion.div>
 
           {/* Projects Grid */}
@@ -324,13 +324,13 @@ const AdditionalProjects = () => {
               <motion.div
                 key={project.id}
                 variants={itemVariants}
-                className="group bg-primary rounded-lg overflow-hidden border border-border-color hover:border-accent-gold/50 transition-all duration-300 hover:shadow-lg"
+                className="group bg-primary rounded-none overflow-hidden border border-border-color hover:border-accent-gold/50 transition-all duration-300 hover:shadow-lg"
                 whileHover={{ y: -5 }}
               >
                 {/* Project Header */}
                 <div className="p-6 border-b border-border-color">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="px-3 py-1 bg-accent-blue/10 text-accent-blue text-xs font-medium rounded-full">
+                    <span className="px-3 py-1 bg-accent-blue/10 text-accent-blue text-xs font-medium rounded-none">
                       {project.category}
                     </span>
                     {/* <span className="text-contrast-gray text-sm font-medium">
@@ -351,7 +351,7 @@ const AdditionalProjects = () => {
                     {project.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="px-2 py-1 bg-accent-gold/10 text-accent-gold text-xs font-medium rounded-full"
+                        className="px-2 py-1 bg-accent-gold/10 text-accent-gold text-xs font-medium rounded-none"
                       >
                         {tech}
                       </span>
@@ -363,7 +363,7 @@ const AdditionalProjects = () => {
                     {project.category === "Animation" ? (
                       <motion.button
                         onClick={() => setShowVideoModal(true)}
-                        className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-lg hover:bg-accent-gold/80 transition-all duration-300"
+                        className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-none hover:bg-accent-gold/80 transition-all duration-300"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -375,7 +375,7 @@ const AdditionalProjects = () => {
                           href="https://pixelartsmoother.onrender.com"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-lg hover:bg-accent-gold/80 transition-all duration-300"
+                          className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-none hover:bg-accent-gold/80 transition-all duration-300"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -383,7 +383,7 @@ const AdditionalProjects = () => {
                         </motion.a>
                         <motion.button
                           onClick={() => setShowPixelArtModal(true)}
-                          className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-lg hover:bg-accent-gold/80 transition-all duration-300"
+                          className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-none hover:bg-accent-gold/80 transition-all duration-300"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -396,14 +396,14 @@ const AdditionalProjects = () => {
                     ) : (
                       <>
                         <motion.button
-                          className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-lg hover:bg-accent-gold/80 transition-all duration-300"
+                          className="px-4 py-2 bg-accent-gold text-white text-sm font-semibold rounded-none hover:bg-accent-gold/80 transition-all duration-300"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
                           View Details
                         </motion.button>
                         <motion.button
-                          className="px-4 py-2 border border-accent-gold text-accent-gold text-sm font-semibold rounded-lg hover:bg-accent-gold hover:text-white transition-all duration-300"
+                          className="px-4 py-2 border border-accent-gold text-accent-gold text-sm font-semibold rounded-none hover:bg-accent-gold hover:text-white transition-all duration-300"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -427,7 +427,7 @@ const AdditionalProjects = () => {
             </p>
             <motion.a
               href="#contact"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-accent-blue text-white font-semibold rounded-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-accent-blue text-white font-semibold rounded-none hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >

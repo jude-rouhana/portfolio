@@ -173,7 +173,7 @@ const Hero = () => {
               {/* Logo instead of Portfolio text */}
               <div className="flex justify-center items-center">
                 <motion.img
-                  src="/logo/JR%20Logo.png"
+                  src="/logo/Logo%20block%20color.png"
                   alt="JR Logo"
                   className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
                   initial={{ opacity: 0, y: 20 }}
@@ -304,7 +304,7 @@ const Hero = () => {
           >
             <motion.button
               onClick={() => scrollToSection('projects')}
-              className="px-8 py-4 bg-accent-blue text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+              className="px-8 py-4 bg-accent-blue text-white font-semibold rounded-none shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -313,7 +313,7 @@ const Hero = () => {
             
             <motion.button
               onClick={() => scrollToSection('contact')}
-              className="px-8 py-4 border-2 border-accent-blue text-accent-blue font-semibold rounded-lg hover:bg-accent-blue hover:text-white transition-all duration-300"
+              className="px-8 py-4 border-2 border-accent-blue text-accent-blue font-semibold rounded-none hover:bg-accent-blue hover:text-white transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

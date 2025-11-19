@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const Navbar = ({ activeSection, theme }) => {
+const Navbar = ({ activeSection }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -83,13 +83,12 @@ const Navbar = ({ activeSection, theme }) => {
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <img 
-              src={activeSection === 'home' || (isScrolled && theme === 'dark') ? "/logo/JR%20Logo.png" : "/logo/JR%20Logo%20alt.png"} 
+              src="/logo/Logo%20block%20color.png" 
               alt="JR Logo" 
               className="w-12 h-12 mr-3 object-contain"
             />
             <span className={`text-xl font-bold font-display ${
-              activeSection === 'home' ? 'text-white' : 
-              isScrolled ? 'text-contrast' : 'text-accent-blue'
+              activeSection === 'home' ? 'text-white' : 'text-accent-blue'
             }`}>JUDE ROUHANA</span>
           </motion.div>
 
@@ -104,7 +103,7 @@ const Navbar = ({ activeSection, theme }) => {
                     ? activeSection === 'home' ? 'text-white' : 'text-accent-blue'
                     : activeSection === 'home' 
                       ? 'text-white hover:text-accent-light' 
-                      : isScrolled ? 'text-contrast hover:text-accent-blue' : 'text-accent-blue hover:text-accent-sky-blue'
+                      : 'text-accent-blue hover:text-accent-sky-blue'
                 }`}
                 whileHover={{ y: -2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -127,9 +126,8 @@ const Navbar = ({ activeSection, theme }) => {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className={`md:hidden p-2 rounded-md hover:text-accent-blue focus:outline-none ${
-              activeSection === 'home' ? 'text-white' :
-              isScrolled ? 'text-contrast' : 'text-accent-blue'
+            className={`md:hidden p-2 rounded-none hover:text-accent-blue focus:outline-none ${
+              activeSection === 'home' ? 'text-white' : 'text-accent-blue'
             }`}
             onClick={() => setIsOpen(!isOpen)}
             whileTap={{ scale: 0.95 }}
@@ -158,7 +156,7 @@ const Navbar = ({ activeSection, theme }) => {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className={`px-2 pt-2 pb-3 space-y-1 rounded-lg mt-2 shadow-lg mx-4 ${
+              <div className={`px-2 pt-2 pb-3 space-y-1 rounded-none mt-2 shadow-lg mx-4 ${
                 isScrolled 
                   ? 'bg-white shadow-xl' 
                   : 'bg-primary/98 backdrop-blur-md'
@@ -167,7 +165,7 @@ const Navbar = ({ activeSection, theme }) => {
                   <motion.button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className={`block w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    className={`block w-full text-left px-3 py-2 rounded-none text-sm font-medium transition-colors duration-200 ${
                       activeSection === item.id
                         ? 'text-accent-blue bg-accent-blue/10'
                         : 'text-contrast hover:text-accent-blue hover:bg-accent-blue/5'

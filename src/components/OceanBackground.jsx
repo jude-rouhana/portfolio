@@ -90,37 +90,30 @@ const OceanBackground = ({ onGameModeChange }) => {
     sunLight.shadow.camera.bottom = -100
     scene.add(sunLight)
 
-    const skyGeometry = new THREE.SphereGeometry(500, 32, 32)
-    const skyMaterial = new THREE.ShaderMaterial({
-      vertexShader: `
-        varying vec3 vWorldPosition;
-        void main() {
-          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-          vWorldPosition = worldPosition.xyz;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 topColor;
-        uniform vec3 bottomColor;
-        uniform float offset;
-        uniform float exponent;
-        varying vec3 vWorldPosition;
-        void main() {
-          float h = normalize(vWorldPosition + vec3(0.0, offset, 0.0)).y;
-          vec3 col = mix(bottomColor, topColor, max(pow(max(h, 0.0), exponent), 0.0));
-          gl_FragColor = vec4(col, 1.0);
-        }
-      `,
-      uniforms: {
-        topColor: { value: new THREE.Color(0x0077ff) },
-        bottomColor: { value: new THREE.Color(0xffffff) },
-        offset: { value: 33.0 },
-        exponent: { value: 0.6 }
-      },
-      side: THREE.BackSide
-    })
-    scene.add(new THREE.Mesh(skyGeometry, skyMaterial))
+    // Load sky texture for skybox (box)
+    const skyTextureLoader = new THREE.TextureLoader()
+    // const skyTexture = skyTextureLoader.load('/Textures/sky.jpg')
+    const skyTexture = skyTextureLoader.load('/Textures/sky2.jpg')
+    skyTexture.wrapS = THREE.RepeatWrapping
+    skyTexture.wrapT = THREE.RepeatWrapping
+    
+    // Create box skybox - large enough to contain the scene
+    const skyBoxSize = 750
+    const skyGeometry = new THREE.BoxGeometry(skyBoxSize, skyBoxSize, skyBoxSize)
+    
+    // Create materials for each face of the box
+    // Bottom face gets dark blue color to match ocean, other faces use sky texture
+    const skyMaterials = [
+      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide, fog: false }), // Right
+      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide, fog: false }), // Left
+      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide, fog: false }), // Top
+      new THREE.MeshBasicMaterial({ color: 0x001f3f, side: THREE.BackSide, fog: false }), // Bottom - dark blue
+      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide, fog: false }), // Front
+      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide, fog: false })  // Back
+    ]
+    
+    const skyMesh = new THREE.Mesh(skyGeometry, skyMaterials)
+    scene.add(skyMesh)
 
     // Ship variables
     let ship = null
@@ -153,11 +146,11 @@ const OceanBackground = ({ onGameModeChange }) => {
     }
     
     // Physics constants
-    const maxSpeed = 1.2  // Increased from 0.4
-    const acceleration = 0.08  // Increased from 0.005
+    const maxSpeed = 1  // Increased from 0.4
+    const acceleration = 0.1  // Increased from 0.005
     const rotationSpeed = 0.2
     const friction = 0.95
-    const angularFriction = 0.92
+    const angularFriction = 0.95
     
     // Ocean boundaries - 5x larger: 175*5 = 875, 75*5 = 375
     const oceanBounds = { xMin: -875, xMax: 875, zMin: -375, zMax: 375 }
@@ -200,16 +193,29 @@ const OceanBackground = ({ onGameModeChange }) => {
     // Reduce grid resolution on mobile for better performance
     const GRID = mobileDevice ? 100 : 200
     // Ocean made 5x larger: 350*5 = 1750, 150*5 = 750
-    const geometry = new THREE.PlaneGeometry(1750, 750, GRID, GRID)
+    const geometry = new THREE.PlaneGeometry(750, 750, GRID, GRID)
+    
+    // Load water texture
+    const textureLoader = new THREE.TextureLoader()
+    const waterTexture = textureLoader.load('/Textures/water2.jpg')
+    waterTexture.wrapS = THREE.RepeatWrapping
+    waterTexture.wrapT = THREE.RepeatWrapping
+    // Repeat texture to tile across the ocean surface (higher values = more tiles = smaller texture per tile)
+    // Ocean is 1750x750, so we want many tiles to avoid stretching
+    waterTexture.repeat.set(50, 25) // More tiles for better detail without stretching
+    
     const material = new THREE.MeshPhongMaterial({
+      map: waterTexture,
       vertexColors: true,
       side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.9,
+      transparent: false, // Make ocean opaque
+      opacity: 1.0,
       shininess: 100
     })
     const ocean = new THREE.Mesh(geometry, material)
     ocean.rotation.x = -Math.PI / 2
+    // Position ocean at the base of the skybox (y = 0 is the center, so we position it at the bottom)
+    ocean.position.y = 0 // Ocean sits at the base of the box
     ocean.receiveShadow = true
     scene.add(ocean)
 
@@ -896,17 +902,27 @@ const OceanBackground = ({ onGameModeChange }) => {
         cursor: isShipLoaded ? 'pointer' : 'default'
       }}
     >
+      {/* Instruction Message - Show when not in game mode */}
+      {!isGameMode && isShipLoaded && (
+        <div className="absolute top-4 left-4 pointer-events-none z-50">
+          <div className="bg-black/70 text-white px-6 py-4 rounded-none backdrop-blur-sm border-2 border-white">
+            <p className="text-lg font-bold mb-1">Click on the boat to start the game</p>
+            <p className="text-sm opacity-75">Use arrow keys or joystick to control the ship</p>
+          </div>
+        </div>
+      )}
+
       {/* Game UI Overlay */}
       {isGameMode && (
         <div className="absolute inset-0 pointer-events-none z-50">
           {/* Fragment Counter */}
-          <div className={`absolute top-4 left-4 bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm ${isMobile ? 'px-2 py-1' : ''}`}>
+          <div className={`absolute top-4 left-4 bg-black/70 text-white px-4 py-2 rounded-none backdrop-blur-sm border-2 border-white ${isMobile ? 'px-2 py-1' : ''}`}>
             <div className={`${isMobile ? 'text-sm' : 'text-lg'} font-bold`}>Tablet Fragments: {collectedFragments}</div>
           </div>
           
           {/* Instructions - top right, always visible */}
           <div 
-            className={`absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-lg backdrop-blur-sm ${isMobile ? 'hidden' : ''}`}
+            className={`absolute top-4 right-4 bg-black/70 text-white px-4 py-3 rounded-none backdrop-blur-sm border-2 border-white ${isMobile ? 'hidden' : ''}`}
           >
             <h3 className="text-lg font-bold mb-2">Ship Control</h3>
             <p className="text-sm mb-1">↑ ↓ Arrow Keys: Move Forward/Backward</p>
@@ -917,7 +933,7 @@ const OceanBackground = ({ onGameModeChange }) => {
           
           {/* Mobile Instructions */}
           {isMobile && (
-            <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-2 rounded-lg backdrop-blur-sm max-w-[180px]">
+            <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-2 rounded-none backdrop-blur-sm max-w-[180px] border-2 border-white">
               <h3 className="text-xs font-bold mb-1">Ship Control</h3>
               <p className="text-[10px] mb-0.5 leading-tight">Use joystick to control the ship</p>
               <p className="text-[10px] text-yellow-400 mt-1 leading-tight">Collect the glowing fragments!</p>
@@ -940,7 +956,7 @@ const OceanBackground = ({ onGameModeChange }) => {
                 {/* Outer Circle - Joystick Container */}
                 <div
                   ref={joystickElementRef}
-                  className="relative rounded-full border-2 border-gray-500/70 bg-gray-900/50 backdrop-blur-sm shadow-inner"
+                  className="relative rounded-none border-2 border-gray-500/70 bg-gray-900/50 backdrop-blur-sm shadow-inner"
                   style={{
                     width: 'clamp(6rem, 24vw, 8rem)',
                     height: 'clamp(6rem, 24vw, 8rem)',
@@ -965,7 +981,7 @@ const OceanBackground = ({ onGameModeChange }) => {
                   {/* Inner Circle - Joystick Handle */}
                   <div
                     ref={joystickRef}
-                    className="absolute rounded-full bg-gradient-to-br from-gray-500 to-gray-700 border-2 border-gray-400 shadow-lg transition-transform duration-100 ease-out"
+                    className="absolute rounded-none bg-gradient-to-br from-gray-500 to-gray-700 border-2 border-gray-400 shadow-lg transition-transform duration-100 ease-out"
                     style={{
                       width: 'clamp(2.5rem, 10vw, 3.5rem)',
                       height: 'clamp(2.5rem, 10vw, 3.5rem)',
@@ -997,7 +1013,7 @@ const OceanBackground = ({ onGameModeChange }) => {
                   state.camera.lookAt(state.originalCameraLookAt)
                   if (state.onGameModeChange) state.onGameModeChange(false)
                 }}
-                className="absolute bg-red-500/80 hover:bg-red-600/90 active:bg-red-700/90 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-white shadow-lg border-2 border-red-400/50 touch-manipulation"
+                className="absolute bg-red-500/80 hover:bg-red-600/90 active:bg-red-700/90 backdrop-blur-md rounded-none flex items-center justify-center font-bold text-white shadow-lg border-2 border-red-400/50 touch-manipulation"
                 style={{ 
                   touchAction: 'manipulation',
                   bottom: 'min(20vh, 120px)', // Match the height of movement controls

@@ -64,9 +64,9 @@ export const videoAssets = {
   },
   
   // Particle Visualization
-  particleVisualization: {
-    local: "/assets/coding%20projects/Particle%20Visualization.mov",
-    external: null, // Add Cloudinary URL when available
+  sailingGame: {  
+    local: "/sailing.mp4",
+    external: "", // Add Cloudinary URL when available
   },
 };
 

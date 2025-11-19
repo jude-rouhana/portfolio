@@ -95,7 +95,7 @@ const Projects = () => {
         }}
       >
         <motion.div
-          className="relative bg-white rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto shadow-2xl"
+          className="relative bg-white rounded-none p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto shadow-2xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -136,7 +136,7 @@ const Projects = () => {
                   Screen Recording
                 </h4>
                 <video
-                  className="w-full rounded-lg"
+                  className="w-full rounded-none"
                   controls
                   preload="metadata"
                   muted
@@ -160,7 +160,7 @@ const Projects = () => {
                   Live Action
                 </h4>
                 <video
-                  className="w-full rounded-lg"
+                  className="w-full rounded-none"
                   controls
                   preload="metadata"
                   muted
@@ -181,7 +181,7 @@ const Projects = () => {
           ) : isOthelloProject ? (
             <div className="w-full max-w-lg mx-auto">
               <video
-                className="w-full rounded-lg"
+                className="w-full rounded-none"
                 controls
                 preload="metadata"
                 autoPlay
@@ -194,7 +194,7 @@ const Projects = () => {
           ) : isAstroInvaderProject ? (
             <div className="w-full max-w-lg mx-auto space-y-4">
               <video
-                className="w-full rounded-lg"
+                className="w-full rounded-none"
                 controls
                 preload="metadata"
                 autoPlay
@@ -237,7 +237,7 @@ const Projects = () => {
         onClick={() => setShowDescriptionModal(false)}
       >
         <motion.div
-          className="relative bg-white rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[95vh] overflow-y-auto shadow-2xl"
+          className="relative bg-white rounded-none p-6 max-w-4xl w-full mx-4 max-h-[95vh] overflow-y-auto shadow-2xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -271,7 +271,7 @@ The model successfully generates musically coherent progressions like:
 ['C', 'G', 'Am', 'F', 'C', 'G', 'Am', 'F']
 This specific example demonstrates the popular I-V-vi-IV progression (in the key of C), which appears in countless pop songs. The fact that our neural network independently discovered this common progression suggests it has learned meaningful harmonic relationships from the training data. 
 "
-              className="w-full h-96 p-4 bg-primary border border-border-color rounded-lg text-contrast placeholder-contrast-gray resize-none focus:outline-none focus:border-accent-blue"
+              className="w-full h-96 p-4 bg-primary border border-border-color rounded-none text-contrast placeholder-contrast-gray resize-none focus:outline-none focus:border-accent-blue"
             />
           </div>
         </motion.div>
@@ -304,7 +304,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={() => setShowFocusAidModal(false)}>
-        <div className="relative bg-white rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="relative bg-white rounded-none p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
           {/* Close Button */}
           <button
             onClick={() => setShowFocusAidModal(false)}
@@ -328,20 +328,20 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
             {/* Navigation Buttons */}
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 text-gray-800 p-3 rounded-full hover:bg-white shadow-lg transition-all duration-200"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 text-gray-800 p-3 rounded-none hover:bg-white shadow-lg transition-all duration-200"
             >
               ←
             </button>
             
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 text-gray-800 p-3 rounded-full hover:bg-white shadow-lg transition-all duration-200"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 text-gray-800 p-3 rounded-none hover:bg-white shadow-lg transition-all duration-200"
             >
               →
             </button>
 
             {/* Image Display - Only this part changes */}
-            <div className="w-full h-96 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+            <div className="w-full h-96 bg-gray-100 rounded-none overflow-hidden flex items-center justify-center">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={focusAidImageIndex}
@@ -444,7 +444,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
             <h2 className="text-4xl sm:text-5xl font-bold text-contrast mb-4 font-display">
               Featured Coding Projects
             </h2>
-            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-full mb-8"></div>
+            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-none mb-8"></div>
           </motion.div>
 
           {/* Projects List */}
@@ -452,7 +452,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
             {projects.map((project, index) => (
               <motion.div
                 key={project.id}
-                className="bg-primary-dark rounded-lg border border-border-color overflow-hidden"
+                className="bg-primary-dark rounded-none border border-border-color overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
@@ -495,7 +495,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                       <div className="p-6 space-y-6">
                         {/* Project Image */}
                         <div className="flex justify-center">
-                          <div className="h-48 w-full max-w-md bg-accent-light/10 rounded-lg flex items-center justify-center">
+                          <div className="h-48 w-full max-w-md bg-accent-light/10 rounded-none flex items-center justify-center">
                             {project.image && (project.image.startsWith('assets/') || project.image.startsWith('/')) ? (
                               <img 
                                 src={project.image} 
@@ -525,7 +525,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                           {project.technologies.map((tech) => (
                             <span
                               key={tech}
-                              className="px-3 py-1 bg-accent-blue/10 text-accent-blue text-sm font-medium rounded-full border border-accent-blue/20"
+                              className="px-3 py-1 bg-accent-blue/10 text-accent-blue text-sm font-medium rounded-none border border-accent-blue/20"
                             >
                               {tech}
                             </span>
@@ -537,7 +537,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                           {project.hasDemo && (
                             <motion.button
                               onClick={() => handleLiveDemoClick(project.id)}
-                              className="px-6 py-3 bg-accent-blue text-white font-semibold rounded-lg hover:bg-accent-blue/80 transition-all duration-300"
+                              className="px-6 py-3 bg-accent-blue text-white font-semibold rounded-none hover:bg-accent-blue/80 transition-all duration-300"
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
@@ -547,7 +547,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                           {project.hasDescription && (
                             <motion.button
                               onClick={handleDescriptionClick}
-                              className="px-6 py-3 bg-accent-gold text-white font-semibold rounded-lg hover:bg-accent-gold/80 transition-all duration-300"
+                              className="px-6 py-3 bg-accent-gold text-white font-semibold rounded-none hover:bg-accent-gold/80 transition-all duration-300"
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
@@ -557,7 +557,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                           {project.hasGallery && (
                             <motion.button
                               onClick={() => setShowFocusAidModal(true)}
-                              className="px-6 py-3 bg-accent-gold text-white font-semibold rounded-lg hover:bg-accent-gold/80 transition-all duration-300"
+                              className="px-6 py-3 bg-accent-gold text-white font-semibold rounded-none hover:bg-accent-gold/80 transition-all duration-300"
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >

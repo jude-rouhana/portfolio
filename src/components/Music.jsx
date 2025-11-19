@@ -168,7 +168,7 @@ const Music = () => {
             <h2 className="text-4xl sm:text-5xl font-bold text-contrast mb-4 font-display">
               Music
             </h2>
-            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-full mb-8"></div>
+            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-none mb-8"></div>
             {/* <p className="text-xl text-contrast-gray max-w-3xl mx-auto mb-8">
             "Music is your own experience, your own thoughts, your wisdom. If you don't live it, it won't come out of your horn. They teach you there's a boundary line to music. But, man, there's no boundary line to art" – Charlie Parker
             </p> */}
@@ -176,8 +176,8 @@ const Music = () => {
             {/* Saxophone Photo */}
             {/* <div className="flex justify-center">
               <div className="relative">
-                <div className="w-64 h-64 rounded-full bg-accent-light p-1">
-                  <div className="w-full h-full rounded-full bg-primary overflow-hidden">
+                <div className="w-64 h-64 rounded-none bg-accent-light p-1">
+                  <div className="w-full h-full rounded-none bg-primary overflow-hidden">
                     <img 
                       src="assets/music/SaxophoneSolo.jpg" 
                       alt="Saxophone Solo Performance" 
@@ -217,7 +217,7 @@ const Music = () => {
                 return (
                   <motion.div
                     key={track.id}
-                    className="bg-primary-dark rounded-xl p-6 border border-border-color hover:border-accent-gold/50 transition-all duration-300 hover:shadow-xl"
+                    className="bg-primary-dark rounded-none p-6 border border-border-color hover:border-accent-gold/50 transition-all duration-300 hover:shadow-xl"
                     whileHover={{ y: -5 }}
                     initial={{ opacity: 0, y: 30 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -243,12 +243,12 @@ const Music = () => {
                     </div>
 
                     {/* Audio Player */}
-                    <div className="bg-accent-light/10 rounded-lg p-4 mb-4">
+                    <div className="bg-accent-light/10 rounded-none p-4 mb-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <button 
                             onClick={() => handlePlayPause(track)}
-                            className="w-10 h-10 bg-accent-gold rounded-full flex items-center justify-center hover:bg-accent-gold/80 transition-colors"
+                            className="w-10 h-10 bg-accent-gold rounded-none flex items-center justify-center hover:bg-accent-gold/80 transition-colors"
                           >
                             <span className="text-white text-lg">
                               {isTrackPlaying ? (
@@ -277,11 +277,11 @@ const Music = () => {
                       
                       {/* Progress Bar */}
                       <div 
-                        className="w-full bg-gray-200 rounded-full h-2 mb-2 cursor-pointer"
+                        className="w-full bg-gray-200 rounded-none h-2 mb-2 cursor-pointer"
                         onClick={handleSeek}
                       >
                         <motion.div
-                          className="h-2 bg-accent-gold rounded-full"
+                          className="h-2 bg-accent-gold rounded-none"
                           initial={{ width: "0%" }}
                           animate={inView ? { 
                             width: isCurrentTrack ? `${(currentTime / duration) * 100}%` : "0%" 
@@ -315,7 +315,7 @@ const Music = () => {
                 return (
                   <motion.div
                     key={track.id}
-                    className="bg-primary-dark rounded-lg p-4 border border-border-color hover:border-accent-gold/50 transition-all duration-300 hover:shadow-lg"
+                    className="bg-primary-dark rounded-none p-4 border border-border-color hover:border-accent-gold/50 transition-all duration-300 hover:shadow-lg"
                     whileHover={{ y: -3 }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -340,12 +340,12 @@ const Music = () => {
                     </div>
 
                     {/* Mini Player */}
-                    <div className="bg-accent-light/5 rounded p-3 mb-3">
+                    <div className="bg-accent-light/5 rounded-none p-3 mb-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <button 
                             onClick={() => handlePlayPause(track)}
-                            className="w-6 h-6 bg-accent-gold rounded-full flex items-center justify-center hover:bg-accent-gold/80 transition-colors"
+                            className="w-6 h-6 bg-accent-gold rounded-none flex items-center justify-center hover:bg-accent-gold/80 transition-colors"
                           >
                             <span className="text-white text-lg">
                               {isTrackPlaying ? (
@@ -379,7 +379,7 @@ const Music = () => {
             className="text-center mt-16"
           >
             <motion.button
-              className="px-8 py-4 bg-accent-gold text-white font-semibold rounded-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+              className="px-8 py-4 bg-accent-gold text-white font-semibold rounded-none hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

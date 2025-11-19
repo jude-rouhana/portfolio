@@ -126,7 +126,7 @@ const Contact = () => {
             <h2 className="text-4xl sm:text-5xl font-bold text-contrast mb-4 font-display">
               Contact
             </h2>
-            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-full"></div>
+            <div className="w-24 h-1 bg-accent-gold mx-auto rounded-none"></div>
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-12">
@@ -146,7 +146,7 @@ const Contact = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-border-color rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300"
+                      className="w-full px-4 py-3 border border-border-color rounded-none focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300"
                     //   placeholder="Your name"
                     />
                   </div>
@@ -161,7 +161,7 @@ const Contact = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-border-color rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300"
+                      className="w-full px-4 py-3 border border-border-color rounded-none focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300"
                     //   placeholder="your.email@example.com"
                     />
                   </div>
@@ -178,7 +178,7 @@ const Contact = () => {
                     value={formData.subject}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-border-color rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300"
+                    className="w-full px-4 py-3 border border-border-color rounded-none focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300"
                     // placeholder="What's this about?"
                   />
                 </div>
@@ -194,7 +194,7 @@ const Contact = () => {
                     onChange={handleInputChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 border border-border-color rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300 resize-none"
+                    className="w-full px-4 py-3 border border-border-color rounded-none focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-primary-dark text-contrast placeholder-contrast-gray transition-all duration-300 resize-none"
                     // placeholder="Tell me about your project or just say hello!"
                   />
                 </div>
@@ -202,7 +202,7 @@ const Contact = () => {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full px-8 py-4 bg-accent-gold text-white font-semibold rounded-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-8 py-4 bg-accent-gold text-white font-semibold rounded-none hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                 >
@@ -226,12 +226,12 @@ const Contact = () => {
               {/* Contact Details */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent-blue rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-accent-blue rounded-none flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                     </svg>
                   </div>
-                  <div className="bg-primary-dark border border-border-color rounded-lg px-4 py-2">
+                  <div className="bg-primary-dark border border-border-color rounded-none px-4 py-2">
                     <div className="text-sm font-medium text-contrast-gray">Email</div>
                     <a href="mailto:juderouhana@gmail.com" className="text-accent-blue hover:text-accent-sky-blue transition-colors duration-300">
                       juderouhana@gmail.com
@@ -240,7 +240,7 @@ const Contact = () => {
                 </div>
 
                 {/* <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent-dark rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-accent-dark rounded-none flex items-center justify-center">
                     <span className="text-white text-xl">💼</span>
                   </div>
                   <div>
@@ -260,7 +260,7 @@ const Contact = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-primary-dark border border-border-color rounded-lg hover:border-accent-blue/50 transition-all duration-300 group"
+                      className="flex items-center gap-2 px-4 py-2 bg-primary-dark border border-border-color rounded-none hover:border-accent-blue/50 transition-all duration-300 group"
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -274,7 +274,7 @@ const Contact = () => {
               </div>
 
               {/* Quick Response
-              <div className="bg-accent-light/10 rounded-lg p-6">
+              <div className="bg-accent-light/10 rounded-none p-6">
                 <h4 className="text-lg font-semibold text-contrast mb-2 font-display">Quick Response</h4>
                 <p className="text-contrast-gray text-sm">
                   I typically respond to messages within 24 hours. 

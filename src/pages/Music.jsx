@@ -316,7 +316,7 @@ const Music = () => {
       genre: "Blues",
       audioFile: getAudioUrl('blues') || "/assets/music/Blues.mp3",
       description: "An expressive solo on saxophone, piano, and clarinet over a simple blues progression that combines traditional blues with elements inspired from jazz. Written by Jude Rouhana. Recorded, mixed, and produced by Jude Rouhana.",
-      featured: false
+      featured: true
     },
   ]
 
@@ -473,8 +473,11 @@ const Music = () => {
               className="text-center mb-16"
             >
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#000052] mb-4">
-                Music
+                MUSIC
               </h2>
+              <p className="text-lg text-[#000052] mb-8">
+                A collection of pieces I've written, recorded, and produced.
+              </p>
               <div className="w-24 h-1 bg-[#000052] mx-auto mb-8"></div>
             </motion.div>
 
@@ -493,7 +496,7 @@ const Music = () => {
               transition={{ duration: 0.8, delay: 1.0 }}
               className="mb-16"
             >
-              <h3 className="text-2xl font-bold text-[#000052] mb-8">Featured Tracks</h3>
+              {/* <h3 className="text-2xl font-bold text-[#000052] mb-8">Featured Tracks</h3> */}
               <div className="grid lg:grid-cols-2 gap-8">
                 {featuredTracks.map((track, index) => {
                   const isCurrentTrack = currentTrack && currentTrack.id === track.id

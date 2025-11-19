@@ -591,7 +591,7 @@ const Games = () => {
                   <h2 className="text-4xl sm:text-5xl font-bold text-[#000052] mb-4">
                     GAMES
             </h2>
-            <p className="text-lg text-[#000052] mb-4">A series of games I've built using various programming languages and game development tools.</p>
+            <p className="text-lg text-[#000052] mb-4">Games I've built using various programming languages and game development tools.</p>
                   <div className="w-24 h-1 bg-[#000052] mx-auto rounded-none mb-8"></div>
           </motion.div>
 

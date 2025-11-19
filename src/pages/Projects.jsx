@@ -860,7 +860,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                   <h2 className="text-4xl sm:text-5xl font-bold text-[#000052] mb-4">
                     PROJECTS
             </h2>
-            <p className="text-lg text-[#000052] mb-4">A collection of my coding work, web applications, and other creative projects.</p>
+            <p className="text-lg text-[#000052] mb-4">My coding work, web applications, and other creative projects.</p>
                   <div className="w-24 h-1 bg-[#000052] mx-auto rounded-none mb-8"></div>
           </motion.div>
 

@@ -666,7 +666,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       id: 3,
       title: "Portfolio Website: Jude Rouhana",
       fullTitle: "Portfolio Website",
-      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Continue exploring my work below.",
+      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the CANVAS feature on the home page, a built in pixel art designer! Continue exploring my work below.",
       image: "/portfoliov2.png",
       technologies: ["React", "Framer Motion", "Three.js", "WebGL", "Tailwind CSS", "Vite"],
       hasDemo: false

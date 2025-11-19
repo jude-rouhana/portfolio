@@ -92,6 +92,10 @@ export const audioAssets = {
     local: "/assets/music/R%26B.mp3",
     external: AUDIO_CDN_BASE ? `${AUDIO_CDN_BASE}/music/R%26B.mp3` : null,
   },
+  blues: {
+    local: "/assets/music/Blues.mp3",
+    external: AUDIO_CDN_BASE ? `${AUDIO_CDN_BASE}/music/Blues.mp3` : null,
+  },
 };
 
 // Image assets (keep in repo if < 1MB, otherwise use external)

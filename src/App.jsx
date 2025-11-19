@@ -6,7 +6,7 @@ import ExperimentalPage from './pages/ExperimentalPage'
 import Projects from './pages/Projects'
 import About from './pages/About'
 import ScrollToTop from './components/ScrollToTop'
-// import Music from './pages/Music'
+import Music from './pages/Music'
 import Games from './pages/Games'
 
 function App() {
@@ -127,7 +127,7 @@ function App() {
           <Route path="/sailing-game" element={<ExperimentalPage />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/games" element={<Games />} />
-          {/* <Route path="/music" element={<Music />} /> */}
+          <Route path="/music" element={<Music />} />
         </Routes>
       </AnimatePresence>
     </>

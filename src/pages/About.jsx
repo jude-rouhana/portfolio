@@ -430,8 +430,8 @@ const About = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="flex-1 pt-20 relative"
           style={{
-            backgroundImage: isMobile ? 'url(/mobileabt.png)' : 'url(/aboutbackground.png)',
-            backgroundSize: isMobile ? '40%' : '65%',
+            backgroundImage: isMobile ? 'url(/mobilebackground.png)' : 'url(/aboutbackground.png)',
+            backgroundSize: isMobile ? '50%' : '65%',
             backgroundPosition: isMobile ? 'center top 10%' : 'left 32% top 25%',
             backgroundRepeat: 'no-repeat',
             minHeight: 'calc(100vh - 80px)'

@@ -14,6 +14,7 @@ function Home() {
   // Canvas mode states
   const [isCanvasMode, setIsCanvasMode] = useState(false)
   const [canvasPixels, setCanvasPixels] = useState({})
+  const [canvasHistory, setCanvasHistory] = useState([])
   const [selectedColor, setSelectedColor] = useState('#0d2b45')
   const [toolMode, setToolMode] = useState('draw')
   const [isDrawing, setIsDrawing] = useState(false)
@@ -347,12 +348,14 @@ function Home() {
   const canvasContainerRef = useRef(null)
   const toolModeRef = useRef(toolMode)
   const selectedColorRef = useRef(selectedColor)
+  const canvasPixelsRef = useRef(canvasPixels)
   
   // Keep refs in sync with state
   useEffect(() => {
     toolModeRef.current = toolMode
     selectedColorRef.current = selectedColor
-  }, [toolMode, selectedColor])
+    canvasPixelsRef.current = canvasPixels
+  }, [toolMode, selectedColor, canvasPixels])
 
   const getSnappedCoordinates = (clientX, clientY) => {
     const snappedX = Math.floor(clientX / 32) * 32
@@ -360,12 +363,21 @@ function Home() {
     return { snappedX, snappedY }
   }
 
-  const drawPixel = (x, y) => {
+  const saveStateToHistory = () => {
+    setCanvasHistory(prev => [...prev, JSON.parse(JSON.stringify(canvasPixels))])
+  }
+
+  const drawPixel = (x, y, isFirstPixel = false) => {
     const { snappedX, snappedY } = getSnappedCoordinates(x, y)
     const cellKey = `${snappedX}-${snappedY}`
     
     if (canvasLastCellRef.current === cellKey) return
     canvasLastCellRef.current = cellKey
+
+    // Save state to history when starting a new stroke
+    if (isFirstPixel) {
+      saveStateToHistory()
+    }
 
     if (toolMode === 'erase') {
       setCanvasPixels(prev => {
@@ -386,7 +398,7 @@ function Home() {
     // Don't draw if clicking on tools panel or buttons
     if (event.target.closest('.canvas-tools-panel')) return
     setIsDrawing(true)
-    drawPixel(event.clientX, event.clientY)
+    drawPixel(event.clientX, event.clientY, true)
   }
 
   const handleCanvasMouseMove = (event) => {
@@ -449,6 +461,9 @@ function Home() {
       const touch = event.touches[0]
       if (touch) {
         setIsDrawing(true)
+        // Save state to history when starting a new stroke
+        setCanvasHistory(prev => [...prev, JSON.parse(JSON.stringify(canvasPixelsRef.current))])
+        
         const { snappedX, snappedY } = getSnappedCoordinates(touch.clientX, touch.clientY)
         const cellKey = `${snappedX}-${snappedY}`
         
@@ -516,7 +531,15 @@ function Home() {
   }, [isCanvasMode, isDrawing])
 
   const clearCanvas = () => {
+    saveStateToHistory()
     setCanvasPixels({})
+  }
+
+  const undoCanvas = () => {
+    if (canvasHistory.length === 0) return
+    const previousState = canvasHistory[canvasHistory.length - 1]
+    setCanvasHistory(prev => prev.slice(0, -1))
+    setCanvasPixels(JSON.parse(JSON.stringify(previousState)))
   }
 
   const saveCanvas = () => {
@@ -900,6 +923,15 @@ function Home() {
                   Eraser
                 </motion.button>
                 <motion.button
+                  onClick={undoCanvas}
+                  disabled={canvasHistory.length === 0}
+                  className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm font-medium bg-white text-[#000052] border border-black hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={{ scale: canvasHistory.length === 0 ? 1 : 1.05 }}
+                  whileTap={{ scale: canvasHistory.length === 0 ? 1 : 0.95 }}
+                >
+                  Undo
+                </motion.button>
+                <motion.button
                   onClick={clearCanvas}
                   className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm font-medium bg-white text-[#000052] border border-black hover:bg-gray-100 transition-colors"
                   whileHover={{ scale: 1.05 }}
@@ -918,9 +950,9 @@ function Home() {
               </div>
 
               {/* Instructions */}
-              <div className="text-xs text-[#000052] ml-auto flex items-center gap-1 md:gap-2">
+              <div className="text-sm text-[#000052] ml-auto flex items-center gap-1 md:gap-2">
                 <span className="hidden md:inline">Click or drag to draw • Press ESC to exit</span>
-                <span className="md:hidden text-[10px]">Click to draw</span>
+                <span className="md:hidden text-xs">Click to draw</span>
                 <motion.button
                   onClick={() => setIsCanvasMode(false)}
                   className="md:hidden w-5 h-5 md:w-6 md:h-6 flex items-center justify-center bg-white border border-black text-[#000052] hover:bg-[#000052] hover:text-white transition-colors text-lg"
@@ -949,6 +981,14 @@ function Home() {
               className="px-4 py-2 bg-white border border-black text-[#000052] text-sm font-medium hover:bg-[#000052] hover:text-white transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              animate={{
+                scale: [1, 1.07, 1],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             >
               CANVAS!
             </motion.button>
@@ -971,7 +1011,7 @@ function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: showIntro ? 0 : 1, y: 0 }}
                 transition={{ duration: 0.8, delay: showIntro ? 0 : 1.5 }}
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight mb-8 text-[#000052]"
+                className="text-7xl sm:text-8xl md:text-9xl lg:text-10xl font-bold tracking-tight mb-8 text-[#000052]"
               >
                 {/* JUDE ROUHANA */}
                 Jude Rouhana

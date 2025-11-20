@@ -352,11 +352,14 @@ const OceanBackground = ({ onGameModeChange }) => {
     function updateShipPhysics(time, deltaTime) {
       if (!ship || !isGameModeRef.current) return
       
+      // Read directly from keysPressedRef to get latest joystick values
+      const keys = keysPressedRef.current
+      
       // Handle rotation
-      if (keysPressed.left) {
+      if (keys.left) {
         shipRotationVelocityRef.value += rotationSpeed * deltaTime
       }
-      if (keysPressed.right) {
+      if (keys.right) {
         shipRotationVelocityRef.value -= rotationSpeed * deltaTime
       }
       
@@ -374,10 +377,10 @@ const OceanBackground = ({ onGameModeChange }) => {
       )
       
       // Handle acceleration
-      if (keysPressed.up) {
+      if (keys.up) {
         shipVelocity.add(forward.multiplyScalar(acceleration * deltaTime * 60))
       }
-      if (keysPressed.down) {
+      if (keys.down) {
         shipVelocity.add(forward.multiplyScalar(-acceleration * deltaTime * 60 * 0.5))
       }
       
@@ -654,21 +657,24 @@ const OceanBackground = ({ onGameModeChange }) => {
     const handleKeyDown = (event) => {
       if (!isGameModeRef.current) return
       
+      // Use keysPressedRef.current directly
+      const keys = keysPressedRef.current
+      
       switch(event.key) {
         case 'ArrowUp':
-          keysPressed.up = true
+          keys.up = true
           event.preventDefault()
           break
         case 'ArrowDown':
-          keysPressed.down = true
+          keys.down = true
           event.preventDefault()
           break
         case 'ArrowLeft':
-          keysPressed.left = true
+          keys.left = true
           event.preventDefault()
           break
         case 'ArrowRight':
-          keysPressed.right = true
+          keys.right = true
           event.preventDefault()
           break
         case 'Escape':
@@ -695,21 +701,24 @@ const OceanBackground = ({ onGameModeChange }) => {
     const handleKeyUp = (event) => {
       if (!isGameModeRef.current) return
       
+      // Use keysPressedRef.current directly
+      const keys = keysPressedRef.current
+      
       switch(event.key) {
         case 'ArrowUp':
-          keysPressed.up = false
+          keys.up = false
           event.preventDefault()
           break
         case 'ArrowDown':
-          keysPressed.down = false
+          keys.down = false
           event.preventDefault()
           break
         case 'ArrowLeft':
-          keysPressed.left = false
+          keys.left = false
           event.preventDefault()
           break
         case 'ArrowRight':
-          keysPressed.right = false
+          keys.right = false
           event.preventDefault()
           break
       }
@@ -785,14 +794,15 @@ const OceanBackground = ({ onGameModeChange }) => {
 
   // Joystick handler functions
   const handleJoystickStart = (event) => {
+    // Only work in game mode
+    if (!isGameModeRef.current) return
+    
     setIsJoystickActive(true)
     isJoystickActiveRef.current = true
     if (joystickContainerRef.current) {
-      const rect = joystickContainerRef.current.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
-      const clientX = event.clientX || event.touches?.[0]?.clientX || 0
-      const clientY = event.clientY || event.touches?.[0]?.clientY || 0
+      // Handle both event objects and Touch objects
+      const clientX = event.clientX || (event.touches && event.touches[0]?.clientX) || 0
+      const clientY = event.clientY || (event.touches && event.touches[0]?.clientY) || 0
       handleJoystickMove({ clientX, clientY })
     }
   }
@@ -800,40 +810,71 @@ const OceanBackground = ({ onGameModeChange }) => {
   // Set up touch event listeners with useEffect - using refs to access latest state
   useEffect(() => {
     const joystickEl = joystickElementRef.current
-    if (!joystickEl || !isMobile) return
+    if (!joystickEl) return
 
     // Touch event handlers that use refs to access latest state
     const handleTouchStart = (e) => {
-      e.preventDefault()
-      if (e.touches && e.touches[0]) {
-        handleJoystickStart(e.touches[0])
+      // Check if touch is on the joystick element
+      const touch = e.touches?.[0]
+      if (!touch) return
+      
+      const rect = joystickEl.getBoundingClientRect()
+      const touchX = touch.clientX
+      const touchY = touch.clientY
+      
+      // Check if touch is within joystick bounds
+      if (touchX >= rect.left && touchX <= rect.right && 
+          touchY >= rect.top && touchY <= rect.bottom) {
+        e.preventDefault()
+        e.stopPropagation()
+        handleJoystickStart(e)
       }
     }
 
     const handleTouchMove = (e) => {
-      e.preventDefault()
       if (isJoystickActiveRef.current && e.touches && e.touches[0]) {
-        handleJoystickMove(e.touches[0])
+        e.preventDefault()
+        e.stopPropagation()
+        // Pass the event object so handleJoystickMove can access touch coordinates
+        handleJoystickMove(e)
       }
     }
 
     const handleTouchEnd = (e) => {
-      e.preventDefault()
-      handleJoystickEnd()
+      if (isJoystickActiveRef.current) {
+        e.preventDefault()
+        e.stopPropagation()
+        handleJoystickEnd()
+      }
     }
 
+    const handleTouchCancel = (e) => {
+      if (isJoystickActiveRef.current) {
+        e.preventDefault()
+        e.stopPropagation()
+        handleJoystickEnd()
+      }
+    }
+
+    // Add listeners to joystick element for touchstart
     joystickEl.addEventListener('touchstart', handleTouchStart, { passive: false })
-    joystickEl.addEventListener('touchmove', handleTouchMove, { passive: false })
-    joystickEl.addEventListener('touchend', handleTouchEnd, { passive: false })
+    
+    // Add listeners to document for touchmove and touchend so they work even when finger moves outside
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    document.addEventListener('touchend', handleTouchEnd, { passive: false })
+    document.addEventListener('touchcancel', handleTouchCancel, { passive: false })
 
     return () => {
       joystickEl.removeEventListener('touchstart', handleTouchStart)
-      joystickEl.removeEventListener('touchmove', handleTouchMove)
-      joystickEl.removeEventListener('touchend', handleTouchEnd)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
+      document.removeEventListener('touchcancel', handleTouchCancel)
     }
-  }, [isMobile]) // Only re-run when isMobile changes
+  }, []) // Run once on mount
 
   const handleJoystickMove = (event) => {
+    // Only work in game mode
+    if (!isGameModeRef.current) return
     if (!joystickContainerRef.current || !joystickRef.current) return
     
     const rect = joystickContainerRef.current.getBoundingClientRect()

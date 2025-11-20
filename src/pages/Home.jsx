@@ -1043,7 +1043,7 @@ function Home() {
                 transition={introCompleted ? { duration: 0.8, delay: 1.5 } : { duration: 0, delay: 0 }}
                 className="text-7xl sm:text-8xl md:text-9xl lg:text-10xl font-bold tracking-tight mb-8 text-[#000052]"
               >
-                {/* JUDE ROUHANA */}
+                {/* Jude Rouhana */}
                 Jude Rouhana
               </motion.h1>
             <motion.p

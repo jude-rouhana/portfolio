@@ -89,7 +89,7 @@ const Navbar = ({ activeSection }) => {
             />
             <span className={`text-xl font-bold font-display ${
               activeSection === 'home' ? 'text-white' : 'text-accent-blue'
-            }`}>JUDE ROUHANA</span>
+            }`}>Jude Rouhana</span>
           </motion.div>
 
           {/* Desktop Navigation */}

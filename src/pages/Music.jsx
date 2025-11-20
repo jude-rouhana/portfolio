@@ -368,7 +368,7 @@ const Music = () => {
                 alt="JR Logo" 
                 className="w-8 h-8 object-contain"
               />
-              JUDE ROUHANA
+              Jude Rouhana
             </Link>
             <div className="hidden md:flex space-x-8 text-sm font-medium">
               <Link to="/about" className="text-[#000052] hover:opacity-80 transition-colors">About</Link>

@@ -809,7 +809,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                       y: isMenuOpen ? -6 : 0
                     }}
                   />
-                </div>
+            </div>
               </motion.button>
 
               {/* Mobile Dropdown Menu */}

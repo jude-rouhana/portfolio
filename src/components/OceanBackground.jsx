@@ -849,7 +849,7 @@ const OceanBackground = ({ onGameModeChange }) => {
       const padding = 20
       if (touchX >= rect.left - padding && touchX <= rect.right + padding && 
           touchY >= rect.top - padding && touchY <= rect.bottom + padding) {
-        e.preventDefault()
+      e.preventDefault()
         e.stopPropagation()
         handleJoystickStart(e)
       }
@@ -866,10 +866,10 @@ const OceanBackground = ({ onGameModeChange }) => {
 
     const handleTouchEnd = (e) => {
       if (isJoystickActiveRef.current) {
-        e.preventDefault()
+      e.preventDefault()
         e.stopPropagation()
-        handleJoystickEnd()
-      }
+      handleJoystickEnd()
+    }
     }
 
     const handleTouchCancel = (e) => {
@@ -889,7 +889,7 @@ const OceanBackground = ({ onGameModeChange }) => {
       document.addEventListener('touchcancel', handleTouchCancel, { passive: false })
       
       // Return cleanup function
-      return () => {
+    return () => {
         el.removeEventListener('touchstart', handleTouchStart)
         document.removeEventListener('touchmove', handleTouchMove)
         document.removeEventListener('touchend', handleTouchEnd)

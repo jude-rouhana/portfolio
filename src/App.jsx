@@ -100,19 +100,19 @@ function App() {
         <div
           className="fixed inset-0 z-[100] pointer-events-none overflow-hidden"
         >
-          <AnimatePresence>
+      <AnimatePresence>
             {mosaicCells.map((cell) => (
-              <motion.div
+          <motion.div
                 key={cell.id}
                 initial={{ opacity: 0 }}
-                animate={{ 
+            animate={{ 
                   opacity: isTransitioning ? 1 : 0,
-                  transition: {
+              transition: {
                     duration: 0.3,
                     delay: isTransitioning ? cell.delay : Math.max(0, 0.5 - cell.delay),
-                    ease: "easeInOut"
-                  }
-                }}
+                ease: "easeInOut"
+              }
+            }}
                 className="absolute w-8 h-8"
                 style={{
                   left: `${cell.x}px`,
@@ -121,7 +121,7 @@ function App() {
                 }}
               />
             ))}
-          </AnimatePresence>
+      </AnimatePresence>
         </div>
       )}
       

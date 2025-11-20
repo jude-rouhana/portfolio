@@ -524,7 +524,7 @@ const Games = () => {
                       y: isMenuOpen ? -6 : 0
                     }}
                   />
-                </div>
+            </div>
               </motion.button>
 
               {/* Mobile Dropdown Menu */}

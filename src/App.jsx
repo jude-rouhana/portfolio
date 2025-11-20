@@ -16,6 +16,13 @@ function App() {
   const [mosaicCells, setMosaicCells] = useState([])
   const previousPathRef = useRef(location.pathname)
   const isInitialLoadRef = useRef(true)
+  const [allowTransitions, setAllowTransitions] = useState(() => {
+    if (typeof window === 'undefined') return true
+    const introShown = sessionStorage.getItem('introShown')
+    const referrer = document.referrer
+    const isInitialVisit = !referrer || !referrer.includes(window.location.hostname)
+    return !(isInitialVisit && !introShown)
+  })
 
   // Generate random opacity for #000052
   const getRandomShade = () => {
@@ -52,27 +59,31 @@ function App() {
   }, [isTransitioning])
 
   useEffect(() => {
-    // Check if intro has already been shown in this session
-    const introShown = sessionStorage.getItem('introShown')
-    
-    // Check if this is an initial site visit (external link or direct visit)
-    const referrer = document.referrer
-    const isInitialVisit = !referrer || !referrer.includes(window.location.hostname)
-    
-    // Skip transition on initial load if it's an initial visit AND intro hasn't been shown
-    // (intro animation will play instead)
-    if (isInitialLoadRef.current && isInitialVisit && !introShown) {
+    const handleIntroFinished = () => setAllowTransitions(true)
+    window.addEventListener('introFinished', handleIntroFinished)
+    return () => window.removeEventListener('introFinished', handleIntroFinished)
+  }, [])
+
+  useEffect(() => {
+    if (!allowTransitions) {
+      if (isInitialLoadRef.current) {
+        isInitialLoadRef.current = false
+        previousPathRef.current = location.pathname
+      }
+      return
+    }
+
+    if (isInitialLoadRef.current) {
       isInitialLoadRef.current = false
       previousPathRef.current = location.pathname
       return
     }
-    
-    // Mark initial load as complete
-    if (isInitialLoadRef.current) {
-      isInitialLoadRef.current = false
+
+    if (previousPathRef.current === location.pathname) {
+      return
     }
     
-    // Show transition for all navigation (including to home page if not initial visit or intro already shown)
+    // Show transition for all navigation (including to home page if intro already completed)
     setIsTransitioning(true)
     // Start exit animation after fade-in completes
     const exitTimer = setTimeout(() => {
@@ -90,7 +101,7 @@ function App() {
       clearTimeout(exitTimer)
       clearTimeout(clearTimer)
     }
-  }, [location.pathname])
+  }, [location.pathname, allowTransitions])
 
   return (
     <>

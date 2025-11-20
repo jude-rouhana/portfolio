@@ -116,11 +116,15 @@ function Home() {
       setLogoReveal(true)
     }, LOGO_REVEAL_DELAY)
     
+    let introCompletionTimer
     const hideTimer = setTimeout(() => {
       setShowIntro(false) // Hide intro after wave completes
       // Mark intro as completed after a short delay to ensure smooth transition
-      setTimeout(() => {
+      introCompletionTimer = setTimeout(() => {
         setIntroCompleted(true)
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('introFinished'))
+        }
       }, 100)
     }, INTRO_HIDE_DELAY)
     
@@ -128,6 +132,9 @@ function Home() {
       clearTimeout(timer)
       clearTimeout(logoTimer)
       clearTimeout(hideTimer)
+      if (introCompletionTimer) {
+        clearTimeout(introCompletionTimer)
+      }
       }
     } else {
       // Internal navigation or intro already shown - skip intro
@@ -135,6 +142,9 @@ function Home() {
       setIntroCompleted(true) // Allow animations immediately if no intro
       setStartLetterWave(false)
       setLogoReveal(false)
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('introFinished'))
+      }
     }
   }, []) // Empty dependency array ensures this runs only on mount
 

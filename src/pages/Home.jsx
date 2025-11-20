@@ -90,12 +90,18 @@ function Home() {
 
   // Intro animation effect - only play on initial site visit (external link)
   useEffect(() => {
+    // Check if intro has already been shown in this session
+    const introShown = sessionStorage.getItem('introShown')
+    
     // Check if this is an initial site visit (external link or direct visit)
     const referrer = document.referrer
     const isInitialVisit = !referrer || !referrer.includes(window.location.hostname)
     
-    // Only show intro on initial visit
-    if (isInitialVisit) {
+    // Only show intro on initial visit AND if it hasn't been shown in this session
+    if (isInitialVisit && !introShown) {
+      // Mark intro as shown in session storage
+      sessionStorage.setItem('introShown', 'true')
+      
     setShowIntro(true)
     setStartLetterWave(false)
     setLogoReveal(false)
@@ -118,7 +124,7 @@ function Home() {
       clearTimeout(hideTimer)
       }
     } else {
-      // Internal navigation - skip intro
+      // Internal navigation or intro already shown - skip intro
       setShowIntro(false)
       setStartLetterWave(false)
       setLogoReveal(false)
@@ -767,8 +773,12 @@ function Home() {
         >
           <div className="w-full px-6 sm:px-8 lg:px-12 py-4">
             <div className="flex justify-between items-center">              
-              <Link to="/" className="text-xl font-bold tracking-tight text-[#000052]">
-                {/* JUDE ROUHANA */}
+              <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-[#000052]">
+                <img 
+                  src="/logo/Logo%20block%20color.png" 
+                  alt="JR Logo" 
+                  className="w-8 h-8 object-contain"
+                />
                 Jude Rouhana
               </Link>
               <div className="hidden md:flex space-x-8 text-sm font-medium">

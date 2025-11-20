@@ -766,8 +766,12 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       >
         <div className="w-full px-6 sm:px-8 lg:px-12 py-4">
           <div className="flex justify-between items-center">              
-            <Link to="/" className="text-xl font-bold tracking-tight text-[#000052]">
-              {/* JUDE ROUHANA */}
+            <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-[#000052]">
+              <img 
+                src="/logo/Logo%20block%20color.png" 
+                alt="JR Logo" 
+                className="w-8 h-8 object-contain"
+              />
               Jude Rouhana
             </Link>
             <div className="hidden md:flex space-x-8 text-sm font-medium">

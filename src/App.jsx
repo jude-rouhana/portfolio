@@ -52,12 +52,16 @@ function App() {
   }, [isTransitioning])
 
   useEffect(() => {
+    // Check if intro has already been shown in this session
+    const introShown = sessionStorage.getItem('introShown')
+    
     // Check if this is an initial site visit (external link or direct visit)
     const referrer = document.referrer
     const isInitialVisit = !referrer || !referrer.includes(window.location.hostname)
     
-    // Skip transition on initial load if it's an initial visit (intro animation will play)
-    if (isInitialLoadRef.current && isInitialVisit) {
+    // Skip transition on initial load if it's an initial visit AND intro hasn't been shown
+    // (intro animation will play instead)
+    if (isInitialLoadRef.current && isInitialVisit && !introShown) {
       isInitialLoadRef.current = false
       previousPathRef.current = location.pathname
       return
@@ -68,7 +72,7 @@ function App() {
       isInitialLoadRef.current = false
     }
     
-    // Show transition for all navigation (including to home page if not initial visit)
+    // Show transition for all navigation (including to home page if not initial visit or intro already shown)
     setIsTransitioning(true)
     // Start exit animation after fade-in completes
     const exitTimer = setTimeout(() => {

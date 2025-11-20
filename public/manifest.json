@@ -1,0 +1,25 @@
+{
+  "name": "Jude Rouhana - Portfolio",
+  "short_name": "Jude Rouhana",
+  "description": "Software Developer and Creative Technologist - Portfolio showcasing projects, music, games, and creative work",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000052",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo/Logo block color.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo/Logo block color.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

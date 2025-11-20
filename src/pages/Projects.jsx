@@ -679,16 +679,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasDemo: true
     },
     {
-      id: 3,
-      title: "Portfolio Website: Jude Rouhana",
-      fullTitle: "Portfolio Website",
-      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the **Canvas** feature on the home page, a built in pixel art designer. Continue exploring my work below.",
-      image: "/portfoliov2.png",
-      technologies: ["React", "Framer Motion", "Three.js", "WebGL", "Tailwind CSS", "Vite"],
-      hasDemo: false
-    },
-    {
-      id: 4,
+      id: 2,
       title: "Chord Progression Neural Network",
       fullTitle: "Chord Progression Neural Network",
       description: "A neural network to generate musically coherent chord progressions by learning harmonic relationships between chords. Trained on the Chordonomicon dataset with one-hot encoded inputs, the model predicts the next chord based on the previous four. With 132 chord types and a two-layer architecture, it outputs progressions that often mirror real musical structures — including the classic I–V–vi–IV progression found in many pop songs. Built by myself and Jacob Helzner.",
@@ -697,13 +688,42 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasDescription: true
     },
     {
-      id: 6,
+      id: 3,
       title: "FocusAid: A Chrome Extension for Focus Enhancement",
       fullTitle: "FocusAid",
       description: "A Chrome extension which serves as an all-in-one focus tool for people with Autism and/or ADHD. FocusAid's architecture features interactive components that enhance text selection. The floating action box offers options like highlighting, underlining, isolating, or summarizing (using OpenAI's API), while the color selection box enables custom highlight colors, and the help box provides user guidance. Researched, designed, built, and documented by myself and Pandelis Margaronis in our Developing Accessible User Interfaces course.",
       image: "/assets/coding%20projects/FocusAid/focusaid.png",
       technologies: ["OpenAI API", "Chrome Extension", "HTML", "CSS", "JavaScript"],
       hasGallery: true
+    },
+    {
+      id: 4,
+      title: "Portfolio Website: Jude Rouhana",
+      fullTitle: "Portfolio Website",
+      description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the **Canvas** feature on the home page, a built in pixel art designer. Continue exploring my work below.",
+      image: "/portfoliov2.png",
+      technologies: ["React", "Framer Motion", "Three.js", "WebGL", "Tailwind CSS", "Vite"],
+      hasDemo: false
+    },
+    {
+      id: 5,
+      title: "Football Kit Classifier: Machine Learning",
+      fullTitle: "Football Kit Classifier",
+      description: "A machine learning model that classifies football kits based on their design. This app embeds your uploaded football kit image using a ResNet-based encoder, compares it against a gallery of known kits, and return the closest matches. The gallery includes the kits of the champions league and premier league winners. Built by myself.",
+      image: "/public/FootballKitClassifier.png",
+      technologies: ["Python", "Machine Learning", "Computer Vision", "FastAPI", "React", "Torchvision"],
+      hasDemo: false
+    },
+    {
+      id: 6,
+      title: "Pixel Art Smoother",
+      fullTitle: "Pixel Art Smoother",
+      description: "This Python tool and retro interface uses custom algorithms to upscale and smooth pixel art images. It implements corner detection, color averaging, and multi-pass processing to transform low-resolution pixel art into higher-quality, smoother versions while preserving the original artistic style. Try it out for yourself and download the smoothed pixel art! Built by myself and Jacob Helzner.",
+    //   image: "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov",
+      technologies: ["Python", "PIL", "Image Processing Algorithms"],
+      hasDemo: true,
+      hasLink: true,
+      linkUrl: "https://pixelartsmoother.onrender.com"
     },
     {
       id: 7,
@@ -713,17 +733,6 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
     //   image: "/assets/animations/JRouhana_Final_Project.mp4",
       technologies: ["Procreate", "Premiere Pro"],
       hasDemo: true
-    },
-    {
-      id: 8,
-      title: "Pixel Art Smoother",
-      fullTitle: "Pixel Art Smoother",
-      description: "This Python tool and retro interface uses custom algorithms to upscale and smooth pixel art images. It implements corner detection, color averaging, and multi-pass processing to transform low-resolution pixel art into higher-quality, smoother versions while preserving the original artistic style. Try it out for yourself and download the smoothed pixel art! Built by myself and Jacob Helzner.",
-    //   image: "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov",
-      technologies: ["Python", "PIL", "Image Processing Algorithms"],
-      hasDemo: true,
-      hasLink: true,
-      linkUrl: "https://pixelartsmoother.onrender.com"
     }
   ]
 

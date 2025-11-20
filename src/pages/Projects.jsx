@@ -1210,7 +1210,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                 <div>
                   <h4 className="text-sm font-medium mb-2 text-[#000052]">Links</h4>
                   <div className="flex flex-col gap-1">
-                    <a href="https://www.linkedin.com/in/jude-rouhana-798542261/" className="text-sm text-[#000052] hover:underline">LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/jude-rouhana/" className="text-sm text-[#000052] hover:underline">LinkedIn</a>
                   </div>
                   <div className="flex flex-col gap-1">
                     <a href="https://www.juderouhana.com" className="text-sm text-[#000052] hover:underline">juderouhana.com</a>

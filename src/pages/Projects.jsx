@@ -710,7 +710,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "Football Kit Classifier: Machine Learning",
       fullTitle: "Football Kit Classifier",
       description: "A machine learning model that classifies football kits based on their design. This app embeds your uploaded football kit image using a ResNet-based encoder, compares it against a gallery of known kits, and return the closest matches. The gallery includes the kits of the champions league and premier league winners. Built by myself.",
-      image: "/public/FootballKitClassifier.png",
+      image: "/FootballKitClassifier.png",
       technologies: ["Python", "Machine Learning", "Computer Vision", "FastAPI", "React", "Torchvision"],
       hasDemo: false
     },

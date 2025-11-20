@@ -27,16 +27,25 @@ const OceanBackground = ({ onGameModeChange }) => {
   useEffect(() => {
     if (!mountRef.current) return
 
-    // Detect mobile device
+    // Detect mobile device - check for touch capability or small screen
     const checkMobile = () => {
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-        (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) ||
-        ('ontouchstart' in window)
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const isSmallScreen = window.matchMedia && window.matchMedia('(max-width: 768px)').matches
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      
+      // Show joystick if touch is available OR screen is small
+      const isMobileDevice = hasTouch || isSmallScreen || isMobileUserAgent
       setIsMobile(isMobileDevice)
       isMobileRef.current = isMobileDevice
       return isMobileDevice
     }
     const mobileDevice = checkMobile()
+    
+    // Also listen for resize to update mobile detection
+    const handleResizeMobile = () => {
+      checkMobile()
+    }
+    window.addEventListener('resize', handleResizeMobile)
 
     const container = mountRef.current
     const scene = new THREE.Scene()
@@ -810,7 +819,21 @@ const OceanBackground = ({ onGameModeChange }) => {
   // Set up touch event listeners with useEffect - using refs to access latest state
   useEffect(() => {
     const joystickEl = joystickElementRef.current
-    if (!joystickEl) return
+    if (!joystickEl) {
+      // Element might not be ready yet, try again after a short delay
+      const timer = setTimeout(() => {
+        const retryEl = joystickElementRef.current
+        if (retryEl) {
+          // Set up listeners now that element is available
+          setupListeners(retryEl)
+        }
+      }, 200)
+      return () => clearTimeout(timer)
+    }
+    
+    setupListeners(joystickEl)
+    
+    function setupListeners(el) {
 
     // Touch event handlers that use refs to access latest state
     const handleTouchStart = (e) => {
@@ -818,13 +841,14 @@ const OceanBackground = ({ onGameModeChange }) => {
       const touch = e.touches?.[0]
       if (!touch) return
       
-      const rect = joystickEl.getBoundingClientRect()
+      const rect = el.getBoundingClientRect()
       const touchX = touch.clientX
       const touchY = touch.clientY
       
-      // Check if touch is within joystick bounds
-      if (touchX >= rect.left && touchX <= rect.right && 
-          touchY >= rect.top && touchY <= rect.bottom) {
+      // Check if touch is within joystick bounds (with padding for easier touch)
+      const padding = 20
+      if (touchX >= rect.left - padding && touchX <= rect.right + padding && 
+          touchY >= rect.top - padding && touchY <= rect.bottom + padding) {
         e.preventDefault()
         e.stopPropagation()
         handleJoystickStart(e)
@@ -856,21 +880,27 @@ const OceanBackground = ({ onGameModeChange }) => {
       }
     }
 
-    // Add listeners to joystick element for touchstart
-    joystickEl.addEventListener('touchstart', handleTouchStart, { passive: false })
-    
-    // Add listeners to document for touchmove and touchend so they work even when finger moves outside
-    document.addEventListener('touchmove', handleTouchMove, { passive: false })
-    document.addEventListener('touchend', handleTouchEnd, { passive: false })
-    document.addEventListener('touchcancel', handleTouchCancel, { passive: false })
-
-    return () => {
-      joystickEl.removeEventListener('touchstart', handleTouchStart)
-      document.removeEventListener('touchmove', handleTouchMove)
-      document.removeEventListener('touchend', handleTouchEnd)
-      document.removeEventListener('touchcancel', handleTouchCancel)
+      // Add listeners to joystick element for touchstart
+      el.addEventListener('touchstart', handleTouchStart, { passive: false })
+      
+      // Add listeners to document for touchmove and touchend so they work even when finger moves outside
+      document.addEventListener('touchmove', handleTouchMove, { passive: false })
+      document.addEventListener('touchend', handleTouchEnd, { passive: false })
+      document.addEventListener('touchcancel', handleTouchCancel, { passive: false })
+      
+      // Return cleanup function
+      return () => {
+        el.removeEventListener('touchstart', handleTouchStart)
+        document.removeEventListener('touchmove', handleTouchMove)
+        document.removeEventListener('touchend', handleTouchEnd)
+        document.removeEventListener('touchcancel', handleTouchCancel)
+      }
     }
-  }, []) // Run once on mount
+    
+    // Get cleanup function from setupListeners
+    const cleanup = setupListeners(joystickEl)
+    return cleanup || (() => {})
+  }, [isGameMode]) // Re-run when game mode changes to ensure listeners are set up
 
   const handleJoystickMove = (event) => {
     // Only work in game mode
@@ -981,9 +1011,9 @@ const OceanBackground = ({ onGameModeChange }) => {
             </div>
           )}
           
-          {/* Mobile Control Buttons */}
-          {isMobile && (
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-auto mobile-control">
+          {/* Mobile Control Buttons - Show when mobile OR when in game mode (for testing) */}
+          {(isMobile || isGameMode) && (
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-auto mobile-control" style={{ zIndex: 1000 }}>
               {/* Joystick Control - Bottom Left - Raised and responsive */}
               <div 
                 ref={joystickContainerRef}
@@ -991,7 +1021,7 @@ const OceanBackground = ({ onGameModeChange }) => {
                 style={{
                   bottom: 'min(20vh, 120px)', // Raise controls - use 20% of viewport height or max 120px
                   left: 'max(1rem, 4vw)', // Responsive left margin
-                  zIndex: 100
+                  zIndex: 1001
                 }}
               >
                 {/* Outer Circle - Joystick Container */}
@@ -1002,7 +1032,9 @@ const OceanBackground = ({ onGameModeChange }) => {
                     width: 'clamp(6rem, 24vw, 8rem)',
                     height: 'clamp(6rem, 24vw, 8rem)',
                     touchAction: 'none',
-                    boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)'
+                    pointerEvents: 'auto',
+                    boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
+                    zIndex: 1002
                   }}
                   onMouseDown={(e) => {
                     e.preventDefault()

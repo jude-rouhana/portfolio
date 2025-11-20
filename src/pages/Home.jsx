@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 function Home() {
   // Initialize showIntro - will be set based on whether it's an initial visit
   const [showIntro, setShowIntro] = useState(false)
+  const [introCompleted, setIntroCompleted] = useState(false)
   const [startLetterWave, setStartLetterWave] = useState(false)
   const [logoReveal, setLogoReveal] = useState(false)
   const [isShiftHeld, setIsShiftHeld] = useState(false)
@@ -103,6 +104,7 @@ function Home() {
       sessionStorage.setItem('introShown', 'true')
       
     setShowIntro(true)
+    setIntroCompleted(false)
     setStartLetterWave(false)
     setLogoReveal(false)
     
@@ -116,6 +118,10 @@ function Home() {
     
     const hideTimer = setTimeout(() => {
       setShowIntro(false) // Hide intro after wave completes
+      // Mark intro as completed after a short delay to ensure smooth transition
+      setTimeout(() => {
+        setIntroCompleted(true)
+      }, 100)
     }, INTRO_HIDE_DELAY)
     
     return () => {
@@ -126,6 +132,7 @@ function Home() {
     } else {
       // Internal navigation or intro already shown - skip intro
       setShowIntro(false)
+      setIntroCompleted(true) // Allow animations immediately if no intro
       setStartLetterWave(false)
       setLogoReveal(false)
     }
@@ -163,7 +170,7 @@ function Home() {
   const touchStartTimeRef = useRef(null)
 
   useEffect(() => {
-    if (showIntro || isCanvasMode) {
+    if (showIntro || !introCompleted || isCanvasMode) {
       setTrailCells([])
       lastCellRef.current = null
       timeoutsRef.current.forEach(clearTimeout)
@@ -335,7 +342,7 @@ function Home() {
       shiftHeldRef.current = false
       touchStartTimeRef.current = null
     }
-  }, [showIntro, isCanvasMode])
+  }, [showIntro, introCompleted, isCanvasMode])
 
   // Prevent scrolling in canvas mode
   useEffect(() => {
@@ -727,8 +734,8 @@ function Home() {
       {!isCanvasMode && (
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: showIntro ? 0 : 1 }}
-        transition={{ duration: 0.6, delay: showIntro ? 0 : 1.3 }}
+        animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
+        transition={introCompleted ? { duration: 0.6, delay: 1.3 } : { duration: 0, delay: 0 }}
           className="fixed top-28 md:top-20 right-4 z-10 bg-white border border-black px-5 py-3 text-sm font-medium text-[#000052]"
         style={{ visibility: showIntro ? 'hidden' : 'visible' }}
       >
@@ -766,8 +773,8 @@ function Home() {
         {/* Navigation */}
         <motion.nav
           initial={{ opacity: 0 }}
-          animate={{ opacity: showIntro ? 0 : 1 }}
-          transition={{ duration: 0.6, delay: showIntro ? 0 : 1.3 }}
+          animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
+          transition={introCompleted ? { duration: 0.6, delay: 1.3 } : { duration: 0, delay: 0 }}
           className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-black"
           style={{ visibility: showIntro ? 'hidden' : 'visible' }}
         >
@@ -992,8 +999,8 @@ function Home() {
         {!isCanvasMode && !showIntro && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.3 }}
+            animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
+            transition={introCompleted ? { duration: 0.6, delay: 1.3 } : { duration: 0, delay: 0 }}
             className="fixed top-28 md:top-20 left-6 z-30"
             style={{ visibility: showIntro ? 'hidden' : 'visible' }}
           >
@@ -1013,8 +1020,8 @@ function Home() {
           {/* Hero Section */}
           <motion.section
             initial={{ opacity: 0 }}
-            animate={{ opacity: showIntro ? 0 : 1 }}
-            transition={{ duration: 0.6, delay: showIntro ? 0 : 1.3 }}
+            animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
+            transition={introCompleted ? { duration: 0.6, delay: 1.3 } : { duration: 0, delay: 0 }}
             className="min-h-screen flex flex-col justify-center px-6 sm:px-8 lg:px-12"
             style={{ visibility: showIntro ? 'hidden' : 'visible' }}
           >
@@ -1022,8 +1029,8 @@ function Home() {
               {/* Main Title */}
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: showIntro ? 0 : 1, y: 0 }}
-                transition={{ duration: 0.8, delay: showIntro ? 0 : 1.5 }}
+                animate={introCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={introCompleted ? { duration: 0.8, delay: 1.5 } : { duration: 0, delay: 0 }}
                 className="text-7xl sm:text-8xl md:text-9xl lg:text-10xl font-bold tracking-tight mb-8 text-[#000052]"
               >
                 {/* JUDE ROUHANA */}
@@ -1031,8 +1038,8 @@ function Home() {
               </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: showIntro ? 0 : 1, y: 0 }}
-              transition={{ duration: 0.7, delay: showIntro ? 0 : 1.8 }}
+              animate={introCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={introCompleted ? { duration: 0.7, delay: 1.8 } : { duration: 0, delay: 0 }}
               className="text-lg sm:text-xl font-medium text-[#000052] mb-4"
             >
               Scroll to explore ↓
@@ -1043,8 +1050,8 @@ function Home() {
           {/* News/Content Section */}
           <motion.section
             initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: showIntro ? 0 : 1, y: 0 }}
-            transition={{ duration: 0.8, delay: showIntro ? 0 : 2.0 }}
+            animate={introCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            transition={introCompleted ? { duration: 0.8, delay: 2.0 } : { duration: 0, delay: 0 }}
             className="px-6 sm:px-8 lg:px-12 py-20"
             style={{ visibility: showIntro ? 'hidden' : 'visible' }}
           >
@@ -1152,8 +1159,8 @@ function Home() {
           {/* Footer */}
           <motion.footer
             initial={{ opacity: 0 }}
-            animate={{ opacity: showIntro ? 0 : 1 }}
-            transition={{ duration: 0.6, delay: showIntro ? 0 : 2.3 }}
+            animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
+            transition={introCompleted ? { duration: 0.6, delay: 2.3 } : { duration: 0, delay: 0 }}
             className="px-6 sm:px-8 lg:px-12 py-12 border-t border-black"
             style={{ visibility: showIntro ? 'hidden' : 'visible' }}
           >

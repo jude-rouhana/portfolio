@@ -73,7 +73,7 @@ const Projects = () => {
   }
 
   const handleLiveDemoClick = (projectId) => {
-    if (projectId === 1 || projectId === 7) { // VBT or Jazz Cats
+    if (projectId === 1 || projectId === 5 || projectId === 7) { // VBT, Football Kit Classifier, or Jazz Cats
       setActiveProjectId(projectId)
       setShowVideoModal(true)
     } else if (projectId === 8) { // Pixel Art Smoother
@@ -319,7 +319,9 @@ const Projects = () => {
     if (!showVideoModal) return null
 
     const isVBTProject = activeProjectId === 1
+    const isFootballKitProject = activeProjectId === 5
     const isJazzCatsProject = activeProjectId === 7
+    const selectedProject = projects.find(p => p.id === activeProjectId)
 
     return (
       <motion.div
@@ -353,11 +355,13 @@ const Projects = () => {
           {/* Modal Header */}
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold text-[#000052] mb-2">
-              {isVBTProject ? 'VBT System Demo' : 'The Jazz Cats'}
+              {isVBTProject ? 'VBT System Demo' : isFootballKitProject ? 'Football Kit Classifier Demo' : 'The Jazz Cats'}
             </h3>
             <p className="text-gray-600">
               {isVBTProject 
                 ? 'Watch Hamilton College\'s Strength and Conditioning Coach use the device and web application in action'
+                : isFootballKitProject
+                ? 'Watch the Football Kit Classifier in action'
                 : 'Watch the animated short story about a cat who finds another world inside of a glass jar'
               }
             </p>
@@ -413,6 +417,30 @@ const Projects = () => {
                   Your browser does not support the video tag.
                 </video>
               </div>
+            </div>
+          ) : isFootballKitProject ? (
+            <div className="w-full max-w-xl mx-auto">
+              <video
+                className="w-full rounded-none"
+                controls
+                preload="metadata"
+                autoPlay
+                muted
+                onPlay={(e) => {
+                  e.target.muted = false
+                }}
+                onLoadedMetadata={(e) => {
+                  const video = e.target
+                  setTimeout(() => {
+                    if (!video.paused) {
+                      video.muted = false
+                    }
+                  }, 100)
+                }}
+              >
+                <source src={selectedProject?.videoUrl || "https://res.cloudinary.com/djsfb1hrn/video/upload/v1763741467/FootballKitClassifier_orubz5.mp4"} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           ) : isJazzCatsProject ? (
             <div className="w-full max-w-xl mx-auto">
@@ -712,7 +740,8 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       description: "A machine learning model that classifies football kits based on their design. This app embeds your uploaded football kit image using a ResNet-based encoder, compares it against a gallery of known kits, and return the closest matches. The gallery includes the kits of the champions league and premier league winners. Built by myself.",
       image: "/FootballKitClassifier.png",
       technologies: ["Python", "Machine Learning", "Computer Vision", "FastAPI", "React", "Torchvision"],
-      hasDemo: false
+      hasDemo: true,
+      videoUrl: "https://res.cloudinary.com/djsfb1hrn/video/upload/v1763741467/FootballKitClassifier_orubz5.mp4"
     },
     {
       id: 6,

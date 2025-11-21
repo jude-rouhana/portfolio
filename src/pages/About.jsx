@@ -465,7 +465,7 @@ const About = () => {
                       I'm a software developer and creative technologist with a unique blend of technical skills and artistic vision. I love to build: from software and hardware to music, digital art, and games. Explore some of my work below!
                     </p>
                     <p className="text-sm sm:text-sm md:text-lg leading-relaxed">
-                      I graduated from Hamilton College in 2025 as a Computer Science major and Digital Arts and Music minors. I currently work at Boston Children's Hospital in Pediatrics-Emergency Medicine creating custom software solutions to help with process enhancement, automation, and workflow improvement.
+                      I graduated from Hamilton College in 2025 as a Computer Science major and Digital Arts and Music minors. While at Hamilton, I played four years of varsity soccer and was a member of the Hamilton College Jazz Ensemble, Jazz Combo, and Saxophone Ensemble. I currently work at Boston Children's Hospital in Pediatrics-Emergency Medicine creating custom software solutions to help with process enhancement, automation, and workflow improvement.
                     </p>
                   </div>
                 </div>

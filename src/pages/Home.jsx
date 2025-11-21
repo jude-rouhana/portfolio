@@ -35,9 +35,9 @@ function Home() {
     '#ffffff',
   ]
 
-  const LETTER_WAVE_DELAY = 2500
-  const LOGO_REVEAL_DELAY = 1500
-  const INTRO_HIDE_DELAY = 3800
+  const LETTER_WAVE_DELAY = 2000
+  const LOGO_REVEAL_DELAY = 1200
+  const INTRO_HIDE_DELAY = 3000
 
   // Detect mobile device
   useEffect(() => {
@@ -161,7 +161,7 @@ function Home() {
           y: startLetterWave ? -20 : 0,
           transition: {
             duration: 0.3,
-            delay: startLetterWave ? (offset + index) * 0.02 : 0.2 + (offset + index) * 0.02,
+            delay: startLetterWave ? (offset + index) * 0.02 : 0.15 + (offset + index) * 0.02,
             ease: "easeOut"
           }
         }}
@@ -664,11 +664,11 @@ function Home() {
             className="fixed inset-0 bg-[#000052] z-50 flex items-center justify-center"
             initial={{ opacity: 1 }}
             animate={{ opacity: startLetterWave ? 0 : 1 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             exit={{
               opacity: 0,
               transition: {
-                duration: 2,
+                duration: 1.5,
                 ease: "easeInOut"
               }
             }}
@@ -680,7 +680,7 @@ function Home() {
               exit={{
                 opacity: 0,
                 transition: {
-                  duration: 2.5,
+                  duration: 2,
                   ease: "easeInOut"
                 }
               }}
@@ -694,7 +694,7 @@ function Home() {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  duration: 1,
+                  duration: 0.8,
                   ease: "easeOut"
                 }}
               >
@@ -703,7 +703,7 @@ function Home() {
                   className="flex items-center justify-center"
                   animate={{ gap: logoReveal ? 96 : 8 }}
                   initial={{ gap: 8 }}
-                  transition={{ duration: 0.7, ease: "easeInOut" }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
                   <div className="flex justify-center items-center">
                     {renderLetters(firstNameLetters, 0)}
@@ -719,7 +719,7 @@ function Home() {
                       maxWidth: logoReveal ? 120 : 0
                     }}
                     transition={{
-                      duration: 0.6,
+                      duration: 0.5,
                       ease: "easeInOut"
                     }}
                   >
@@ -746,7 +746,7 @@ function Home() {
         initial={{ opacity: 0 }}
         animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
         transition={introCompleted ? { duration: 0.6, delay: 1.3 } : { duration: 0, delay: 0 }}
-          className="fixed top-28 md:top-20 right-4 z-10 bg-white border border-black px-5 py-3 text-sm font-medium text-[#000052]"
+          className="fixed top-28 md:top-20 right-4 z-10 bg-white border border-black px-4 py-2 text-sm font-medium text-[#000052]"
         style={{ visibility: showIntro ? 'hidden' : 'visible' }}
       >
         {isMobile ? (

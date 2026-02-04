@@ -13,10 +13,12 @@ const Projects = () => {
   const [showDescriptionModal, setShowDescriptionModal] = useState(false)
   const [showFocusAidModal, setShowFocusAidModal] = useState(false)
   const [showPixelArtModal, setShowPixelArtModal] = useState(false)
+  const [showVBTModal, setShowVBTModal] = useState(false)
   const [descriptionText, setDescriptionText] = useState("")
   const [activeProjectId, setActiveProjectId] = useState(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [focusAidImageIndex, setFocusAidImageIndex] = useState(0)
+  const [vbtImageIndex, setVbtImageIndex] = useState(0)
   const [expandedProject, setExpandedProject] = useState(null)
   const [trailCells, setTrailCells] = useState([])
   const [isShiftHeld, setIsShiftHeld] = useState(false)
@@ -54,16 +56,16 @@ const Projects = () => {
 
   const dropdownVariants = {
     hidden: { height: 0, opacity: 0 },
-    visible: { 
-      height: "auto", 
+    visible: {
+      height: "auto",
       opacity: 1,
       transition: {
         height: { duration: 0.3, ease: "easeInOut" },
         opacity: { duration: 0.2, delay: 0.1 }
       }
     },
-    exit: { 
-      height: 0, 
+    exit: {
+      height: 0,
       opacity: 0,
       transition: {
         height: { duration: 0.3, ease: "easeInOut" },
@@ -121,8 +123,8 @@ const Projects = () => {
   // Cursor grid trail effect
   useEffect(() => {
     // Check if any modal is open - if so, halt all cursor animation
-    const isAnyModalOpen = showVideoModal || showDescriptionModal || showFocusAidModal || showPixelArtModal
-    
+    const isAnyModalOpen = showVideoModal || showDescriptionModal || showFocusAidModal || showPixelArtModal || showVBTModal
+
     if (isAnyModalOpen) {
       // Clear all trail cells and reset state when modal opens
       setTrailCells([])
@@ -216,7 +218,7 @@ const Projects = () => {
         clearTimeout(touchHoldTimeoutRef.current)
         touchHoldTimeoutRef.current = null
       }
-      
+
       // If shift was held (touch was held for 2+ seconds), release it
       if (shiftHeldRef.current) {
         shiftHeldRef.current = false
@@ -231,7 +233,7 @@ const Projects = () => {
           timeoutsRef.current.push(timeoutId)
         })
       }
-      
+
       touchStartTimeRef.current = null
     }
 
@@ -296,7 +298,7 @@ const Projects = () => {
       shiftHeldRef.current = false
       touchStartTimeRef.current = null
     }
-  }, [showVideoModal, showDescriptionModal, showFocusAidModal, showPixelArtModal])
+  }, [showVideoModal, showDescriptionModal, showFocusAidModal, showPixelArtModal, showVBTModal])
 
   // Helper function to render description with bold CANVAS
   const renderDescription = (description) => {
@@ -358,11 +360,11 @@ const Projects = () => {
               {isVBTProject ? 'VBT System Demo' : isFootballKitProject ? 'Football Kit Classifier Demo' : 'The Jazz Cats'}
             </h3>
             <p className="text-gray-600">
-              {isVBTProject 
+              {isVBTProject
                 ? 'Watch Hamilton College\'s Strength and Conditioning Coach use the device and web application in action'
                 : isFootballKitProject
-                ? 'Watch the Football Kit Classifier in action'
-                : 'Watch the animated short story about a cat who finds another world inside of a glass jar'
+                  ? 'Watch the Football Kit Classifier in action'
+                  : 'Watch the animated short story about a cat who finds another world inside of a glass jar'
               }
             </p>
           </div>
@@ -581,7 +583,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
             >
               ←
             </button>
-            
+
             <button
               onClick={nextImage}
               className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 text-[#000052] p-3 rounded-none hover:bg-white shadow-lg transition-all duration-200"
@@ -609,6 +611,93 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
             <div className="text-center mt-4">
               <span className="text-gray-600 text-sm">
                 {focusAidImageIndex + 1} of {focusAidImages.length}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // VBT Modal Component
+  const VBTModal = () => {
+    if (!showVBTModal) return null
+
+    // Array of VBT process images
+    const vbtImages = [
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT1.jpg",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT2.jpg",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT3.jpg",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT4.jpg",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT5.jpg"
+    ]
+
+    const nextImage = () => {
+      setVbtImageIndex((prev) => (prev + 1) % vbtImages.length)
+    }
+
+    const prevImage = () => {
+      setVbtImageIndex((prev) => (prev - 1 + vbtImages.length) % vbtImages.length)
+    }
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={() => setShowVBTModal(false)}>
+        <div className="relative bg-white rounded-none p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          {/* Close Button */}
+          <button
+            onClick={() => setShowVBTModal(false)}
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-10"
+          >
+            ×
+          </button>
+
+          {/* Modal Header */}
+          <div className="text-center mb-6">
+            <h3 className="text-2xl font-bold text-[#000052] mb-2">
+              VBT System - Development Process
+            </h3>
+            <p className="text-gray-600">
+              Behind the Scenes of Creating the VBT Device
+            </p>
+          </div>
+
+          {/* Simple Carousel */}
+          <div className="relative">
+            {/* Navigation Buttons */}
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 text-[#000052] p-3 rounded-none hover:bg-white shadow-lg transition-all duration-200"
+            >
+              ←
+            </button>
+
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 text-[#000052] p-3 rounded-none hover:bg-white shadow-lg transition-all duration-200"
+            >
+              →
+            </button>
+
+            {/* Image Display - Only this part changes */}
+            <div className="w-full h-96 bg-gray-100 rounded-none overflow-hidden flex items-center justify-center">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={vbtImageIndex}
+                  src={vbtImages[vbtImageIndex]}
+                  alt={`VBT process screenshot ${vbtImageIndex + 1}`}
+                  className="max-w-full max-h-full object-contain"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                />
+              </AnimatePresence>
+            </div>
+
+            {/* Image Counter */}
+            <div className="text-center mt-4">
+              <span className="text-gray-600 text-sm">
+                {vbtImageIndex + 1} of {vbtImages.length}
               </span>
             </div>
           </div>
@@ -678,10 +767,10 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
               <source src={getVideoUrl('pixelArtSmoother') || "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov"} type="video/quicktime" />
               <source src={getVideoUrl('pixelArtSmoother') || "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov"} type="video/mp4" />
               <p className="text-center text-gray-600 p-4">
-                Your browser does not support the video format. 
+                Your browser does not support the video format.
                 <br />
-                <a 
-                  href={getVideoUrl('pixelArtSmoother') || "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov"} 
+                <a
+                  href={getVideoUrl('pixelArtSmoother') || "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov"}
                   download
                   className="text-[#000052] hover:opacity-80 underline"
                 >
@@ -704,14 +793,15 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       description: "The Velocity-Based Training (VBT) System is a device and full-stack web application created for Hamilton College's Athletics Department. The VBT is a small, portable device that measures the velocity of a repition of an exercise on a barbell and sends the data to the web application where the data is stored and displayed in a user-friendly interface in order to track peak and average velocity of an athlete's lifts. The 5 devices are built with an Arduino Nano IoT board, a battery, charger, and switch, all of which are housed in a custom-designed, 3D-printed case. Logo and UI design created by myself. Product design, development, production, and documentation by myself, Pandelis Margaronis, Teddy Rosenbaum, and Kien Tran as our Senior Thesis project.",
       image: "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT_logo_gray.png",
       technologies: ["Python", "React", "Next.js", "Node.js", "FastAPI", "Arduino", "Blender", "3D Printing", "Wire Soldering"],
-      hasDemo: true
+      hasDemo: true,
+      hasVBTGallery: true
     },
     {
       id: 2,
       title: "Chord Progression Neural Network",
       fullTitle: "Chord Progression Neural Network",
       description: "A neural network to generate musically coherent chord progressions by learning harmonic relationships between chords. Trained on the Chordonomicon dataset with one-hot encoded inputs, the model predicts the next chord based on the previous four. With 132 chord types and a two-layer architecture, it outputs progressions that often mirror real musical structures — including the classic I–V–vi–IV progression found in many pop songs. Built by myself and Jacob Helzner.",
-    //   image: "/assets/coding%20projects/Chord%20Classifier%3AGenerator/Image.png",
+      //   image: "/assets/coding%20projects/Chord%20Classifier%3AGenerator/Image.png",
       technologies: ["Python", "Neural Networks", "Machine Learning"],
       hasDescription: true
     },
@@ -748,7 +838,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "Pixel Art Smoother",
       fullTitle: "Pixel Art Smoother",
       description: "This Python tool and retro interface uses custom algorithms to upscale and smooth pixel art images. It implements corner detection, color averaging, and multi-pass processing to transform low-resolution pixel art into higher-quality, smoother versions while preserving the original artistic style. Try it out for yourself and download the smoothed pixel art! Built by myself and Jacob Helzner.",
-    //   image: "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov",
+      //   image: "/assets/coding%20projects/Pixel%20Art%20Smoother/pixelartsmoother.mov",
       technologies: ["Python", "PIL", "Image Processing Algorithms"],
       hasDemo: true,
       hasLink: true,
@@ -759,7 +849,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "The Jazz Cats: An Animated Short",
       fullTitle: "The Jazz Cats",
       description: "An animation made with Procreate and Premiere Pro. The Jazz Cats is a short story about a cat who finds another world inside of a glass jar on his evening stroll. Hand-drawn and animated by myself. Music by myself. Fall 2022",
-    //   image: "/assets/animations/JRouhana_Final_Project.mp4",
+      //   image: "/assets/animations/JRouhana_Final_Project.mp4",
       technologies: ["Procreate", "Premiere Pro"],
       hasDemo: true
     }
@@ -803,11 +893,11 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
         className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-black"
       >
         <div className="w-full px-6 sm:px-8 lg:px-12 py-4">
-          <div className="flex justify-between items-center">              
+          <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-[#000052]">
-              <img 
-                src="/logo/Logo%20block%20color.png" 
-                alt="JR Logo" 
+              <img
+                src="/logo/Logo%20block%20color.png"
+                alt="JR Logo"
                 className="w-8 h-8 object-contain"
               />
               Jude Rouhana
@@ -847,7 +937,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                       y: isMenuOpen ? -6 : 0
                     }}
                   />
-            </div>
+                </div>
               </motion.button>
 
               {/* Mobile Dropdown Menu */}
@@ -917,51 +1007,49 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
         <main className="flex-1 pt-20">
           <section className="px-6 sm:px-8 lg:px-12 py-10">
             <div className="max-w-7xl mx-auto">
-        <motion.div
-          ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-        >
-          {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center mb-16">
+              <motion.div
+                ref={ref}
+                variants={containerVariants}
+                initial="hidden"
+                animate={inView ? "visible" : "hidden"}
+              >
+                {/* Section Header */}
+                <motion.div variants={itemVariants} className="text-center mb-16">
                   <h2 className="text-4xl sm:text-5xl font-bold text-[#000052] mb-4">
                     PROJECTS
-            </h2>
-            <p className="text-lg text-[#000052] mb-4">My coding work, web applications, and other creative projects.</p>
+                  </h2>
+                  <p className="text-lg text-[#000052] mb-4">My coding work, web applications, and other creative projects.</p>
                   <div className="w-24 h-1 bg-[#000052] mx-auto rounded-none mb-8"></div>
-          </motion.div>
+                </motion.div>
 
                 {/* Desktop: Two-column layout */}
                 <div className="hidden md:grid md:grid-cols-2 md:gap-8">
                   {/* Left Column: Projects List */}
-          <motion.div variants={itemVariants} className="space-y-4">
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                        className={`bg-white rounded-none border border-black overflow-hidden transition-all duration-200 ${
-                          expandedProject === project.id ? 'border-[#000052] border-2 bg-gray-50' : ''
-                        }`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.1 }}
-              >
-                {/* Project Title (Clickable) */}
-                <motion.button
-                  onClick={() => toggleProject(project.id)}
-                          className={`w-full p-6 text-left flex items-center justify-between transition-colors duration-200 ${
-                            expandedProject === project.id ? 'bg-gray-50' : 'hover:bg-gray-50'
+                  <motion.div variants={itemVariants} className="space-y-4">
+                    {projects.map((project, index) => (
+                      <motion.div
+                        key={project.id}
+                        className={`bg-white rounded-none border border-black overflow-hidden transition-all duration-200 ${expandedProject === project.id ? 'border-[#000052] border-2 bg-gray-50' : ''
                           }`}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={inView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        {/* Project Title (Clickable) */}
+                        <motion.button
+                          onClick={() => toggleProject(project.id)}
+                          className={`w-full p-6 text-left flex items-center justify-between transition-colors duration-200 ${expandedProject === project.id ? 'bg-gray-50' : 'hover:bg-gray-50'
+                            }`}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                        >
                           <h3 className="text-lg font-bold text-[#000052]">
                             {project.title}
                           </h3>
-                          <svg 
-                            className="w-6 h-6 text-[#000052]" 
-                            fill="none" 
-                            stroke="currentColor" 
+                          <svg
+                            className="w-6 h-6 text-[#000052]"
+                            fill="none"
+                            stroke="currentColor"
                             viewBox="0 0 24 24"
                             style={{ transform: 'rotate(-90deg)' }}
                           >
@@ -978,7 +1066,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                       {expandedProject && (() => {
                         const selectedProject = projects.find(p => p.id === expandedProject)
                         if (!selectedProject) return null
-                        
+
                         return (
                           <motion.div
                             key={expandedProject}
@@ -993,8 +1081,8 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                               <div className="flex justify-center">
                                 <div className="h-48 w-full max-w-md bg-gray-50 rounded-none flex items-center justify-center">
                                   {selectedProject.image.startsWith('assets/') || selectedProject.image.startsWith('/') ? (
-                                    <img 
-                                      src={selectedProject.image} 
+                                    <img
+                                      src={selectedProject.image}
                                       alt={selectedProject.fullTitle}
                                       className="max-w-full max-h-full object-contain"
                                     />
@@ -1053,6 +1141,16 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                                   {selectedProject.id === 7 ? 'Watch Animation' : 'Watch Demo'}
                                 </motion.button>
                               )}
+                              {selectedProject.hasVBTGallery && (
+                                <motion.button
+                                  onClick={() => setShowVBTModal(true)}
+                                  className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  Explore Process
+                                </motion.button>
+                              )}
                               {selectedProject.hasDescription && (
                                 <motion.button
                                   onClick={handleDescriptionClick}
@@ -1087,140 +1185,150 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                     <motion.div
                       key={project.id}
                       className="bg-white rounded-none border border-black overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.1 }}
-              >
-                {/* Project Title (Clickable) */}
-                <motion.button
-                  onClick={() => toggleProject(project.id)}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={inView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {/* Project Title (Clickable) */}
+                      <motion.button
+                        onClick={() => toggleProject(project.id)}
                         className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                      >
                         <h3 className="text-lg font-bold text-[#000052]">
-                    {project.title}
-                  </h3>
-                  <motion.div
-                    animate={{ rotate: expandedProject === project.id ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <svg 
-                            className="w-6 h-6 text-[#000052]" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </motion.div>
-                </motion.button>
+                          {project.title}
+                        </h3>
+                        <motion.div
+                          animate={{ rotate: expandedProject === project.id ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <svg
+                            className="w-6 h-6 text-[#000052]"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </motion.div>
+                      </motion.button>
 
-                {/* Expanded Content */}
-                <AnimatePresence>
-                  {expandedProject === project.id && (
-                    <motion.div
-                      variants={dropdownVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
+                      {/* Expanded Content */}
+                      <AnimatePresence>
+                        {expandedProject === project.id && (
+                          <motion.div
+                            variants={dropdownVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
                             className="border-t border-black"
-                    >
-                      <div className="p-6 space-y-6">
-                        {/* Project Image */}
-                        {project.image && (
-                        <div className="flex justify-center">
-                            <div className="h-48 w-full max-w-md bg-gray-50 rounded-none flex items-center justify-center">
-                              {project.image.startsWith('assets/') || project.image.startsWith('/') ? (
-                              <img 
-                                src={project.image} 
-                                alt={project.fullTitle}
-                                className="max-w-full max-h-full object-contain"
-                              />
-                            ) : (
-                                <span className="text-6xl">{project.image}</span>
-                            )}
-                          </div>
-                        </div>
-                        )}
+                          >
+                            <div className="p-6 space-y-6">
+                              {/* Project Image */}
+                              {project.image && (
+                                <div className="flex justify-center">
+                                  <div className="h-48 w-full max-w-md bg-gray-50 rounded-none flex items-center justify-center">
+                                    {project.image.startsWith('assets/') || project.image.startsWith('/') ? (
+                                      <img
+                                        src={project.image}
+                                        alt={project.fullTitle}
+                                        className="max-w-full max-h-full object-contain"
+                                      />
+                                    ) : (
+                                      <span className="text-6xl">{project.image}</span>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
 
-                        {/* Full Title */}
-                        <div className="text-center">
+                              {/* Full Title */}
+                              <div className="text-center">
                                 <h4 className="text-2xl font-bold text-[#000052] mb-2">
-                            {project.fullTitle}
-                          </h4>
-                        </div>
+                                  {project.fullTitle}
+                                </h4>
+                              </div>
 
-                        {/* Description */}
+                              {/* Description */}
                               <p className="text-[#000052] leading-relaxed">
-                          {renderDescription(project.description)}
-                        </p>
+                                {renderDescription(project.description)}
+                              </p>
 
-                        {/* Technologies */}
-                        <div className="flex flex-wrap gap-2 justify-center">
-                          {project.technologies.map((tech) => (
-                            <span
-                              key={tech}
+                              {/* Technologies */}
+                              <div className="flex flex-wrap gap-2 justify-center">
+                                {project.technologies.map((tech) => (
+                                  <span
+                                    key={tech}
                                     className="px-3 py-1 bg-[#000052]/10 text-[#000052] text-sm font-medium rounded-none border border-[#000052]/20"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
 
-                        {/* Action Buttons */}
-                        <div className="flex justify-center gap-4">
-                          {project.hasLink && (
-                            <motion.a
-                              href={project.linkUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Check it out!
-                            </motion.a>
-                          )}
-                          {project.hasDemo && (
-                            <motion.button
-                              onClick={() => handleLiveDemoClick(project.id)}
+                              {/* Action Buttons */}
+                              <div className="flex justify-center gap-4">
+                                {project.hasLink && (
+                                  <motion.a
+                                    href={project.linkUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              {project.id === 7 ? 'Watch Animation' : 'Watch Demo'}
-                            </motion.button>
-                          )}
-                          {project.hasDescription && (
-                            <motion.button
-                              onClick={handleDescriptionClick}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    Check it out!
+                                  </motion.a>
+                                )}
+                                {project.hasDemo && (
+                                  <motion.button
+                                    onClick={() => handleLiveDemoClick(project.id)}
                                     className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Full Description
-                            </motion.button>
-                          )}
-                          {project.hasGallery && (
-                            <motion.button
-                              onClick={() => setShowFocusAidModal(true)}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    {project.id === 7 ? 'Watch Animation' : 'Watch Demo'}
+                                  </motion.button>
+                                )}
+                                {project.hasVBTGallery && (
+                                  <motion.button
+                                    onClick={() => setShowVBTModal(true)}
                                     className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              View Gallery
-                            </motion.button>
-                          )}
-                        </div>
-                      </div>
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    Explore Process
+                                  </motion.button>
+                                )}
+                                {project.hasDescription && (
+                                  <motion.button
+                                    onClick={handleDescriptionClick}
+                                    className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    Full Description
+                                  </motion.button>
+                                )}
+                                {project.hasGallery && (
+                                  <motion.button
+                                    onClick={() => setShowFocusAidModal(true)}
+                                    className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    View Gallery
+                                  </motion.button>
+                                )}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </motion.div>
-                  )}
-                </AnimatePresence>
+                  ))}
+                </motion.div>
               </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
             </div>
           </section>
         </main>
@@ -1259,12 +1367,13 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
           </div>
         </motion.footer>
       </div>
-      
+
       {/* Modals */}
       <VideoModal />
       <DescriptionModal />
       <FocusAidModal />
       <PixelArtModal />
+      <VBTModal />
     </div>
   )
 }

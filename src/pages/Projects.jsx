@@ -391,7 +391,7 @@ const Projects = () => {
                     }
                   }}
                 >
-                  <source src={getVideoUrl('vbtDemo') || "/assets/coding%20projects/Thesis/Product%20images%20and%20video/Demo.mp4"} type="video/mp4" />
+                  <source src={getVideoUrl('vbtDemo') || "/assets/coding%20projects/Thesis/process/Demo.mp4"} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -415,7 +415,7 @@ const Projects = () => {
                     }
                   }}
                 >
-                  <source src={getVideoUrl('vbtLiveDemo') || "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT%20Demo.mp4"} type="video/mp4" />
+                  <source src={getVideoUrl('vbtLiveDemo') || "/assets/coding%20projects/Thesis/process/VBT%20Demo.mp4"} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -625,11 +625,11 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
 
     // Array of VBT process images
     const vbtImages = [
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT1.png",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT2.png",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT3.png",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT4.png",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT5.png"
+      "/assets/coding%20projects/Thesis/process/VBT1.png",
+      "/assets/coding%20projects/Thesis/process/VBT2.png",
+      "/assets/coding%20projects/Thesis/process/VBT3.png",
+      "/assets/coding%20projects/Thesis/process/VBT4.png",
+      "/assets/coding%20projects/Thesis/process/VBT5.png"
     ]
 
     const nextImage = () => {
@@ -791,7 +791,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       title: "Velocity-Based Training System for Hamilton College's Athletics Department",
       fullTitle: "Velocity-Based Training System",
       description: "The Velocity-Based Training (VBT) System is a device and full-stack web application created for Hamilton College's Athletics Department. The VBT is a small, portable device that measures the velocity of a repition of an exercise on a barbell and sends the data to the web application where the data is stored and displayed in a user-friendly interface in order to track peak and average velocity of an athlete's lifts. The 5 devices are built with an Arduino Nano IoT board, a battery, charger, and switch, all of which are housed in a custom-designed, 3D-printed case. Logo and UI design created by myself. Product design, development, production, and documentation by myself, Pandelis Margaronis, Teddy Rosenbaum, and Kien Tran as our Senior Thesis project.",
-      image: "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT_logo_gray.png",
+      image: "/assets/coding%20projects/Thesis/process/VBT_logo_gray.png",
       technologies: ["Python", "React", "Next.js", "Node.js", "FastAPI", "Arduino", "Blender", "3D Printing", "Wire Soldering"],
       hasDemo: true,
       hasVBTGallery: true

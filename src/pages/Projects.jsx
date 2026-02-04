@@ -625,11 +625,11 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
 
     // Array of VBT process images
     const vbtImages = [
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT1.jpg",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT2.jpg",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT3.jpg",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT4.jpg",
-      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT5.jpg"
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT1.png",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT2.png",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT3.png",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT4.png",
+      "/assets/coding%20projects/Thesis/Product%20images%20and%20video/VBT5.png"
     ]
 
     const nextImage = () => {

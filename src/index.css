@@ -219,6 +219,7 @@ body {
 }
 
 /* Custom Scrollbar */
+/* Custom Scrollbar - Commented out to ensure better compatibility with all mice
 ::-webkit-scrollbar {
   width: 0px;
   display: none;
@@ -235,11 +236,14 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   display: none;
 }
+*/
 
 /* Hide scrollbar for Firefox */
+/* Hide scrollbar for Firefox - Commented out for now
 html {
   scrollbar-width: none;
 }
+*/
 
 /* Hide scrollbar for IE and Edge */
 body {
@@ -660,7 +664,7 @@ body {
 
 /* Allow pointer events on the canvas element for ship interaction */
 .ocean-background canvas {
-  pointer-events: auto !important;
+  pointer-events: none !important;
   position: relative;
   z-index: 1;
 }

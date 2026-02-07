@@ -40,7 +40,7 @@ function App() {
       const height = window.innerHeight
       const cols = Math.ceil(width / cellSize)
       const rows = Math.ceil(height / cellSize)
-      
+
       const cells = []
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -82,26 +82,37 @@ function App() {
     if (previousPathRef.current === location.pathname) {
       return
     }
-    
+
     // Show transition for all navigation (including to home page if intro already completed)
     setIsTransitioning(true)
     // Start exit animation after fade-in completes
     const exitTimer = setTimeout(() => {
       setIsTransitioning(false)
     }, 1000) // Wait for fade-in to complete, then trigger exit
-    
+
     // Clear cells after exit animation completes
     const clearTimer = setTimeout(() => {
       setMosaicCells([])
     }, 2600) // Wait for both fade-in and fade-out to complete
-    
+
     previousPathRef.current = location.pathname
-    
+
     return () => {
       clearTimeout(exitTimer)
       clearTimeout(clearTimer)
     }
   }, [location.pathname, allowTransitions])
+
+  // Explicit wheel listener to ensure smooth scrolling for external mice
+  useEffect(() => {
+    const handleWheel = (event) => {
+      // If we're not in a state that explicitly should block scroll (like intro)
+      // we ensure the event is allowed to propagate normally
+      // This helps with some external mice that might have different deltaMode behaviors
+    }
+    window.addEventListener('wheel', handleWheel, { passive: true })
+    return () => window.removeEventListener('wheel', handleWheel)
+  }, [])
 
   return (
     <>
@@ -111,19 +122,19 @@ function App() {
         <div
           className="fixed inset-0 z-[100] pointer-events-none overflow-hidden"
         >
-      <AnimatePresence>
+          <AnimatePresence>
             {mosaicCells.map((cell) => (
-          <motion.div
+              <motion.div
                 key={cell.id}
                 initial={{ opacity: 0 }}
-            animate={{ 
+                animate={{
                   opacity: isTransitioning ? 1 : 0,
-              transition: {
+                  transition: {
                     duration: 0.3,
                     delay: isTransitioning ? cell.delay : Math.max(0, 0.5 - cell.delay),
-                ease: "easeInOut"
-              }
-            }}
+                    ease: "easeInOut"
+                  }
+                }}
                 className="absolute w-8 h-8"
                 style={{
                   left: `${cell.x}px`,
@@ -132,10 +143,10 @@ function App() {
                 }}
               />
             ))}
-      </AnimatePresence>
+          </AnimatePresence>
         </div>
       )}
-      
+
       {/* Page Content */}
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

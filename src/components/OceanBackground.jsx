@@ -590,7 +590,7 @@ const OceanBackground = ({ onGameModeChange }) => {
     renderer.domElement.addEventListener('click', handleShipInteraction)
     renderer.domElement.addEventListener('touchend', handleShipInteraction, { passive: false })
     renderer.domElement.style.pointerEvents = 'none'
-    renderer.domElement.style.touchAction = 'none' // Prevent default touch behaviors
+    renderer.domElement.style.touchAction = 'auto' // Allow default touch behaviors for scrolling
     renderer.domElement.style.zIndex = '1'
 
     // Add window-level click handler to catch clicks that might be blocked by other elements

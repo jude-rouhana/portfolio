@@ -64,8 +64,10 @@ body::before {
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px; /* Base font size for consistent scaling */
-  -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjustment */
+  font-size: 16px;
+  /* Base font size for consistent scaling */
+  -webkit-text-size-adjust: 100%;
+  /* Prevent iOS text size adjustment */
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -252,10 +254,13 @@ body {
 
 /* Loading Animation */
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.7;
     transform: scale(1.05);
@@ -268,9 +273,12 @@ body {
 
 /* Floating Button Animation */
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -285,6 +293,7 @@ body {
   0% {
     transform: rotate(0deg) translateX(280px) rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg) translateX(280px) rotate(-360deg);
   }
@@ -294,6 +303,7 @@ body {
   0% {
     transform: rotate(0deg) translateX(250px) rotate(0deg);
   }
+
   100% {
     transform: rotate(-360deg) translateX(250px) rotate(360deg);
   }
@@ -303,6 +313,7 @@ body {
   0% {
     transform: rotate(0deg) translateX(210px) rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg) translateX(210px) rotate(-360deg);
   }
@@ -312,6 +323,7 @@ body {
   0% {
     transform: rotate(0deg) translateX(200px) rotate(0deg);
   }
+
   100% {
     transform: rotate(-360deg) translateX(200px) rotate(360deg);
   }
@@ -321,6 +333,7 @@ body {
   0% {
     transform: rotate(0deg) translateX(300px) rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg) translateX(300px) rotate(-360deg);
   }
@@ -330,6 +343,7 @@ body {
   0% {
     transform: rotate(0deg) translateX(180px) rotate(0deg);
   }
+
   100% {
     transform: rotate(-360deg) translateX(180px) rotate(360deg);
   }
@@ -387,18 +401,22 @@ body {
     background-position: 0% 50%;
     opacity: 1;
   }
+
   25% {
     background-position: 50% 50%;
     opacity: 0.8;
   }
+
   50% {
     background-position: 100% 50%;
     opacity: 0.5;
   }
+
   75% {
     background-position: 150% 50%;
     opacity: 0.2;
   }
+
   100% {
     background-position: 200% 50%;
     opacity: 0;
@@ -410,18 +428,22 @@ body {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
+
   25% {
     transform: translateY(-10px) scale(1.02);
     opacity: 0.8;
   }
+
   50% {
     transform: translateY(5px) scale(0.98);
     opacity: 0.6;
   }
+
   75% {
     transform: translateY(-5px) scale(1.01);
     opacity: 0.3;
   }
+
   100% {
     transform: translateY(0) scale(1);
     opacity: 0;
@@ -495,120 +517,143 @@ body {
 
 /* Mobile text size optimizations - More proportional to desktop */
 @media (max-width: 768px) {
+
   /* Slightly reduce heading sizes for mobile, but keep them readable */
   .text-4xl {
-    font-size: 2rem !important; /* 32px - was 28px */
+    font-size: 2rem !important;
+    /* 32px - was 28px */
     line-height: 2.5rem !important;
   }
-  
+
   .text-5xl {
-    font-size: 2.5rem !important; /* 40px - was 32px */
+    font-size: 2.5rem !important;
+    /* 40px - was 32px */
     line-height: 3rem !important;
   }
-  
+
   .text-6xl {
-    font-size: 3rem !important; /* 48px - was 36px */
+    font-size: 3rem !important;
+    /* 48px - was 36px */
     line-height: 3.5rem !important;
   }
-  
+
   .text-7xl {
-    font-size: 3.5rem !important; /* 56px - was 40px */
+    font-size: 3.5rem !important;
+    /* 56px - was 40px */
     line-height: 4rem !important;
   }
-  
+
   /* Keep body text sizes more consistent with desktop */
   .text-lg {
-    font-size: 1rem !important; /* 16px - was 14px */
+    font-size: 1rem !important;
+    /* 16px - was 14px */
     line-height: 1.5rem !important;
   }
-  
+
   .text-xl {
-    font-size: 1.125rem !important; /* 18px - was 16px */
+    font-size: 1.125rem !important;
+    /* 18px - was 16px */
     line-height: 1.75rem !important;
   }
-  
+
   .text-2xl {
-    font-size: 1.5rem !important; /* 24px - was 18px */
+    font-size: 1.5rem !important;
+    /* 24px - was 18px */
     line-height: 2rem !important;
   }
-  
+
   .text-3xl {
-    font-size: 1.875rem !important; /* 30px - was 20px */
+    font-size: 1.875rem !important;
+    /* 30px - was 20px */
     line-height: 2.25rem !important;
   }
-  
+
   /* More proportional padding and margins for mobile */
   .py-32 {
-    padding-top: 3rem !important; /* 48px - was 32px */
+    padding-top: 3rem !important;
+    /* 48px - was 32px */
     padding-bottom: 3rem !important;
   }
-  
+
   .py-20 {
-    padding-top: 2rem !important; /* 32px - was 24px */
+    padding-top: 2rem !important;
+    /* 32px - was 24px */
     padding-bottom: 2rem !important;
   }
-  
+
   .mb-16 {
-    margin-bottom: 3rem !important; /* 48px - was 32px */
+    margin-bottom: 3rem !important;
+    /* 48px - was 32px */
   }
-  
+
   .mb-8 {
-    margin-bottom: 1.5rem !important; /* 24px - was 16px */
+    margin-bottom: 1.5rem !important;
+    /* 24px - was 16px */
   }
-  
+
   .mb-6 {
-    margin-bottom: 1rem !important; /* 16px - was 12px */
+    margin-bottom: 1rem !important;
+    /* 16px - was 12px */
   }
-  
+
   .mb-4 {
-    margin-bottom: 0.75rem !important; /* 12px - was 8px */
+    margin-bottom: 0.75rem !important;
+    /* 12px - was 8px */
   }
-  
+
   /* Container padding adjustments */
   .max-w-7xl {
     max-width: 100% !important;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
   }
-  
+
   .max-w-4xl {
     max-width: 100% !important;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
   }
-  
+
   /* More proportional gap sizes */
   .gap-12 {
-    gap: 2rem !important; /* 32px - was 24px */
+    gap: 2rem !important;
+    /* 32px - was 24px */
   }
-  
+
   .gap-8 {
-    gap: 1.5rem !important; /* 24px - was 16px */
+    gap: 1.5rem !important;
+    /* 24px - was 16px */
   }
-  
-  .space-y-8 > * + * {
-    margin-top: 1.5rem !important; /* 24px - was 16px */
+
+  .space-y-8>*+* {
+    margin-top: 1.5rem !important;
+    /* 24px - was 16px */
   }
-  
-  .space-y-6 > * + * {
-    margin-top: 1rem !important; /* 16px - was 12px */
+
+  .space-y-6>*+* {
+    margin-top: 1rem !important;
+    /* 16px - was 12px */
   }
-  
-  .space-y-4 > * + * {
-    margin-top: 0.75rem !important; /* 12px - was 8px */
+
+  .space-y-4>*+* {
+    margin-top: 0.75rem !important;
+    /* 12px - was 8px */
   }
 }
 
 /* Smooth section transitions */
 section {
   transition: all 0.6s ease-in-out;
-  scroll-margin-top: 80px; /* Account for fixed navbar (64px) + spacing (16px) */
+  scroll-margin-top: 80px;
+  /* Account for fixed navbar (64px) + spacing (16px) */
 }
 
 /* Consistent section spacing */
 section[id] {
-  padding-top: 4rem !important; /* 64px top padding for all sections */
-  padding-bottom: 4rem !important; /* 64px bottom padding for all sections */
+  padding-top: 4rem !important;
+  /* 64px top padding for all sections */
+  padding-bottom: 4rem !important;
+  /* 64px bottom padding for all sections */
 }
 
 /* Gradual fade for better section flow */
@@ -621,18 +666,21 @@ section[id] {
 .fade-section-transition.visible {
   opacity: 1;
   transform: translateY(0);
-} 
+}
 
 /* Mobile adjustments for section spacing */
 @media (max-width: 768px) {
   section[id] {
-    padding-top: 3rem !important; /* 48px top padding for mobile */
-    padding-bottom: 3rem !important; /* 48px bottom padding for mobile */
+    padding-top: 3rem !important;
+    /* 48px top padding for mobile */
+    padding-bottom: 3rem !important;
+    /* 48px bottom padding for mobile */
   }
-} 
+}
 
 /* Prevent scrolling beyond page content */
-html, body {
+html,
+body {
   overflow-x: hidden;
   min-height: 100vh;
   position: relative;
@@ -645,9 +693,9 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Prevent scroll bounce on mobile */
+/* Allow default scroll behaviors */
 body {
-  overscroll-behavior: none;
+  overscroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -669,10 +717,10 @@ body {
   z-index: 1;
 }
 
-/* Make content sections allow pointer events to pass through to canvas when clicking empty areas */
-main > section,
-main > div {
-  pointer-events: auto;
+/* Main content sections handle scrolling natively by default */
+main>section,
+main>div {
+  position: relative;
 }
 
 /* But allow pointer events on interactive elements */
@@ -683,14 +731,15 @@ main textarea,
 main select,
 main [role="button"],
 main [tabindex] {
-  pointer-events: auto !important;
+  pointer-events: auto;
 }
 
 /* Mobile menu improvements */
 @media (max-width: 768px) {
+
   /* Improve touch targets for mobile menu items */
   nav button {
     min-height: 44px;
     min-width: 44px;
   }
-} 
+}

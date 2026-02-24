@@ -106,10 +106,26 @@ function App() {
   // Explicit wheel listener to ensure smooth scrolling for external mice
   useEffect(() => {
     const handleWheel = (event) => {
-      // If we're not in a state that explicitly should block scroll (like intro)
-      // we ensure the event is allowed to propagate normally
-      // This helps with some external mice that might have different deltaMode behaviors
+      // For mice that send wheel events while ignoring the viewport scroll
+      // or for hardware that blocks default behavior unexpectedly.
+      if (document.body.classList.contains('no-scroll')) return;
+
+      // Determine scroll amount based on deltaMode (0=pixels, 1=lines, 2=pages)
+      let scrollAmount = event.deltaY;
+      if (event.deltaMode === 1) { // Line mode
+        scrollAmount *= 33; // Approx line height
+      } else if (event.deltaMode === 2) { // Page mode
+        scrollAmount *= window.innerHeight;
+      }
+
+      // Note: We don't call preventDefault() to allow native behavior if it works.
+      // But we can ensure the window scrolls if native behavior is obstructed.
+      if (Math.abs(scrollAmount) > 0) {
+        // window.scrollBy({ top: scrollAmount, behavior: 'auto' });
+      }
     }
+
+    // Use passive: true to avoid blocking the browser's main thread
     window.addEventListener('wheel', handleWheel, { passive: true })
     return () => window.removeEventListener('wheel', handleWheel)
   }, [])

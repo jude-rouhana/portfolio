@@ -361,7 +361,7 @@ const Projects = () => {
             </h3>
             <p className="text-gray-600">
               {isVBTProject
-                ? 'Watch Hamilton College\'s Strength and Conditioning Coach use the device and web application in action'
+                ? 'Watch as Hamilton College\'s Strength and Conditioning Coach monitors five athletes using the VBT devices for their lifts on the web application on his iPad'
                 : isFootballKitProject
                   ? 'Watch the Football Kit Classifier in action'
                   : 'Watch the animated short story about a cat who finds another world inside of a glass jar'

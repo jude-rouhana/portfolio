@@ -78,7 +78,7 @@ const Projects = () => {
     if (projectId === 1 || projectId === 5 || projectId === 7) { // VBT, Football Kit Classifier, or Jazz Cats
       setActiveProjectId(projectId)
       setShowVideoModal(true)
-    } else if (projectId === 8) { // Pixel Art Smoother
+    } else if (projectId === 6) { // Pixel Art Smoother
       setShowPixelArtModal(true)
     }
   }

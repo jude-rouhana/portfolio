@@ -743,3 +743,65 @@ main [tabindex] {
     min-width: 44px;
   }
 }
+
+/* Terminal UI Styles */
+.terminal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(6px);
+}
+
+.terminal-shell {
+  width: min(960px, 92vw);
+  height: min(640px, 82vh);
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #1a1a1a;
+  color: #eaeaea;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.terminal-body {
+  flex: 1;
+  width: 100%;
+  background: #000;
+}
+
+/* Override jQuery Terminal default styles to match the dark theme */
+.terminal,
+.terminal-body,
+.terminal-shell {
+  --background: #000 !important;
+  --color: #fff !important;
+  --size: 1.1 !important;
+  --font: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace !important;
+  color: #fff !important;
+}
+
+.terminal .terminal-output div div,
+.terminal .cmd,
+.terminal .cmd div {
+  color: #fff !important;
+}
+
+.cmd {
+  padding-bottom: 10px !important;
+}

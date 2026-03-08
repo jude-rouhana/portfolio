@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { getVideoUrl } from '../config/assets'
+import TerminalModal from '../components/TerminalModal'
 
 const Projects = () => {
   const [ref, inView] = useInView({
@@ -14,6 +15,7 @@ const Projects = () => {
   const [showFocusAidModal, setShowFocusAidModal] = useState(false)
   const [showPixelArtModal, setShowPixelArtModal] = useState(false)
   const [showVBTModal, setShowVBTModal] = useState(false)
+  const [showTerminalModal, setShowTerminalModal] = useState(false)
   const [descriptionText, setDescriptionText] = useState("")
   const [activeProjectId, setActiveProjectId] = useState(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -75,10 +77,10 @@ const Projects = () => {
   }
 
   const handleLiveDemoClick = (projectId) => {
-    if (projectId === 1 || projectId === 5 || projectId === 7) { // VBT, Football Kit Classifier, or Jazz Cats
+    if (projectId === 1 || projectId === 5 || projectId === 8) { // VBT, Football Kit Classifier, or Jazz Cats
       setActiveProjectId(projectId)
       setShowVideoModal(true)
-    } else if (projectId === 6) { // Pixel Art Smoother
+    } else if (projectId === 7) { // Pixel Art Smoother
       setShowPixelArtModal(true)
     }
   }
@@ -90,6 +92,10 @@ const Projects = () => {
   const toggleProject = (projectId) => {
     setExpandedProject(expandedProject === projectId ? null : projectId)
   }
+
+  const handleTerminalClose = useCallback(() => {
+    setShowTerminalModal(false)
+  }, [])
 
   // Detect mobile device
   useEffect(() => {
@@ -123,7 +129,7 @@ const Projects = () => {
   // Cursor grid trail effect
   useEffect(() => {
     // Check if any modal is open - if so, halt all cursor animation
-    const isAnyModalOpen = showVideoModal || showDescriptionModal || showFocusAidModal || showPixelArtModal || showVBTModal
+    const isAnyModalOpen = showVideoModal || showDescriptionModal || showFocusAidModal || showPixelArtModal || showVBTModal || showTerminalModal
 
     if (isAnyModalOpen) {
       // Clear all trail cells and reset state when modal opens
@@ -298,7 +304,7 @@ const Projects = () => {
       shiftHeldRef.current = false
       touchStartTimeRef.current = null
     }
-  }, [showVideoModal, showDescriptionModal, showFocusAidModal, showPixelArtModal, showVBTModal])
+  }, [showVideoModal, showDescriptionModal, showFocusAidModal, showPixelArtModal, showVBTModal, showTerminalModal])
 
   // Helper function to render description with bold CANVAS
   const renderDescription = (description) => {
@@ -361,7 +367,7 @@ const Projects = () => {
             </h3>
             <p className="text-gray-600">
               {isVBTProject
-                ? 'Watch as Hamilton College\'s Strength and Conditioning Coach monitors five athletes using the VBT devices for their lifts on the web application on his iPad'
+                ? 'Watch Hamilton College\'s Strength and Conditioning Coach use the device and web application in action'
                 : isFootballKitProject
                   ? 'Watch the Football Kit Classifier in action'
                   : 'Watch the animated short story about a cat who finds another world inside of a glass jar'
@@ -790,7 +796,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       id: 1,
       title: "Velocity-Based Training System for Hamilton College's Athletics Department",
       fullTitle: "Velocity-Based Training System",
-      description: "The Velocity-Based Training (VBT) System is a device and full-stack web application created for Hamilton College's Athletics Department. The VBT is a small, portable device that measures the velocity of a repition of an exercise on a barbell and sends the data to the web application where the data is stored and displayed in a user-friendly interface in order to track peak and average velocity of an athlete's lifts. The 5 devices are built with an Arduino Nano IoT board, a battery, charger, and switch, all of which are housed in a custom-designed, 3D-printed case. Logo and UI design created by myself in Figma. Product design, development, production, and documentation by myself, Pandelis Margaronis, and Teddy Rosenbaum as our Senior Thesis project.",
+      description: "The Velocity-Based Training (VBT) System is a device and full-stack web application created for Hamilton College's Athletics Department. The VBT is a small, portable device that measures the velocity of a repition of an exercise on a barbell and sends the data to the web application where the data is stored and displayed in a user-friendly interface in order to track peak and average velocity of an athlete's lifts. The 5 devices are built with an Arduino Nano IoT board, a battery, charger, and switch, all of which are housed in a custom-designed, 3D-printed case. Logo and UI design created by myself in Figma. Product design, development, production, and documentation by myself, Pandelis Margaronis, Teddy Rosenbaum, and Kien Tran as our Senior Thesis project.",
       image: "/assets/coding%20projects/Thesis/process/VBT_logo_gray.png",
       technologies: ["Python", "React", "Next.js", "Node.js", "FastAPI", "Arduino", "Figma", "Blender", "3D Printing"],
       hasDemo: true,
@@ -798,6 +804,14 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
     },
     {
       id: 2,
+      title: "Terminal User Interface",
+      fullTitle: "An Exploration - Terminal User Interface",
+      description: "A terminal user interface created using React, Next.js, and jQuery Terminal. The interface allows users to interact with this portfolio. Built as an exploration of the capabilities of jQuery Terminal and using a command-line interface to create a retro, interactive experience to navigate some of the projects on this portfolio.",
+      technologies: ["React", "Next.js", "jQuery Terminal"],
+      hasTerminal: true
+    },
+    {
+      id: 3,
       title: "Chord Progression Neural Network",
       fullTitle: "Chord Progression Neural Network",
       description: "A neural network to generate musically coherent chord progressions by learning harmonic relationships between chords. Trained on the Chordonomicon dataset with one-hot encoded inputs, the model predicts the next chord based on the previous four. With 132 chord types and a two-layer architecture, it outputs progressions that often mirror real musical structures — including the classic I–V–vi–IV progression found in many pop songs. Built by myself and Jacob Helzner.",
@@ -806,7 +820,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasDescription: true
     },
     {
-      id: 3,
+      id: 4,
       title: "FocusAid: A Chrome Extension for Focus Enhancement",
       fullTitle: "FocusAid",
       description: "A Chrome extension which serves as an all-in-one focus tool for people with Autism and/or ADHD. FocusAid's architecture features interactive components that enhance text selection. The floating action box offers options like highlighting, underlining, isolating, or summarizing (using OpenAI's API), while the color selection box enables custom highlight colors, and the help box provides user guidance. Researched, designed, built, and documented by myself and Pandelis Margaronis in our Developing Accessible User Interfaces course.",
@@ -815,7 +829,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasGallery: true
     },
     {
-      id: 4,
+      id: 5,
       title: "Portfolio Website: Jude Rouhana",
       fullTitle: "Portfolio Website",
       description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the **Canvas** feature on the home page, a built in pixel art designer. Continue exploring my work below.",
@@ -824,7 +838,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasDemo: false
     },
     {
-      id: 5,
+      id: 6,
       title: "Football Kit Classifier: Machine Learning",
       fullTitle: "Football Kit Classifier",
       description: "A machine learning model that classifies football kits based on their design. This app embeds your uploaded football kit image using a ResNet-based encoder, compares it against a gallery of known kits, and return the closest matches. The gallery includes the kits of the champions league and premier league winners. Built by myself.",
@@ -834,7 +848,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       videoUrl: "https://res.cloudinary.com/djsfb1hrn/video/upload/v1763741467/FootballKitClassifier_orubz5.mp4"
     },
     {
-      id: 6,
+      id: 7,
       title: "Pixel Art Smoother",
       fullTitle: "Pixel Art Smoother",
       description: "This Python tool and retro interface uses custom algorithms to upscale and smooth pixel art images. It implements corner detection, color averaging, and multi-pass processing to transform low-resolution pixel art into higher-quality, smoother versions while preserving the original artistic style. Try it out for yourself and download the smoothed pixel art! Built by myself and Jacob Helzner.",
@@ -845,7 +859,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       linkUrl: "https://pixelartsmoother.onrender.com"
     },
     {
-      id: 7,
+      id: 8,
       title: "The Jazz Cats: An Animated Short",
       fullTitle: "The Jazz Cats",
       description: "An animation made with Procreate and Premiere Pro. The Jazz Cats is a short story about a cat who finds another world inside of a glass jar on his evening stroll. Hand-drawn and animated by myself. Music by myself. Fall 2022",
@@ -1138,7 +1152,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                                   whileHover={{ scale: 1.05 }}
                                   whileTap={{ scale: 0.95 }}
                                 >
-                                  {selectedProject.id === 7 ? 'Watch Animation' : 'Watch Demo'}
+                                  {selectedProject.id === 8 ? 'Watch Animation' : 'Watch Demo'}
                                 </motion.button>
                               )}
                               {selectedProject.hasVBTGallery && (
@@ -1159,6 +1173,16 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                                   whileTap={{ scale: 0.95 }}
                                 >
                                   Full Description
+                                </motion.button>
+                              )}
+                              {selectedProject.hasTerminal && (
+                                <motion.button
+                                  onClick={() => setShowTerminalModal(true)}
+                                  className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  Open Terminal
                                 </motion.button>
                               )}
                               {selectedProject.hasGallery && (
@@ -1310,6 +1334,16 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                                     Full Description
                                   </motion.button>
                                 )}
+                                {project.hasTerminal && (
+                                  <motion.button
+                                    onClick={() => setShowTerminalModal(true)}
+                                    className="px-6 py-3 bg-[#000052] text-white font-semibold rounded-none hover:opacity-80 transition-all duration-300"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    Open Terminal
+                                  </motion.button>
+                                )}
                                 {project.hasGallery && (
                                   <motion.button
                                     onClick={() => setShowFocusAidModal(true)}
@@ -1374,6 +1408,10 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       <FocusAidModal />
       <PixelArtModal />
       <VBTModal />
+      <TerminalModal
+        isOpen={showTerminalModal}
+        onClose={handleTerminalClose}
+      />
     </div>
   )
 }

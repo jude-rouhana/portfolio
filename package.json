@@ -20,8 +20,8 @@
     "jquery": "^3.7.1",
     "jquery.terminal": "^2.45.2",
     "postprocessing": "^6.38.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "react-intersection-observer": "^9.16.0",
     "react-router-dom": "^7.9.6",
     "three": "^0.179.1"

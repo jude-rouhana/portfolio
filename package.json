@@ -17,7 +17,6 @@
     "@react-three/fiber": "^9.3.0",
     "framer-motion": "^12.23.12",
     "gsap": "^3.13.0",
-    "ink": "^6.8.0",
     "jquery": "^3.7.1",
     "jquery.terminal": "^2.45.2",
     "postprocessing": "^6.38.0",
@@ -28,8 +27,8 @@
     "three": "^0.179.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@types/three": "^0.179.0",
     "@vitejs/plugin-react": "^4.1.0",
     "autoprefixer": "^10.4.16",

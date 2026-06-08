@@ -18,7 +18,6 @@ const Projects = () => {
   const [showTerminalModal, setShowTerminalModal] = useState(false)
   const [descriptionText, setDescriptionText] = useState("")
   const [activeProjectId, setActiveProjectId] = useState(null)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [focusAidImageIndex, setFocusAidImageIndex] = useState(0)
   const [vbtImageIndex, setVbtImageIndex] = useState(0)
   const [expandedProject, setExpandedProject] = useState(null)
@@ -77,10 +76,10 @@ const Projects = () => {
   }
 
   const handleLiveDemoClick = (projectId) => {
-    if (projectId === 1 || projectId === 5 || projectId === 8) { // VBT, Football Kit Classifier, or Jazz Cats
+    if (projectId === 1 || projectId === 5 || projectId === 7) { // VBT, Football Kit Classifier, or Jazz Cats
       setActiveProjectId(projectId)
       setShowVideoModal(true)
-    } else if (projectId === 7) { // Pixel Art Smoother
+    } else if (projectId === 6) { // Pixel Art Smoother
       setShowPixelArtModal(true)
     }
   }
@@ -804,14 +803,6 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
     },
     {
       id: 2,
-      title: "Terminal User Interface",
-      fullTitle: "An Exploration - Terminal User Interface",
-      description: "A terminal user interface created using React, Next.js, and jQuery Terminal. The interface allows users to interact with this portfolio. Built as an exploration of the capabilities of jQuery Terminal and using a command-line interface to create a retro, interactive experience to navigate some of the projects on this portfolio.",
-      technologies: ["React", "Next.js", "jQuery Terminal"],
-      hasTerminal: true
-    },
-    {
-      id: 3,
       title: "Chord Progression Neural Network",
       fullTitle: "Chord Progression Neural Network",
       description: "A neural network to generate musically coherent chord progressions by learning harmonic relationships between chords. Trained on the Chordonomicon dataset with one-hot encoded inputs, the model predicts the next chord based on the previous four. With 132 chord types and a two-layer architecture, it outputs progressions that often mirror real musical structures — including the classic I–V–vi–IV progression found in many pop songs. Built by myself and Jacob Helzner.",
@@ -820,7 +811,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasDescription: true
     },
     {
-      id: 4,
+      id: 3,
       title: "FocusAid: A Chrome Extension for Focus Enhancement",
       fullTitle: "FocusAid",
       description: "A Chrome extension which serves as an all-in-one focus tool for people with Autism and/or ADHD. FocusAid's architecture features interactive components that enhance text selection. The floating action box offers options like highlighting, underlining, isolating, or summarizing (using OpenAI's API), while the color selection box enables custom highlight colors, and the help box provides user guidance. Researched, designed, built, and documented by myself and Pandelis Margaronis in our Developing Accessible User Interfaces course.",
@@ -829,7 +820,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasGallery: true
     },
     {
-      id: 5,
+      id: 4,
       title: "Portfolio Website: Jude Rouhana",
       fullTitle: "Portfolio Website",
       description: "This very portfolio website. Built from scratch using React, Framer Motion, Three.js, and Tailwind CSS. Features smooth animations and responsive design. Try out the **Canvas** feature on the home page, a built in pixel art designer. Continue exploring my work below.",
@@ -838,7 +829,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       hasDemo: false
     },
     {
-      id: 6,
+      id: 5,
       title: "Football Kit Classifier: Machine Learning",
       fullTitle: "Football Kit Classifier",
       description: "A machine learning model that classifies football kits based on their design. This app embeds your uploaded football kit image using a ResNet-based encoder, compares it against a gallery of known kits, and return the closest matches. The gallery includes the kits of the champions league and premier league winners. Built by myself.",
@@ -848,7 +839,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       videoUrl: "https://res.cloudinary.com/djsfb1hrn/video/upload/v1763741467/FootballKitClassifier_orubz5.mp4"
     },
     {
-      id: 7,
+      id: 6,
       title: "Pixel Art Smoother",
       fullTitle: "Pixel Art Smoother",
       description: "This Python tool and retro interface uses custom algorithms to upscale and smooth pixel art images. It implements corner detection, color averaging, and multi-pass processing to transform low-resolution pixel art into higher-quality, smoother versions while preserving the original artistic style. Try it out for yourself and download the smoothed pixel art! Built by myself and Jacob Helzner.",
@@ -859,13 +850,21 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
       linkUrl: "https://pixelartsmoother.onrender.com"
     },
     {
-      id: 8,
+      id: 7,
       title: "The Jazz Cats: An Animated Short",
       fullTitle: "The Jazz Cats",
       description: "An animation made with Procreate and Premiere Pro. The Jazz Cats is a short story about a cat who finds another world inside of a glass jar on his evening stroll. Hand-drawn and animated by myself. Music by myself. Fall 2022",
       //   image: "/assets/animations/JRouhana_Final_Project.mp4",
       technologies: ["Procreate", "Premiere Pro"],
       hasDemo: true
+    },
+    {
+      id: 8,
+      title: "Terminal User Interface",
+      fullTitle: "An Exploration - Terminal User Interface",
+      description: "A terminal user interface created using React, Next.js, and jQuery Terminal. The interface allows users to interact with this portfolio. Built as an exploration of the capabilities of jQuery Terminal and using a command-line interface to create a retro, interactive experience to navigate some of the projects on this portfolio.",
+      technologies: ["React", "Next.js", "jQuery Terminal"],
+      hasTerminal: true
     }
   ]
 
@@ -881,7 +880,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
         backgroundSize: '32px 32px, 32px 32px, cover',
         backgroundPosition: '0 0, 0 0, center',
         backgroundRepeat: 'repeat, repeat, no-repeat',
-        backgroundAttachment: 'fixed, fixed, fixed'
+        backgroundAttachment: isMobile ? 'scroll, scroll, scroll' : 'fixed, fixed, fixed'
       }}
     >
       {/* Trail Cells */}
@@ -1152,7 +1151,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                                   whileHover={{ scale: 1.05 }}
                                   whileTap={{ scale: 0.95 }}
                                 >
-                                  {selectedProject.id === 8 ? 'Watch Animation' : 'Watch Demo'}
+                                  {selectedProject.id === 7 ? 'Watch Animation' : 'Watch Demo'}
                                 </motion.button>
                               )}
                               {selectedProject.hasVBTGallery && (
@@ -1291,7 +1290,7 @@ This specific example demonstrates the popular I-V-vi-IV progression (in the key
                               </div>
 
                               {/* Action Buttons */}
-                              <div className="flex justify-center gap-4">
+                              <div className="flex justify-center gap-4 flex-wrap">
                                 {project.hasLink && (
                                   <motion.a
                                     href={project.linkUrl}

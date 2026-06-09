@@ -1088,7 +1088,7 @@ function Home() {
               </div>
 
               {/* Games */}
-              <div className="py-6 border-t border-b border-black">
+              <div className="py-6 border-t border-black">
                 <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">CREATIVE</span>
                 <div className="flex items-start justify-between gap-4">
                   <div>

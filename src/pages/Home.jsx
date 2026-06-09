@@ -37,7 +37,7 @@ function Home() {
 
   const LETTER_WAVE_DELAY = 2000
   const LOGO_REVEAL_DELAY = 1200
-  const INTRO_HIDE_DELAY = 3000
+  const INTRO_HIDE_DELAY = 2700
 
   // Detect mobile device
   useEffect(() => {

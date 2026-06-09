@@ -166,7 +166,7 @@ const TerminalModal = ({ isOpen, onClose }) => {
                 break;
             case 'resume':
                 output = <div>Opening resume in a new tab... [OK]</div>;
-                window.open('/Jude Rouhana Resume.pdf', '_blank');
+                window.open('/Jude_Rouhana_Resume.pdf', '_blank');
                 break;
             case 'contact':
                 output = (

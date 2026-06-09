@@ -1027,143 +1027,78 @@ function Home() {
 
         {/* Main Content Area */}
         <main className={`flex-1 pt-20 ${isCanvasMode ? 'hidden' : ''}`}>
-          {/* Hero Section */}
+          {/* Hero + Navigation Section */}
           <motion.section
             initial={{ opacity: 0 }}
             animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
             transition={introCompleted ? { duration: 0.6, delay: 1.3 } : { duration: 0, delay: 0 }}
-            className="min-h-screen flex flex-col justify-center px-6 sm:px-8 lg:px-12"
+            className="min-h-screen flex flex-col lg:flex-row lg:items-start px-6 sm:px-8 lg:px-12 pt-20"
             style={{ visibility: showIntro ? 'hidden' : 'visible' }}
           >
-            <div className="max-w-7xl mx-auto w-full">
-              {/* Main Title */}
+            {/* Left: Name */}
+            <div className="flex-1 flex items-start py-20 lg:pb-0 lg:pt-[22vh]">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={introCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={introCompleted ? { duration: 0.8, delay: 1.5 } : { duration: 0, delay: 0 }}
-                className="text-7xl sm:text-8xl md:text-9xl lg:text-10xl font-bold tracking-tight mb-8 text-[#000052]"
+                className="text-7xl sm:text-8xl md:text-9xl font-bold tracking-tight text-[#000052]"
               >
-                {/* Jude Rouhana */}
                 Jude Rouhana
               </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={introCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={introCompleted ? { duration: 0.7, delay: 1.8 } : { duration: 0, delay: 0 }}
-              className="text-lg sm:text-xl font-medium text-[#000052] mb-4"
-            >
-              Scroll to explore ↓
-            </motion.p>
             </div>
-          </motion.section>
 
-          {/* News/Content Section */}
-          <motion.section
-            initial={{ opacity: 0, y: 40 }}
-            animate={introCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-            transition={introCompleted ? { duration: 0.8, delay: 2.0 } : { duration: 0, delay: 0 }}
-            className="px-6 sm:px-8 lg:px-12 py-20"
-            style={{ visibility: showIntro ? 'hidden' : 'visible' }}
-          >
-            <div className="max-w-7xl mx-auto">
-              <div className="space-y-16">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                    <div className="flex-1">
-                      <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">WHO AM I</span>
-                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-[#000052]">
-                        About
-                      </h2>
-                    </div>
-                    <motion.div
-                      className="md:mt-8"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Link
-                        to="/about"
-                        className="inline-block px-6 py-3 bg-[#000052] text-white font-medium transition-all duration-300 hover:shadow-lg"
-                      >
-                        Learn More →
-                      </Link>
-                    </motion.div>
-                  </div>
-                {/* News Item 1 */}
-                <div className="border-t border-black pt-8">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                    <div className="flex-1">
-                      <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">WORK</span>
-                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-[#000052]">
-                        Projects
-                      </h2>
-                      <p className="text-lg text-[#000052] max-w-2xl">
-                        Explore my coding work, applications, experiments, and other creative projects.
-                      </p>
-                    </div>
-                    <motion.div
-                      className="md:mt-8"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Link
-                        to="/projects"
-                        className="inline-block px-6 py-3 bg-[#000052] text-white font-medium transition-all duration-300 hover:shadow-lg"
-                      >
-                        View Projects →
-                      </Link>
-                    </motion.div>
-                  </div>
-                </div>
-
-                <div className="border-t border-black pt-8">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                    <div className="flex-1">
-                      <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">CREATIVE</span>
-                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-[#000052]">
-                        Music
-                      </h2>
-                      <p className="text-lg text-[#000052] max-w-2xl">
-                        A collection of pieces I've written, recorded, and produced.
-                      </p>
-                    </div>
-                    <motion.div
-                      className="md:mt-8"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Link
-                        to="/music"
-                        className="inline-block px-6 py-3 bg-[#000052] text-white font-medium transition-all duration-300 hover:shadow-lg"
-                      >
-                        View Music →
-                      </Link>
-                    </motion.div>
-                  </div>
-                  <br/>
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                    <div className="flex-1">
-                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-[#000052]">
-                        Games
-                      </h2>
-                      <p className="text-lg text-[#000052] max-w-2xl">
-                        Games I've built using various programming languages and game development tools.
-                      </p>
-                    </div>
-                    <motion.div
-                      className="md:mt-8"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Link
-                        to="/games"
-                        className="inline-block px-6 py-3 bg-[#000052] text-white font-medium transition-all duration-300 hover:shadow-lg"
-                      >
-                        View Games →
-                      </Link>
-                    </motion.div>
-                  </div>
+            {/* Right: Navigation Strip */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={introCompleted ? { opacity: 1 } : { opacity: 0 }}
+              transition={introCompleted ? { duration: 0.6, delay: 2.0 } : { duration: 0, delay: 0 }}
+              className="w-full lg:w-80 xl:w-96 flex-shrink-0 pb-20 lg:pb-0 lg:border-l lg:border-black lg:pl-10"
+            >
+              {/* About */}
+              <div className="py-6 border-t border-black">
+                <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">WHO AM I</span>
+                <div className="flex items-start justify-between gap-4">
+                  <h2 className="text-2xl font-bold text-[#000052]">About</h2>
+                  <Link to="/about" className="text-sm font-medium text-[#000052] hover:opacity-70 transition-opacity whitespace-nowrap mt-1">Learn More →</Link>
                 </div>
               </div>
-            </div>
+
+              {/* Projects */}
+              <div className="py-6 border-t border-black">
+                <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">WORK</span>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-[#000052] mb-2">Projects</h2>
+                    <p className="text-sm text-[#000052] leading-relaxed">Explore my coding work, applications, experiments, and other creative projects.</p>
+                  </div>
+                  <Link to="/projects" className="text-sm font-medium text-[#000052] hover:opacity-70 transition-opacity whitespace-nowrap mt-1">View Projects →</Link>
+                </div>
+              </div>
+
+              {/* Music */}
+              <div className="py-6 border-t border-black">
+                <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">CREATIVE</span>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-[#000052] mb-2">Music</h2>
+                    <p className="text-sm text-[#000052] leading-relaxed">A collection of pieces I've written, recorded, and produced.</p>
+                  </div>
+                  <Link to="/music" className="text-sm font-medium text-[#000052] hover:opacity-70 transition-opacity whitespace-nowrap mt-1">View Music →</Link>
+                </div>
+              </div>
+
+              {/* Games */}
+              <div className="py-6 border-t border-b border-black">
+                <span className="text-xs font-medium uppercase tracking-wider mb-2 block text-[#000052]">CREATIVE</span>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-[#000052] mb-2">Games</h2>
+                    <p className="text-sm text-[#000052] leading-relaxed">Games I've built using various programming languages and game development tools.</p>
+                  </div>
+                  <Link to="/games" className="text-sm font-medium text-[#000052] hover:opacity-70 transition-opacity whitespace-nowrap mt-1">View Games →</Link>
+                </div>
+              </div>
+            </motion.div>
           </motion.section>
 
           {/* Footer */}
